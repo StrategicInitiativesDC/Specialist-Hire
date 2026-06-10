@@ -140,47 +140,72 @@ body{font-family:var(--sans);background:var(--body-bg);color:var(--text-primary)
 
 <!-- 1. Clinic information -->
 <div class="card card-accent">
-<div class="sec-eyebrow">
-<svg class="shine-sm" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M50 0 C50 28 72 50 100 50 C72 50 50 72 50 100 C50 72 28 50 0 50 C28 50 50 28 50 0Z" fill="#34798D"/></svg>
-<span class="sec-title">Your information</span><div class="sec-rule"></div>
-</div>
-
-
-<div style="display:flex;flex-direction:column;gap:14px">
-  <div class="field" style="position:relative">
-    <label>Practice code <span class="req">*</span></label>
-    <input type="text" id="cn" placeholder="Type a code or practice name..." autocomplete="off" oninput="searchPractice(this.value)" onkeydown="handlePracticeKey(event)" style="padding:9px 12px">
-    <div id="practice-dropdown" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid #ccc8be;border-radius:0 0 6px 6px;max-height:220px;overflow-y:auto;z-index:200;box-shadow:0 4px 16px rgba(0,0,0,.12)"></div>
-    <div id="practice-confirm" style="display:none;margin-top:8px;padding:10px 13px;background:#EEF6EE;border:1px solid #A1B9A1;border-left:3px solid #4a9460;border-radius:6px;font-size:13px;color:#1e4d2b;line-height:1.6"></div>
+  <div class="sec-eyebrow">
+    <svg class="shine-sm" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M50 0 C50 28 72 50 100 50 C72 50 50 72 50 100 C50 72 28 50 0 50 C28 50 50 28 50 0Z" fill="#34798D"/></svg>
+    <span class="sec-title">Your information</span><div class="sec-rule"></div>
   </div>
 
-  <div class="field">
-    <label>Practice name</label>
-    <input type="text" id="practice_name_display" placeholder="Auto-filled after selecting a practice" readonly>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start">
+    <!-- Left column: keep name + email -->
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div class="field">
+        <label>Your name <span class="req">*</span></label>
+        <input type="text" id="mgr" placeholder="Full name" oninput="autoEmail()">
+      </div>
+
+      <div class="field">
+        <label>Email <span class="req">*</span></label>
+        <input type="email" id="em" placeholder="name@dentalcorp.ca">
+      </div>
+    </div>
+
+    <!-- Right column: practice lookup + auto-filled fields -->
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div class="field" style="position:relative">
+        <label>Practice code <span class="req">*</span></label>
+        <input
+          type="text"
+          id="cn"
+          placeholder="Type a code or practice name..."
+          autocomplete="off"
+          oninput="searchPractice(this.value)"
+          onkeydown="handlePracticeKey(event)"
+          style="padding:9px 12px"
+        >
+        <div id="practice-dropdown" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid #ccc8be;border-radius:0 0 6px 6px;max-height:220px;overflow-y:auto;z-index:200;box-shadow:0 4px 16px rgba(0,0,0,.12)"></div>
+        <div id="practice-confirm" style="display:none;margin-top:8px;padding:10px 13px;background:#EEF6EE;border:1px solid #A1B9A1;border-left:3px solid #4a9460;border-radius:6px;font-size:13px;color:#1e4d2b;line-height:1.6"></div>
+      </div>
+
+      <div class="field">
+        <label>Practice name</label>
+        <input type="text" id="practice_name_display" placeholder="Auto-filled after selecting a practice" readonly>
+      </div>
+
+      <div class="field">
+        <label>City</label>
+        <input type="text" id="city_display" placeholder="Auto-filled after selecting a practice" readonly>
+      </div>
+
+      <!-- Hidden fields used by backend -->
+      <input type="hidden" id="cy">
+      <input type="hidden" id="practice_name_hidden">
+    </div>
   </div>
 
-  <div class="field">
-    <label>City</label>
-    <input type="text" id="city_display" placeholder="Auto-filled after selecting a practice" readonly>
+  <div class="mt">
+    <div class="field"><label>RM sign-off? <span class="req">*</span></label>
+      <select id="ram" onchange="chk()" style="max-width:360px">
+        <option value="">Select...</option>
+        <option value="yes">Yes — discussed and approved</option>
+        <option value="pending">Discussed — awaiting formal sign-off</option>
+        <option value="no">Not yet discussed</option>
+      </select>
+    </div>
   </div>
 
-  <input type="hidden" id="cy">
-  <input type="hidden" id="practice_name_hidden">
+  <div id="ramq" style="display:none"></div>
 </div>
 
-
-<div class="mt">
-<div class="field"><label>RM sign-off? <span class="req">*</span></label>
-<select id="ram" onchange="chk()" style="max-width:360px">
-<option value="">Select...</option>
-<option value="yes">Yes — discussed and approved</option>
-<option value="pending">Discussed — awaiting formal sign-off</option>
-<option value="no">Not yet discussed</option>
-</select>
-</div>
-</div>
-<div id="ramq" style="display:none"></div>
-</div>
 
 <!-- 2. Role -->
 <div class="card">
@@ -873,40 +898,75 @@ var SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwDOrwDsybhQZAS6Gh0q5n
 // ────────────────────────────────────────────────────────────
 
 function searchPractice(query){
-var dd=document.getElementById('practice-dropdown');
-var confirm=document.getElementById('practice-confirm');
-if(!query||query.length<1){dd.style.display='none';confirm.style.display='none';return;}
-var q=query.toLowerCase();
-var matches=PRACTICE_DB.filter(function(p){
-return p['Practice Code'].toLowerCase().indexOf(q)===0||
-p['Practicename'].toLowerCase().indexOf(q)>=0;
-}).slice(0,8);
-if(matches.length===0){dd.style.display='none';return;}
-dd.innerHTML='';
-matches.forEach(function(p,i){
-var item=document.createElement('div');
-item.style.cssText='padding:9px 12px;cursor:pointer;font-size:13px;border-bottom:0.5px solid #e9e7df;display:flex;gap:10px;align-items:baseline';
-item.innerHTML='<span style="font-weight:700;color:#34798D;min-width:52px">'+p['Practice Code']+'</span><span style="color:#273221">'+p['Practicename']+'</span><span style="color:#7a8a74;margin-left:auto;font-size:12px">'+p['City']+'</span>';
-item.dataset.idx=i;
-item.onmouseenter=function(){
-dd.querySelectorAll('div').forEach(function(d){d.style.background=''});
-this.style.background='#f0f8fb';
-};
-item.onmouseleave=function(){this.style.background=''};
-item.onclick=function(){selectPractice(matches[parseInt(this.dataset.idx)]);};
-dd.appendChild(item);
-});
-dd.style.display='block';
+  var dd=document.getElementById('practice-dropdown');
+  var confirm=document.getElementById('practice-confirm');
+
+  if(!query || query.length < 1){
+    dd.style.display='none';
+    confirm.style.display='none';
+    return;
+  }
+
+  var q=query.toLowerCase().trim();
+
+  // Exact match on Practice Code or exact Practice Name
+  var exact=PRACTICE_DB.find(function(p){
+    return p['Practice Code'].toLowerCase() === q ||
+           p['Practicename'].toLowerCase() === q;
+  });
+
+  if(exact){
+    selectPractice(exact);
+    dd.style.display='none';
+    return;
+  }
+
+  var matches=PRACTICE_DB.filter(function(p){
+    return p['Practice Code'].toLowerCase().indexOf(q)===0 ||
+           p['Practicename'].toLowerCase().indexOf(q)>=0;
+  }).slice(0,8);
+
+  if(matches.length===0){
+    dd.style.display='none';
+    return;
+  }
+
+  dd.innerHTML='';
+
+  matches.forEach(function(p,i){
+    var item=document.createElement('div');
+    item.style.cssText='padding:9px 12px;cursor:pointer;font-size:13px;border-bottom:0.5px solid #e9e7df;display:flex;gap:10px;align-items:baseline';
+    item.innerHTML='<span style="font-weight:700;color:#34798D;min-width:52px">'+p['Practice Code']+'</span><span style="color:#273221">'+p['Practicename']+'</span><span style="color:#7a8a74;margin-left:auto;font-size:12px">'+p['City']+'</span>';
+    item.dataset.idx=i;
+
+    item.onmouseenter=function(){
+      dd.querySelectorAll('div').forEach(function(d){d.style.background='';});
+      this.style.background='#f0f8fb';
+    };
+
+    item.onmouseleave=function(){
+      this.style.background='';
+    };
+
+    item.onclick=function(){
+      selectPractice(matches[parseInt(this.dataset.idx)]);
+    };
+
+    dd.appendChild(item);
+  });
+
+  dd.style.display='block';
 }
 
 function selectPractice(p){
   var input=document.getElementById('cn');
   input.value=p['Practice Code'];
 
+  // Hidden values used by backend
   document.getElementById('cy').value=p['City'];
   document.getElementById('practice_name_hidden').value=p['Practicename'];
 
-  // Visible auto-filled fields
+  // Visible auto-filled values
   document.getElementById('practice_name_display').value=p['Practicename'];
   document.getElementById('city_display').value=p['City'];
 
@@ -1573,24 +1633,39 @@ function submitToSheets(userEmail, pdfData){
 }
 
 function openEmailModal(){
-  var defaultEmail=document.getElementById('em').value||'';
-  document.getElementById('userEmail').value=defaultEmail;
-  document.getElementById('emailModal').style.display='flex';
+  var modal=document.getElementById('emailModal');
+  var userEmailInput=document.getElementById('userEmail');
+  var defaultEmail=document.getElementById('em') ? document.getElementById('em').value : '';
+
+  if(!modal){
+    alert('Email modal not found in the page.');
+    return;
+  }
+
+  if(userEmailInput){
+    userEmailInput.value=defaultEmail || '';
+  }
+
+  modal.style.display='flex';
 }
 
 function closeModal(){
-  document.getElementById('emailModal').style.display='none';
+  var modal=document.getElementById('emailModal');
+  if(modal){
+    modal.style.display='none';
+  }
 }
 
 async function confirmSubmit(){
-  var email=document.getElementById("userEmail").value.trim();
+  var emailInput=document.getElementById('userEmail');
+  var email=emailInput ? emailInput.value.trim() : '';
 
   if(!email){
-	alert("Please enter your email");
-	return;
+    alert('Please enter your email');
+    return;
   }
 
-  document.getElementById('emailModal').style.display='none';
+  closeModal();
 
   var pdfData=await exportPDF(true);
   submitToSheets(email,pdfData);
