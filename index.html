@@ -107,7 +107,14 @@ body{font-family:var(--sans);background:var(--body-bg);color:var(--text-primary)
 .btn-clear{padding:11px 20px;background:var(--white);color:var(--text-secondary);border:1px solid #ccc8be;border-radius:7px;font-family:var(--sans);font-size:14px;cursor:pointer;transition:background .15s}
 .btn-clear:hover{background:var(--latte)}
 .toast{display:none;position:fixed;bottom:24px;right:24px;background:var(--black-olive);color:var(--latte);padding:11px 18px;border-radius:8px;font-family:var(--sans);font-size:13px;font-weight:600;box-shadow:0 6px 24px rgba(39,50,33,.3);z-index:999;border-left:3px solid var(--eucalyptus)}
-.footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid #ddd9ce;display:flex;align-items:center;gap:10px}
+.pdf-export .actions {
+  display: none !important;
+}
+
+.pdf-export .toast {
+  display: none !important;
+}
+ .footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid #ddd9ce;display:flex;align-items:center;gap:10px}
 .shine-ft{width:16px;height:16px;opacity:.5}
 .footer p{font-size:12px;color:var(--text-muted)}
 
@@ -834,17 +841,26 @@ body{font-family:var(--sans);background:var(--body-bg);color:var(--text-primary)
     <div class="slbl" id="sl"></div>
   </div>
 
-  <div class="actions">
-    <button class="btn-submit" onclick="submitToSheets()">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>
-      Submit
-    </button>
-    <button class="btn-export" onclick="exportXLS()">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      Export to Excel
-    </button>
-    <button class="btn-clear" onclick="clearForm()">Clear form</button>
+ <div class="card" id="export-actions-card">
+  <div style="margin-bottom:14px;padding:12px 14px;background:#f0f8fb;border:1px solid #CDE1E0;border-left:3px solid #34798D;border-radius:7px;font-size:13px;color:#273221;line-height:1.55">
+    When you click <strong>Submit to SharePoint</strong>, a PDF copy of this completed form will automatically download in your browser. Please save that PDF if you would like a record of your responses.
   </div>
+
+  <div class="actions">
+    <button class="btn-export" onclick="exportPDF()">
+      Export to PDF
+    </button>
+
+    <button class="btn-export" onclick="openEmailModal()">
+      Submit to SharePoint + Download PDF
+    </button>
+
+    <button class="btn-clear" onclick="clearForm()">
+      Clear form
+    </button>
+  </div>
+</div>
+
 
   <div class="footer">
     <svg class="shine-ft" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M50 0 C50 28 72 50 100 50 C72 50 50 72 50 100 C50 72 28 50 0 50 C28 50 50 28 50 0Z" fill="#273221"/></svg>
@@ -1423,7 +1439,7 @@ function buildPayload(){
   };
 }
 
-function submitToSheets(){
+function submitToSheets(userEmail, pdfData){
   if(SHEETS_URL==='PASTE_YOUR_WEB_APP_URL_HERE'){
     alert('Google Sheets not connected yet.\n\nPaste your Apps Script Web App URL into the SHEETS_URL variable at the top of the script.');
     return;
@@ -1435,13 +1451,12 @@ function submitToSheets(){
     return;
   }
 
-  var btn=document.querySelector('.btn-submit');
-  var originalHTML=btn.innerHTML;
-
-  btn.disabled=true;
-  btn.innerHTML='Submitting...';
+  var actionButtons = document.querySelectorAll('.btn-export, .btn-clear');
+  actionButtons.forEach(function(btn){ btn.disabled = true; });
 
   var payload=buildPayload();
+  payload.userEmail = userEmail || '';
+  payload.pdfData = pdfData || '';
 
   fetch(SHEETS_URL,{
     method:'POST',
@@ -1449,43 +1464,119 @@ function submitToSheets(){
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify(payload)
   }).then(function(){
-    btn.disabled=false;
-    btn.innerHTML='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Submitted!';
-    btn.style.background='#4a9460';
+    actionButtons.forEach(function(btn){ btn.disabled = false; });
 
     var t=document.getElementById('toast');
-    t.textContent='✓ Submitted to Google Sheets';
+    t.textContent='✓ Submitted successfully';
     t.style.display='block';
 
     setTimeout(function(){
       t.style.display='none';
-      btn.innerHTML=originalHTML;
-      btn.style.background='';
+      t.textContent='✓ Exported successfully';
     },3000);
   }).catch(function(err){
-    btn.disabled=false;
-    btn.innerHTML=originalHTML;
+    actionButtons.forEach(function(btn){ btn.disabled = false; });
     alert('Submission failed. Check your internet connection and try again.\n\n' + err);
   });
 }
 
-function exportXLS(){
-  var sp=document.getElementById('sp').value;
-  var rows=[
-    ['DENTALCORP — SPECIALIST HIRE REQUEST',''],
-    ['Submitted',new Date().toLocaleDateString('en-CA')],
-    ['',''],
-    ['CLINIC INFORMATION',''],
-    ['Practice code',v('cn')],
-    ['Practice name',document.getElementById('practice_name_hidden').value],
-    ['City',v('cy')],
-    ['Clinic director',v('mgr')],['Email',v('em')],
-    ['Regional / area manager sign-off',v('ram')],
-    ['',''],
-    ['ROLE',''],
-    ['Specialty',sp],['Days per month',pillSel['dg']||''],
-    ['',''],
-  ];
+
+function openEmailModal() {
+  var defaultEmail = document.getElementById('em').value || '';
+  document.getElementById('userEmail').value = defaultEmail;
+  document.getElementById('emailModal').style.display = 'flex';
+}
+
+function closeModal() {
+  document.getElementById('emailModal').style.display = 'none';
+}
+
+async function confirmSubmit() {
+  var email = document.getElementById("userEmail").value.trim();
+
+  if (!email) {
+    alert("Please enter your email");
+    return;
+  }
+
+  document.getElementById('emailModal').style.display = 'none';
+
+  var pdfData = await exportPDF(true);
+  submitToSheets(email, pdfData);
+}
+
+async function exportPDF(returnOnly) {
+  chk();
+
+  const { jsPDF } = window.jspdf;
+  const pageElement = document.querySelector('.page');
+
+  document.body.classList.add('pdf-export');
+
+  try {
+    const canvas = await html2canvas(pageElement, {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: '#F5F2EA',
+      windowWidth: pageElement.scrollWidth,
+      scrollY: 0
+    });
+
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF('p', 'pt', 'letter');
+
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+
+    const margin = 24;
+    const usableWidth = pageWidth - margin * 2;
+    const usableHeight = pageHeight - margin * 2;
+
+    const imgWidth = usableWidth;
+    const imgHeight = canvas.height * imgWidth / canvas.width;
+
+    let heightLeft = imgHeight;
+    let position = margin;
+
+    pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
+    heightLeft -= usableHeight;
+
+    while (heightLeft > 0) {
+      pdf.addPage();
+      position = margin - (imgHeight - heightLeft);
+      pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
+      heightLeft -= usableHeight;
+    }
+
+    var clinic = (v('cn') || 'clinic').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    var spec = (v('sp') || 'specialist-hire-request').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    var fileName = clinic + '-' + spec + '-hire-request';
+
+    if (!returnOnly) {
+      pdf.save(fileName + '.pdf');
+
+      var t = document.getElementById('toast');
+      t.textContent = '✓ PDF exported successfully';
+      t.style.display = 'block';
+
+      setTimeout(function(){
+        t.style.display = 'none';
+        t.textContent = '✓ Exported successfully';
+      }, 2500);
+    } else {
+      pdf.save(fileName + '.pdf');
+    }
+
+    return pdf.output('datauristring');
+
+  } catch (err) {
+    console.error(err);
+    alert('PDF export failed. Please use your browser print option and select "Save as PDF".');
+    return '';
+  } finally {
+    document.body.classList.remove('pdf-export');
+  }
+}
 
   // Specialty-specific section
   if(sp==='Orthodontist'){
@@ -1645,8 +1736,57 @@ function clearForm(){
 window.addEventListener('DOMContentLoaded', function(){
   chk();
 });
-``
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.jsript src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
   
 </script>
+
+  <div id="emailModal" style="display:none; position:fixed; inset:0; background:rgba(39,50,33,0.42); justify-content:center; align-items:center; z-index:1000; padding:20px;">
+  <div style="background:var(--white); border:1px solid #ddd9ce; border-radius:12px; width:100%; max-width:420px; padding:24px; box-shadow:0 16px 40px rgba(39,50,33,0.18);">
+    
+    <div style="font-family:var(--sans); font-weight:700; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--atlantic); margin-bottom:10px;">
+      Submission
+    </div>
+
+    <h3 style="font-family:var(--serif); font-weight:400; font-size:28px; line-height:1.2; color:var(--black-olive); margin:0 0 10px 0;">
+      Enter your email
+    </h3>
+
+    <p style="font-family:var(--sans); font-size:14px; line-height:1.65; color:var(--text-secondary); margin:0 0 16px 0;">
+      When you submit, a PDF copy of this completed form will automatically download in your browser. Please save it if you would like a record of your responses.
+    </p>
+
+    <div style="display:flex; flex-direction:column; gap:6px; margin-bottom:18px;">
+      <label for="userEmail" style="font-size:12px; font-weight:600; color:var(--text-secondary); letter-spacing:.01em;">
+        Email address <span style="color:var(--atlantic);">*</span>
+      </label>
+      <input
+        type="email"
+        id="userEmail"
+        placeholder="your@email.com"
+        style="font-family:var(--sans); font-size:14px; padding:10px 12px; border:1px solid #ccc8be; border-radius:6px; background:var(--latte); color:var(--text-primary); width:100%;"
+      >
+    </div>
+
+    <div style="display:flex; gap:10px; justify-content:flex-start; align-items:center;">
+      <button
+        onclick="confirmSubmit()"
+        style="display:inline-flex; align-items:center; justify-content:center; padding:11px 20px; background:var(--atlantic); color:var(--white); border:none; border-radius:7px; font-family:var(--sans); font-size:14px; font-weight:700; cursor:pointer;"
+      >
+        Submit
+      </button>
+
+      <button
+        onclick="closeModal()"
+        style="display:inline-flex; align-items:center; justify-content:center; padding:11px 18px; background:var(--white); color:var(--text-secondary); border:1px solid #ccc8be; border-radius:7px; font-family:var(--sans); font-size:14px; cursor:pointer;"
+      >
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>
+
+  
 </body>
 </html>
