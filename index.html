@@ -10,12 +10,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
-
-input[readonly]{
-  background:#f5f3ee;
-  color:#4a5744;
-  cursor:default;
-}
 :root {
 --atlantic:#34798D; --black-olive:#273221; --stone-blue:#99BAC1;
 --cool-aqua:#CDE1E0; --eucalyptus:#A1B9A1; --latte:#FDF5E8;
@@ -151,8 +145,8 @@ body{font-family:var(--sans);background:var(--body-bg);color:var(--text-primary)
     <span class="sec-title">Your information</span><div class="sec-rule"></div>
   </div>
 
-  <div class="g2" style="align-items:start">
-    <!-- Left column -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start">
+    <!-- Left column: keep name + email -->
     <div style="display:flex;flex-direction:column;gap:14px">
       <div class="field">
         <label>Your name <span class="req">*</span></label>
@@ -163,46 +157,33 @@ body{font-family:var(--sans);background:var(--body-bg);color:var(--text-primary)
         <label>Email <span class="req">*</span></label>
         <input type="email" id="em" placeholder="name@dentalcorp.ca">
       </div>
-
-      <div class="field">
-        <label>RM sign-off? <span class="req">*</span></label>
-        <select id="ram" onchange="chk()">
-          <option value="">Select...</option>
-          <option value="yes">Yes — discussed and approved</option>
-          <option value="pending">Discussed — awaiting formal sign-off</option>
-          <option value="no">Not yet discussed</option>
-        </select>
-      </div>
-
-      <div id="ramq" style="display:none"></div>
     </div>
 
-    <!-- Right column -->
+    <!-- Right column: practice lookup + auto-filled fields -->
     <div style="display:flex;flex-direction:column;gap:14px">
       <div class="field" style="position:relative">
         <label>Practice code <span class="req">*</span></label>
         <input
           type="text"
           id="cn"
-          placeholder="Type a practice code or practice name..."
+          placeholder="Type a code or practice name..."
           autocomplete="off"
           oninput="searchPractice(this.value)"
           onkeydown="handlePracticeKey(event)"
           style="padding:9px 12px"
         >
         <div id="practice-dropdown" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid #ccc8be;border-radius:0 0 6px 6px;max-height:220px;overflow-y:auto;z-index:200;box-shadow:0 4px 16px rgba(0,0,0,.12)"></div>
+        <div id="practice-confirm" style="display:none;margin-top:8px;padding:10px 13px;background:#EEF6EE;border:1px solid #A1B9A1;border-left:3px solid #4a9460;border-radius:6px;font-size:13px;color:#1e4d2b;line-height:1.6"></div>
       </div>
-
-      <div id="practice-confirm" style="display:none;padding:10px 13px;background:#EEF6EE;border:1px solid #A1B9A1;border-left:3px solid #4a9460;border-radius:6px;font-size:13px;color:#1e4d2b;line-height:1.6"></div>
 
       <div class="field">
         <label>Practice name</label>
-        <input type="text" id="practice_name_display" placeholder="Will auto-fill after selecting a practice" readonly>
+        <input type="text" id="practice_name_display" placeholder="Auto-filled after selecting a practice" readonly>
       </div>
 
       <div class="field">
         <label>City</label>
-        <input type="text" id="city_display" placeholder="Will auto-fill after selecting a practice" readonly>
+        <input type="text" id="city_display" placeholder="Auto-filled after selecting a practice" readonly>
       </div>
 
       <!-- Hidden fields used by backend -->
@@ -210,7 +191,6 @@ body{font-family:var(--sans);background:var(--body-bg);color:var(--text-primary)
       <input type="hidden" id="practice_name_hidden">
     </div>
   </div>
-</div>
 
   <div class="mt">
     <div class="field"><label>RM sign-off? <span class="req">*</span></label>
@@ -921,16 +901,15 @@ function searchPractice(query){
   var dd=document.getElementById('practice-dropdown');
   var confirm=document.getElementById('practice-confirm');
 
-  if(!query || query.trim().length < 1){
+  if(!query || query.length < 1){
     dd.style.display='none';
     confirm.style.display='none';
-    clearPracticeDisplay();
     return;
   }
 
   var q=query.toLowerCase().trim();
 
-  // Exact match by practice code or exact practice name
+  // Exact match on Practice Code or exact Practice Name
   var exact=PRACTICE_DB.find(function(p){
     return p['Practice Code'].toLowerCase() === q ||
            p['Practicename'].toLowerCase() === q;
@@ -943,13 +922,12 @@ function searchPractice(query){
   }
 
   var matches=PRACTICE_DB.filter(function(p){
-    return p['Practice Code'].toLowerCase().indexOf(q) === 0 ||
-           p['Practicename'].toLowerCase().indexOf(q) >= 0;
+    return p['Practice Code'].toLowerCase().indexOf(q)===0 ||
+           p['Practicename'].toLowerCase().indexOf(q)>=0;
   }).slice(0,8);
 
   if(matches.length===0){
     dd.style.display='none';
-    clearPracticeDisplay();
     return;
   }
 
@@ -962,7 +940,7 @@ function searchPractice(query){
     item.dataset.idx=i;
 
     item.onmouseenter=function(){
-      dd.querySelectorAll('div').forEach(function(d){ d.style.background=''; });
+      dd.querySelectorAll('div').forEach(function(d){d.style.background='';});
       this.style.background='#f0f8fb';
     };
 
@@ -971,7 +949,7 @@ function searchPractice(query){
     };
 
     item.onclick=function(){
-      selectPractice(matches[parseInt(this.dataset.idx,10)]);
+      selectPractice(matches[parseInt(this.dataset.idx)]);
     };
 
     dd.appendChild(item);
@@ -980,44 +958,23 @@ function searchPractice(query){
   dd.style.display='block';
 }
 
-	function clearPracticeDisplay(){
-  var practiceNameDisplay=document.getElementById('practice_name_display');
-  var cityDisplay=document.getElementById('city_display');
-  var practiceNameHidden=document.getElementById('practice_name_hidden');
-  var cityHidden=document.getElementById('cy');
-  var confirm=document.getElementById('practice-confirm');
-
-  if(practiceNameDisplay) practiceNameDisplay.value='';
-  if(cityDisplay) cityDisplay.value='';
-  if(practiceNameHidden) practiceNameHidden.value='';
-  if(cityHidden) cityHidden.value='';
-  if(confirm) confirm.style.display='none';
-}
-``
-
 function selectPractice(p){
-  var codeInput=document.getElementById('cn');
-  var cityHidden=document.getElementById('cy');
-  var practiceHidden=document.getElementById('practice_name_hidden');
-  var practiceDisplay=document.getElementById('practice_name_display');
-  var cityDisplay=document.getElementById('city_display');
-  var dropdown=document.getElementById('practice-dropdown');
+  var input=document.getElementById('cn');
+  input.value=p['Practice Code'];
+
+  // Hidden values used by backend
+  document.getElementById('cy').value=p['City'];
+  document.getElementById('practice_name_hidden').value=p['Practicename'];
+
+  // Visible auto-filled values
+  document.getElementById('practice_name_display').value=p['Practicename'];
+  document.getElementById('city_display').value=p['City'];
+
+  document.getElementById('practice-dropdown').style.display='none';
+
   var confirm=document.getElementById('practice-confirm');
-
-  if(codeInput) codeInput.value=p['Practice Code'];
-  if(cityHidden) cityHidden.value=p['City'];
-  if(practiceHidden) practiceHidden.value=p['Practicename'];
-
-  // Visible population on screen
-  if(practiceDisplay) practiceDisplay.value=p['Practicename'];
-  if(cityDisplay) cityDisplay.value=p['City'];
-
-  if(dropdown) dropdown.style.display='none';
-
-  if(confirm){
-    confirm.style.display='block';
-    confirm.innerHTML='<strong>'+p['Practicename']+'</strong> &nbsp;·&nbsp; '+p['City'];
-  }
+  confirm.style.display='block';
+  confirm.innerHTML='<strong>'+p['Practicename']+'</strong> &nbsp;·&nbsp; '+p['City'];
 
   chk();
 }
@@ -1815,18 +1772,18 @@ function clearForm(){
   var practiceConfirm=document.getElementById('practice-confirm');
   var practiceDropdown=document.getElementById('practice-dropdown');
 var practiceNameHidden=document.getElementById('practice_name_hidden');
-  var cy=document.getElementById('cy');
-  var practiceNameDisplay=document.getElementById('practice_name_display');
-  var cityDisplay=document.getElementById('city_display');
+var cy=document.getElementById('cy');
+var practiceNameDisplay=document.getElementById('practice_name_display');
+var cityDisplay=document.getElementById('city_display');
 
-  if(capexBudgetWrap) capexBudgetWrap.style.display='none';
-  if(capexDetailWrap) capexDetailWrap.style.display='none';
-  if(practiceConfirm) practiceConfirm.style.display='none';
-  if(practiceDropdown) practiceDropdown.style.display='none';
-  if(practiceNameHidden) practiceNameHidden.value='';
-  if(cy) cy.value='';
-  if(practiceNameDisplay) practiceNameDisplay.value='';
-  if(cityDisplay) cityDisplay.value='';
+if(capexBudgetWrap) capexBudgetWrap.style.display='none';
+if(capexDetailWrap) capexDetailWrap.style.display='none';
+if(practiceConfirm) practiceConfirm.style.display='none';
+if(practiceDropdown) practiceDropdown.style.display='none';
+if(practiceNameHidden) practiceNameHidden.value='';
+if(cy) cy.value='';
+if(practiceNameDisplay) practiceNameDisplay.value='';
+if(cityDisplay) cityDisplay.value='';
 
   var psf=document.getElementById('perio_surgical_fields');
   if(psf) psf.style.display='none';
@@ -1906,4 +1863,3 @@ window.addEventListener('DOMContentLoaded', function(){
 
 </body>
 </html>
-
