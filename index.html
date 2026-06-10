@@ -6,13 +6,16 @@
 <title>Specialist Hire Request — Dentalcorp</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Nunito+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 <style>
 :root {
-  --atlantic:#34798D; --black-olive:#273221; --stone-blue:#99BAC1;
-  --cool-aqua:#CDE1E0; --eucalyptus:#A1B9A1; --latte:#FDF5E8;
-  --body-bg:#F5F2EA; --white:#FFFFFF;
-  --text-primary:#273221; --text-secondary:#4a5744; --text-muted:#7a8a74;
-  --sans:'Nunito Sans',sans-serif; --serif:'Playfair Display',Georgia,serif;
+--atlantic:#34798D; --black-olive:#273221; --stone-blue:#99BAC1;
+--cool-aqua:#CDE1E0; --eucalyptus:#A1B9A1; --latte:#FDF5E8;
+--body-bg:#F5F2EA; --white:#FFFFFF;
+--text-primary:#273221; --text-secondary:#4a5744; --text-muted:#7a8a74;
+--sans:'Nunito Sans',sans-serif; --serif:'Playfair Display',Georgia,serif;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{font-family:var(--sans);background:var(--body-bg);color:var(--text-primary);line-height:1.6;-webkit-font-smoothing:antialiased}
@@ -107,14 +110,10 @@ body{font-family:var(--sans);background:var(--body-bg);color:var(--text-primary)
 .btn-clear{padding:11px 20px;background:var(--white);color:var(--text-secondary);border:1px solid #ccc8be;border-radius:7px;font-family:var(--sans);font-size:14px;cursor:pointer;transition:background .15s}
 .btn-clear:hover{background:var(--latte)}
 .toast{display:none;position:fixed;bottom:24px;right:24px;background:var(--black-olive);color:var(--latte);padding:11px 18px;border-radius:8px;font-family:var(--sans);font-size:13px;font-weight:600;box-shadow:0 6px 24px rgba(39,50,33,.3);z-index:999;border-left:3px solid var(--eucalyptus)}
-.pdf-export .actions {
-  display: none !important;
-}
+.pdf-export .actions { display: none !important; }
+.pdf-export .toast { display: none !important; }
 
-.pdf-export .toast {
-  display: none !important;
-}
- .footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid #ddd9ce;display:flex;align-items:center;gap:10px}
+.footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid #ddd9ce;display:flex;align-items:center;gap:10px}
 .shine-ft{width:16px;height:16px;opacity:.5}
 .footer p{font-size:12px;color:var(--text-muted)}
 
@@ -125,747 +124,743 @@ body{font-family:var(--sans);background:var(--body-bg);color:var(--text-primary)
 <body>
 
 <div class="topbar">
-  <svg class="shine" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M50 0 C50 28 72 50 100 50 C72 50 50 72 50 100 C50 72 28 50 0 50 C28 50 50 28 50 0Z" fill="#FDF5E8"/></svg>
-  <span class="brand">dentalcorp</span>
-  <div class="divider"></div>
-  <span class="subbrand">dc Specialty Insourcing</span>
+<svg class="shine" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M50 0 C50 28 72 50 100 50 C72 50 50 72 50 100 C50 72 28 50 0 50 C28 50 50 28 50 0Z" fill="#FDF5E8"/></svg>
+<span class="brand">dentalcorp</span>
+<div class="divider"></div>
+<span class="subbrand">dc Specialty Insourcing</span>
 </div>
 
 <div class="page">
-  <div class="page-header">
-    <div class="eyebrow">Specialist recruitment</div>
-    <h1>Specialist hire request</h1>
-    <p>Complete this form to share with the specialty development team details about your practice. It will help assess readiness for specialty.</p>
-  </div>
-  <p class="req-note"><span>*</span> Required fields</p>
-
-  <!-- 1. Clinic information -->
-  <div class="card card-accent">
-    <div class="sec-eyebrow">
-      <svg class="shine-sm" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M50 0 C50 28 72 50 100 50 C72 50 50 72 50 100 C50 72 28 50 0 50 C28 50 50 28 50 0Z" fill="#34798D"/></svg>
-      <span class="sec-title">Your information</span><div class="sec-rule"></div>
-    </div>
-    <!-- Name + Email left (wide), Practice code right -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start">
-      <!-- Left column: Your name + email stacked -->
-      <div style="display:flex;flex-direction:column;gap:14px">
-        <div class="field">
-          <label>Your name <span class="req">*</span></label>
-          <input type="text" id="mgr" placeholder="Full name" oninput="autoEmail()">
-        </div>
-        <div class="field">
-          <label>Email <span class="req">*</span></label>
-          <input type="email" id="em" placeholder="name@dentalcorp.ca">
-        </div>
-      </div>
-      <!-- Right column: Practice code with confirmation -->
-      <div class="field" style="position:relative">
-        <label>Practice code <span class="req">*</span></label>
-        <input type="text" id="cn" placeholder="Type a code or practice name..." autocomplete="off" oninput="searchPractice(this.value)" onkeydown="handlePracticeKey(event)" style="padding:9px 12px">
-        <div id="practice-dropdown" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid #ccc8be;border-radius:0 0 6px 6px;max-height:220px;overflow-y:auto;z-index:200;box-shadow:0 4px 16px rgba(0,0,0,.12)"></div>
-        <div id="practice-confirm" style="display:none;margin-top:8px;padding:10px 13px;background:#EEF6EE;border:1px solid #A1B9A1;border-left:3px solid #4a9460;border-radius:6px;font-size:13px;color:#1e4d2b;line-height:1.6"></div>
-        <input type="hidden" id="cy">
-        <input type="hidden" id="practice_name_hidden">
-      </div>
-    </div>
-    <div class="mt">
-      <div class="field"><label>RM sign-off? <span class="req">*</span></label>
-        <select id="ram" onchange="chk()" style="max-width:360px">
-          <option value="">Select...</option>
-          <option value="yes">Yes — discussed and approved</option>
-          <option value="pending">Discussed — awaiting formal sign-off</option>
-          <option value="no">Not yet discussed</option>
-        </select>
-      </div>
-    </div>
-    <div id="ramq" style="display:none"></div>
-  </div>
-
-  <!-- 2. Role -->
-  <div class="card">
-    <div class="sec-eyebrow">
-      <svg class="shine-sm" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M50 0 C50 28 72 50 100 50 C72 50 50 72 50 100 C50 72 28 50 0 50 C28 50 50 28 50 0Z" fill="#34798D"/></svg>
-      <span class="sec-title">Role</span><div class="sec-rule"></div>
-    </div>
-    <div class="g2">
-      <div class="field"><label>Specialty <span class="req">*</span></label>
-        <select id="sp" onchange="onSpecialtyChange()">
-          <option value="">Select...</option>
-          <option value="Orthodontist">Orthodontist</option>
-          <option value="Endodontist">Endodontist</option>
-          <option value="Oral Surgeon">Oral Surgeon</option>
-          <option value="Periodontist">Periodontist</option>
-          <option value="Pediatric Dentist">Pediatric Dentist</option>
-        </select>
-      </div>
-      <div class="field"><label>Days needed per month <span class="req">*</span></label>
-        <div class="pills" id="dg">
-          <span class="pill" onclick="togglePill(this,'dg')">1 day</span>
-          <span class="pill" onclick="togglePill(this,'dg')">2 days</span>
-          <span class="pill" onclick="togglePill(this,'dg')">4 days</span>
-          <span class="pill" onclick="togglePill(this,'dg')">6 days</span>
-          <span class="pill" onclick="togglePill(this,'dg')">8+ days</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- SPECIALTY CONDITIONAL: Orthodontist -->
-  <div class="specialty-card" id="sc-ortho">
-    <div class="sec-eyebrow">
-      <svg class="shine-sm" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M50 0 C50 28 72 50 100 50 C72 50 50 72 50 100 C50 72 28 50 0 50 C28 50 50 28 50 0Z" fill="#34798D"/></svg>
-      <span class="sec-title">Orthodontist — specialty questions</span><div class="sec-rule"></div>
-    </div>
-    <div class="g2">
-      <div class="field"><label>Will the orthodontist be taking on net new cases only, or also inheriting an existing patient base? <span class="req">*</span></label>
-        <select id="ortho_cases">
-          <option value="">Select...</option>
-          <option value="net_new">Net new cases only</option>
-          <option value="existing">Taking over existing patient base</option>
-          <option value="both">Both — new and existing</option>
-        </select>
-      </div>
-      <div class="field"><label>Are there currently any providers doing ortho or Invisalign at this clinic? <span class="req">*</span></label>
-        <select id="ortho_current" onchange="chk()">
-          <option value="">Select...</option>
-          <option value="yes_gp">Yes — GPs doing Invisalign / limited ortho</option>
-          <option value="yes_specialist">Yes — visiting / part-time orthodontist</option>
-          <option value="no">No — referring out entirely</option>
-        </select>
-      </div>
-      <div class="field"><label>Is there an ortho hygienist to support the specialist? <span class="req">*</span></label>
-        <select id="ortho_hyg">
-          <option value="">Select...</option>
-          <option value="yes">Yes — in place</option>
-          <option value="hiring">Presently hiring for this role</option>
-          <option value="maybe">Maybe — to be determined</option>
-          <option value="no">No</option>
-        </select>
-      </div>
-      <div class="field"><label>Does the clinic have a dedicated ortho bay / chair setup?</label>
-        <select id="ortho_bay">
-          <option value="">Select...</option>
-          <option value="yes">Yes — dedicated ortho setup</option>
-          <option value="shared">Shared — adaptable chair</option>
-          <option value="no">No — needs to be established</option>
-        </select>
-      </div>
-    </div>
-    <div id="orthoq" class="qa"></div>
-  </div>
-
-  <!-- SPECIALTY CONDITIONAL: Endodontist -->
-  <div class="specialty-card" id="sc-endo">
-    <div class="sec-eyebrow">
-      <svg class="shine-sm" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M50 0 C50 28 72 50 100 50 C72 50 50 72 50 100 C50 72 28 50 0 50 C28 50 50 28 50 0Z" fill="#34798D"/></svg>
-      <span class="sec-title">Endodontist — specialty questions</span><div class="sec-rule"></div>
-    </div>
-    <div class="field" style="margin-bottom:14px">
-  <label>Which of the following endo equipment does the clinic currently have? <span class="req">*</span></label>
-  <div class="check-group">
-    <label class="ci">
-      <input type="checkbox" id="endo_apex" onchange="chk()">
-      <span class="ci-pill">
-        <span class="ci-box">
-          <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="2,6 5,9 10,3"/>
-          </svg>
-        </span>
-        Apex locator
-      </span>
-    </label>
-
-    <label class="ci">
-      <input type="checkbox" id="endo_rotary" onchange="chk()">
-      <span class="ci-pill">
-        <span class="ci-box">
-          <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="2,6 5,9 10,3"/>
-          </svg>
-        </span>
-        Rotary endo system
-      </span>
-    </label>
-
-    <label class="ci">
-      <input type="checkbox" id="endo_cbct" onchange="chk()">
-      <span class="ci-pill">
-        <span class="ci-box">
-          <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="2,6 5,9 10,3"/>
-          </svg>
-        </span>
-        CBCT / cone beam imaging
-      </span>
-    </label>
-
-    <label class="ci">
-      <input type="checkbox" id="endo_scope" onchange="chk()">
-      <span class="ci-pill">
-        <span class="ci-box">
-          <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="2,6 5,9 10,3"/>
-          </svg>
-        </span>
-        Dental microscope
-      </span>
-    </label>
-
-    <label class="ci">
-      <input type="checkbox" id="endo_dam" onchange="chk()">
-      <span class="ci-pill">
-        <span class="ci-box">
-          <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="2,6 5,9 10,3"/>
-          </svg>
-        </span>
-        Rubber dam setup
-      </span>
-    </label>
-
-    <label class="ci">
-      <input type="checkbox" id="endo_obturation" onchange="chk()">
-      <span class="ci-pill">
-        <span class="ci-box">
-          <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="2,6 5,9 10,3"/>
-          </svg>
-        </span>
-        Obturation system (e.g. Obtura, Calamus)
-      </span>
-    </label>
-  </div>
+<div class="page-header">
+<div class="eyebrow">Specialist recruitment</div>
+<h1>Specialist hire request</h1>
+<p>Complete this form to share with the specialty development team details about your practice. It will help assess readiness for specialty.</p>
 </div>
-    <div class="g2">
-      <div class="field"><label>Is the clinic open to purchasing additional endo equipment if required? <span class="req">*</span></label>
-        <select id="endo_purchase" onchange="chk()">
-          <option value="">Select...</option>
-          <option value="yes">Yes — budgeted and ready</option>
-          <option value="yes_approval">Yes — subject to approval</option>
-          <option value="maybe">Open to discussion</option>
-          <option value="no">No — limited to existing equipment</option>
-        </select>
-      </div>
-      <div class="field"><label>Are GPs currently attempting molar endo or referring all cases out?</label>
-        <select id="endo_gp_behavior">
-          <option value="">Select...</option>
-          <option value="all_out">Referring all endo cases out</option>
-          <option value="simple_only">GPs do simple cases, refer complex</option>
-          <option value="most_inhouse">GPs do most cases in-house</option>
-        </select>
-      </div>
-    </div>
-    <div id="endoq" class="qa"></div>
-  </div>
+<p class="req-note"><span>*</span> Required fields</p>
 
-  <!-- SPECIALTY CONDITIONAL: Oral Surgeon -->
-  <div class="specialty-card" id="sc-oralsurg">
-    <div class="sec-eyebrow">
-      <svg class="shine-sm" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M50 0 C50 28 72 50 100 50 C72 50 50 72 50 100 C50 72 28 50 0 50 C28 50 50 28 50 0Z" fill="#34798D"/></svg>
-      <span class="sec-title">Oral Surgeon — specialty questions</span><div class="sec-rule"></div>
-    </div>
-    <div class="g2">
-      <div class="field"><label>Does the clinic have a dedicated surgical suite or operatory? <span class="req">*</span></label>
-        <select id="os_suite" onchange="chk()">
-          <option value="">Select...</option>
-          <option value="yes">Yes — fully equipped surgical suite</option>
-          <option value="adapted">Adapted operatory — functional</option>
-          <option value="planned">Planned / in progress</option>
-          <option value="no">No</option>
-        </select>
-      </div>
-      <div class="field"><label>What is the highest level of sedation offered? <span class="req">*</span></label>
-        <select id="os_sedation" onchange="chk()">
-          <option value="">Select...</option>
-          <option value="ga">General anaesthesia</option>
-          <option value="iv">IV conscious sedation</option>
-          <option value="nitrous">Nitrous oxide only</option>
-          <option value="none">None</option>
-        </select>
-      </div>
-      <div class="field"><label>Facility sedation permit <span class="req">*</span></label>
-        <select id="os_permit" onchange="chk()">
-          <option value="">Select...</option>
-          <option value="type_a">Type A</option>
-          <option value="type_ab">Type A/B</option>
-          <option value="neither">Neither</option>
-        </select>
-      </div>
-      <div class="field"><label>Does the surgeon have or need hospital privileges in the area?</label>
-        <select id="os_privileges">
-          <option value="">Select...</option>
-          <option value="has">Surgeon will bring existing privileges</option>
-          <option value="needs">Surgeon will need to establish privileges</option>
-          <option value="na">Not applicable for planned case mix</option>
-        </select>
-      </div>
-      <div class="field"><label>Is a surgical assistant available to support?</label>
-        <select id="os_assistant">
-          <option value="">Select...</option>
-          <option value="yes">Yes — dedicated surgical assistant</option>
-          <option value="shared">Shared with GP team</option>
-          <option value="hiring">Currently hiring</option>
-          <option value="no">No</option>
-        </select>
-      </div>
-      <div class="field"><label>Primary case mix expected</label>
-        <select id="os_casemix">
-          <option value="">Select...</option>
-          <option value="extractions">Extractions / wisdom teeth</option>
-          <option value="implants">Implant surgery</option>
-          <option value="mixed">Mixed — extractions and implants</option>
-          <option value="complex">Complex / trauma cases</option>
-        </select>
-      </div>
-    </div>
-    <div id="osq" class="qa"></div>
-  </div>
-
-  <!-- SPECIALTY CONDITIONAL: Periodontist -->
-  <div class="specialty-card" id="sc-perio">
-    <div class="sec-eyebrow">
-      <svg class="shine-sm" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M50 0 C50 28 72 50 100 50 C72 50 50 72 50 100 C50 72 28 50 0 50 C28 50 50 28 50 0Z" fill="#34798D"/></svg>
-      <span class="sec-title">Periodontist — specialty questions</span><div class="sec-rule"></div>
-    </div>
-    <!-- Role focus — shown first, drives conditional sub-fields -->
-    <div class="field" style="margin-bottom:16px">
-      <label>What is the primary focus of this periodontist role? <span class="req">*</span></label>
-      <select id="perio_focus" onchange="onPerioFocusChange()">
-        <option value="">Select...</option>
-        <option value="surgical">Surgical focus — osseous surgery, implants, complex procedures</option>
-        <option value="program">Program management — traditional perio, non-surgical, hygiene program oversight</option>
-        <option value="both">Both — mixed surgical and program management responsibilities</option>
-      </select>
-    </div>
-
-    <!-- Common to all focus types -->
-    <div class="g2">
-      <div class="field"><label>Do hygienists currently perform perio charting and support perio therapy?</label>
-        <select id="perio_hyg" onchange="chk()">
-          <option value="">Select...</option>
-          <option value="yes">Yes — active perio hygiene program</option>
-          <option value="basic">Basic perio charting only</option>
-          <option value="no">No — limited perio hygiene focus</option>
-        </select>
-      </div>
-      <div class="field"><label>Number of hygienists at the clinic</label>
-        <select id="perio_hyg_count">
-          <option value="">Select...</option>
-          <option value="one">1</option>
-          <option value="two_three">2–3</option>
-          <option value="four_plus">4+</option>
-        </select>
-      </div>
-    </div>
-
-    <!-- Surgical focus fields -->
-    <div id="perio_surgical_fields" style="display:none;margin-top:14px">
-      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--atlantic);margin-bottom:10px;padding-bottom:6px;border-bottom:1px dashed var(--cool-aqua)">Surgical requirements</div>
-      <div class="g2">
-        <div class="field"><label>Does the clinic have a dedicated surgical bay? <span class="req">*</span></label>
-          <select id="perio_bay" onchange="chk()">
-            <option value="">Select...</option>
-            <option value="yes">Yes — dedicated surgical bay</option>
-            <option value="shared">Shared / adaptable operatory</option>
-            <option value="no">No</option>
-          </select>
-        </div>
-        <div class="field"><label>Is a surgical assistant available?</label>
-          <select id="perio_assistant">
-            <option value="">Select...</option>
-            <option value="yes">Yes — dedicated</option>
-            <option value="shared">Shared with GP team</option>
-            <option value="hiring">Currently hiring</option>
-            <option value="no">No</option>
-          </select>
-        </div>
-        <div class="field"><label>Is an implant system already in use at the clinic?</label>
-          <select id="perio_implant">
-            <option value="">Select...</option>
-            <option value="yes">Yes — active implant system</option>
-            <option value="no_open">No — open to any system</option>
-            <option value="no_pref">No — prefer a specific system</option>
-          </select>
-        </div>
-        <div class="field"><label>Which implant brand / system (if applicable)?</label>
-          <select id="perio_brand">
-            <option value="">Select / not applicable...</option>
-            <option value="Nobel">Nobel Biocare</option>
-            <option value="Straumann">Straumann</option>
-            <option value="Zimmer">Zimmer Biomet</option>
-            <option value="Dentsply">Dentsply Sirona</option>
-            <option value="BioHorizons">BioHorizons</option>
-            <option value="Other">Other</option>
-          </select>
-        </div>
-      </div>
-    </div>
-
-    <!-- Program management focus fields -->
-    <div id="perio_program_fields" style="display:none;margin-top:14px">
-      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--atlantic);margin-bottom:10px;padding-bottom:6px;border-bottom:1px dashed var(--cool-aqua)">Program management requirements</div>
-      <div class="g2">
-        <div class="field"><label>Does the clinic have an existing perio program the specialist would take over?</label>
-          <select id="perio_existing_program">
-            <option value="">Select...</option>
-            <option value="yes">Yes — established program</option>
-            <option value="partial">Partial — needs structure and oversight</option>
-            <option value="no">No — building from scratch</option>
-          </select>
-        </div>
-        <div class="field"><label>Is the expectation that the periodontist will train and mentor the hygiene team?</label>
-          <select id="perio_mentor">
-            <option value="">Select...</option>
-            <option value="yes">Yes — mentorship is a key part of the role</option>
-            <option value="some">Some coaching expected</option>
-            <option value="no">No — independent clinical focus only</option>
-          </select>
-        </div>
-        <div class="field"><label>What is the current perio recall / maintenance patient volume?</label>
-          <select id="perio_recall_vol">
-            <option value="">Select...</option>
-            <option value="high">High — active perio maintenance base</option>
-            <option value="med">Moderate</option>
-            <option value="low">Low — building from referrals</option>
-          </select>
-        </div>
-        <div class="field"><label>Will the periodontist have authority to update the perio protocol / hygiene workflow?</label>
-          <select id="perio_authority">
-            <option value="">Select...</option>
-            <option value="yes">Yes — full clinical authority</option>
-            <option value="partial">Partial — in consultation with clinic director</option>
-            <option value="no">No — existing protocols to be maintained</option>
-          </select>
-        </div>
-      </div>
-    </div>
-
-    <div id="perioq" class="qa"></div>
-  </div>
-
-  <!-- SPECIALTY CONDITIONAL: Pediatric Dentist -->
-  <div class="specialty-card" id="sc-pedo">
-    <div class="sec-eyebrow">
-      <svg class="shine-sm" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M50 0 C50 28 72 50 100 50 C72 50 50 72 50 100 C50 72 28 50 0 50 C28 50 50 28 50 0Z" fill="#34798D"/></svg>
-      <span class="sec-title">Pediatric Dentist — specialty questions</span><div class="sec-rule"></div>
-    </div>
-    <div class="g2">
-      <div class="field"><label>Is nitrous oxide available at the clinic? <span class="req">*</span></label>
-        <select id="pedo_nitrous" onchange="chk()">
-          <option value="">Select...</option>
-          <option value="yes">Yes — in place</option>
-          <option value="planned">Planned / being installed</option>
-          <option value="no">No</option>
-        </select>
-      </div>
-      <div class="field"><label>Is there a child-friendly operatory setup? <span class="req">*</span></label>
-        <select id="pedo_operatory">
-          <option value="">Select...</option>
-          <option value="yes">Yes — dedicated child-friendly space</option>
-          <option value="partial">Partially — some elements in place</option>
-          <option value="no">No — standard adult setup</option>
-        </select>
-      </div>
-      <div class="field"><label>Does the clinical team have behaviour management experience with pediatric patients?</label>
-        <select id="pedo_behavior">
-          <option value="">Select...</option>
-          <option value="yes">Yes — experienced team</option>
-          <option value="some">Some experience</option>
-          <option value="no">No — primarily adult patient focus</option>
-        </select>
-      </div>
-      <div class="field"><label>What is the current pediatric patient volume?</label>
-        <select id="pedo_volume">
-          <option value="">Select...</option>
-          <option value="high">High — strong pediatric base</option>
-          <option value="med">Moderate</option>
-          <option value="low">Low — building from scratch</option>
-        </select>
-      </div>
-      <div class="field"><label>Is the clinic located near schools or family residential areas?</label>
-        <select id="pedo_location">
-          <option value="">Select...</option>
-          <option value="yes">Yes — strong family / school proximity</option>
-          <option value="somewhat">Somewhat</option>
-          <option value="no">No — primarily commercial / adult area</option>
-        </select>
-      </div>
-    </div>
-    <div id="pedoq" class="qa"></div>
-  </div>
-
-  <!-- 3. Demand signal -->
-  <div class="card">
-    <div class="sec-eyebrow">
-      <svg class="shine-sm" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M50 0 C50 28 72 50 100 50 C72 50 50 72 50 100 C50 72 28 50 0 50 C28 50 50 28 50 0Z" fill="#34798D"/></svg>
-      <span class="sec-title">Demand signal</span><div class="sec-rule"></div>
-    </div>
-    <div class="g3">
-      <div class="field"><label>Monthly referrals sent out <span class="req">*</span></label>
-        <select id="ref" onchange="chk()">
-          <option value="">Select...</option>
-          <option value="low">Fewer than 10</option>
-          <option value="med">10–25</option>
-          <option value="high">26–50</option>
-          <option value="vhigh">51+</option>
-        </select>
-      </div>
-      <div class="field"><label>Referral data tracked?</label>
-        <select id="rt" onchange="chk()">
-          <option value="">Select...</option>
-          <option value="yes">Yes — in our PMS</option>
-          <option value="partial">Partially / informally</option>
-          <option value="no">No</option>
-        </select>
-      </div>
-      <div class="field"><label>Avg. patient wait time <span class="req">*</span></label>
-        <select id="wt" onchange="chk()">
-          <option value="">Select...</option>
-          <option value="low">Under 2 weeks</option>
-          <option value="med">2–4 weeks</option>
-          <option value="high">4–8 weeks</option>
-          <option value="vhigh">8+ weeks</option>
-        </select>
-      </div>
-      <div class="field"><label>Avg. patient age profile <span class="req">*</span></label>
-        <select id="age">
-          <option value="">Select...</option>
-          <option value="pediatric">Mostly pediatric (under 12)</option>
-          <option value="young">Mostly younger (12–30)</option>
-          <option value="mixed">Mixed / broad age range</option>
-          <option value="adult">Mostly adults (30–55)</option>
-          <option value="senior">Mostly seniors (55+)</option>
-        </select>
-      </div>
-      <div class="field"><label>Insurance / coverage mix</label>
-        <select id="ins">
-          <option value="">Select...</option>
-          <option value="mostly_insured">Mostly insured (&gt;70%)</option>
-          <option value="mixed">Mixed (40–70% insured)</option>
-          <option value="mostly_ffs">Mostly fee-for-service (&lt;40%)</option>
-        </select>
-      </div>
-      <div class="field"><label>Associates require treatment planning training before specialist starts? <span class="req">*</span></label>
-        <select id="gptrain" onchange="chk()">
-          <option value="">Select...</option>
-          <option value="no">No — associates are ready</option>
-          <option value="some">Some associates need training</option>
-          <option value="yes">Yes — training required first</option>
-        </select>
-      </div>
-      <div class="field"><label>Partner influence on referral patterns <span class="req">*</span></label>
-        <select id="partner_influence" onchange="chk()">
-          <option value="">Select...</option>
-          <option value="high">Partner can significantly influence referral patterns</option>
-          <option value="some">Partner can influence a little</option>
-          <option value="none">Partner cannot influence</option>
-          <option value="unsure">Unsure</option>
-        </select>
-      </div>
-      <div class="field">
-        <label class="tooltip-label">Hygiene team knowledge on this specialty <span class="req">*</span>
-          <span class="tooltip-icon" title="Are new patient or recall exams missing structure — and does this need coaching? Is the team unaware of what triggers a referral for this specialty?">?</span>
-        </label>
-        <select id="hyg_knowledge" onchange="chk()">
-          <option value="">Select...</option>
-          <option value="high">High — team understands referral triggers</option>
-          <option value="low">Low — team needs coaching</option>
-          <option value="unsure">Unsure</option>
-        </select>
-      </div>
-      <div class="field"><label>Strength of hygiene program &amp; recalls <span class="req">*</span></label>
-        <select id="hyg_strength" onchange="chk()">
-          <option value="">Select...</option>
-          <option value="strong">Strong — structured recall and active hygiene program</option>
-          <option value="moderate">Moderate — some structure but inconsistent</option>
-          <option value="weak">Weak — limited recall or hygiene program</option>
-          <option value="none">No hygiene program</option>
-        </select>
-      </div>
-      <div class="field"><label>Case acceptance rate on specialist tx plans</label>
-        <select id="accept">
-          <option value="">Select / estimate...</option>
-          <option value="high">High (&gt;70%)</option>
-          <option value="med">Moderate (40–70%)</option>
-          <option value="low">Low (&lt;40%)</option>
-          <option value="unknown">Unknown</option>
-        </select>
-      </div>
-      <div class="field"><label>Recall system for deferred specialist treatment?</label>
-        <select id="recall">
-          <option value="">Select...</option>
-          <option value="yes">Yes — active recall in place</option>
-          <option value="partial">Partial / manual process</option>
-          <option value="no">No</option>
-        </select>
-      </div>
-    </div>
-    <div id="dq" class="qa"></div>
-  </div>
-
-  <!-- 4. Clinic readiness -->
-  <div class="card">
-    <div class="sec-eyebrow">
-      <svg class="shine-sm" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M50 0 C50 28 72 50 100 50 C72 50 50 72 50 100 C50 72 28 50 0 50 C28 50 50 28 50 0Z" fill="#34798D"/></svg>
-      <span class="sec-title">Clinic readiness</span><div class="sec-rule"></div>
-    </div>
-    <div class="g3">
-      <div class="field"><label>Dedicated specialist operatory? <span class="req">*</span></label>
-        <select id="chair" onchange="chk()">
-          <option value="">Select...</option>
-          <option value="yes">Yes — available now</option>
-          <option value="planned">Planned / in progress</option>
-          <option value="no">No</option>
-        </select>
-      </div>
-      <div class="field"><label>Number of active GPs <span class="req">*</span></label>
-        <select id="gp">
-          <option value="">Select...</option>
-          <option value="one">1</option>
-          <option value="two_three">2–3</option>
-          <option value="four_five">4–5</option>
-          <option value="six_plus">6+</option>
-        </select>
-      </div>
-      <div class="field"><label>GPs actively discussing this specialty with patients? <span class="req">*</span></label>
-        <select id="gbi" onchange="chk()">
-          <option value="">Select...</option>
-          <option value="yes">Yes — all of them</option>
-          <option value="some">Some are</option>
-          <option value="no">Not yet</option>
-        </select>
-      </div>
-      <div class="field"><label>Dedicated booking coordinator?</label>
-        <select id="coord">
-          <option value="">Select...</option>
-          <option value="yes">Yes — dedicated coordinator</option>
-          <option value="shared">Shared with GP team</option>
-          <option value="self">Specialist self-manages</option>
-        </select>
-      </div>
-      <div class="field"><label>Same-day / short-notice capacity?</label>
-        <select id="sameday">
-          <option value="">Select...</option>
-          <option value="yes">Yes — regularly available</option>
-          <option value="sometimes">Sometimes</option>
-          <option value="no">No</option>
-        </select>
-      </div>
-      <div class="field"><label>How can GPs book the specialist?</label>
-        <select id="gpbook">
-          <option value="">Select...</option>
-          <option value="oralinx">Via Oralinx</option>
-          <option value="videa">Via Videa</option>
-          <option value="direct">Direct booking (phone / in-person)</option>
-          <option value="coordinator">Via referral coordinator only</option>
-          <option value="none">No system in place</option>
-        </select>
-      </div>
-      <div class="field"><label>Prior specialist integration at this clinic?</label>
-        <select id="prior">
-          <option value="">Select...</option>
-          <option value="yes_success">Yes — successful</option>
-          <option value="yes_mixed">Yes — mixed results</option>
-          <option value="no">No — first time</option>
-        </select>
-      </div>
-    </div>
-    <!-- Capex -->
-    <div class="g2 mt">
-      <div class="field"><label>Capital investment required? <span class="req">*</span></label>
-        <select id="capex" onchange="toggleCapex()">
-          <option value="">Select...</option>
-          <option value="no">No — existing infrastructure sufficient</option>
-          <option value="yes">Yes — additional investment needed</option>
-          <option value="unsure">Unsure</option>
-        </select>
-      </div>
-      <div class="field" id="capexBudgetWrap" style="display:none"><label>Capex approved / budgeted?</label>
-        <select id="capexBudget" onchange="chk()">
-          <option value="">Select...</option>
-          <option value="approved">Approved and budgeted</option>
-          <option value="inprogress">Approval in progress</option>
-          <option value="no">Not yet — unfunded</option>
-        </select>
-      </div>
-    </div>
-    <div id="capexDetailWrap" style="display:none;margin-top:14px">
-      <div class="field"><label>Describe the required investment</label>
-        <textarea id="capexDetail" placeholder="e.g. New CBCT unit (~$80K), operatory renovation, surgical suite build-out, dental microscope..."></textarea>
-      </div>
-    </div>
-    <div id="capexq" class="qa"></div>
-    <div id="rq" class="qa mt8"></div>
-  </div>
-
-  <!-- 5. Local market -->
-  <div class="card">
-    <div class="sec-eyebrow">
-      <svg class="shine-sm" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M50 0 C50 28 72 50 100 50 C72 50 50 72 50 100 C50 72 28 50 0 50 C28 50 50 28 50 0Z" fill="#34798D"/></svg>
-      <span class="sec-title">Local market</span><div class="sec-rule"></div>
-    </div>
-    <div class="g3">
-      <div class="field"><label>Competing specialists within 5–10km <span class="req">*</span></label>
-        <select id="mcomp" onchange="chk()">
-          <option value="">Select...</option>
-          <option value="none">None</option>
-          <option value="one_two">1–2</option>
-          <option value="three_five">3–5</option>
-          <option value="many">6+</option>
-        </select>
-      </div>
-      <div class="field"><label>Clinic in a growth area?</label>
-        <select id="growth">
-          <option value="">Select...</option>
-          <option value="yes">Yes — active development / underserved</option>
-          <option value="stable">Established / stable community</option>
-          <option value="declining">Declining / shrinking population</option>
-        </select>
-      </div>
-      <div class="field"><label>Current referral destination</label>
-        <select id="refdest">
-          <option value="">Select...</option>
-          <option value="nearby">Nearby — patients travel &lt;15 min</option>
-          <option value="far">Far — patients travel 15–30+ min</option>
-          <option value="varied">Varied — no single destination</option>
-        </select>
-      </div>
-    </div>
-  </div>
-
-  <!-- Score -->
-  <div class="score-card">
-    <div class="score-eyebrow">Readiness assessment</div>
-    <div class="score-main"><span id="sv">—</span><span id="ss">Complete the form to see your score</span></div>
-    <div class="sbar"><div class="sfill" id="sf"></div></div>
-    <div class="slbl" id="sl"></div>
-  </div>
-
- <div class="card" id="export-actions-card">
-  <div style="margin-bottom:14px;padding:12px 14px;background:#f0f8fb;border:1px solid #CDE1E0;border-left:3px solid #34798D;border-radius:7px;font-size:13px;color:#273221;line-height:1.55">
-    When you click <strong>Submit to SharePoint</strong>, a PDF copy of this completed form will automatically download in your browser. Please save that PDF if you would like a record of your responses.
-  </div>
-
-  <div class="actions">
-    <button class="btn-export" onclick="exportPDF()">
-      Export to PDF
-    </button>
-
-    <button class="btn-export" onclick="openEmailModal()">
-      Submit to SharePoint + Download PDF
-    </button>
-
-    <button class="btn-clear" onclick="clearForm()">
-      Clear form
-    </button>
-  </div>
+<!-- 1. Clinic information -->
+<div class="card card-accent">
+<div class="sec-eyebrow">
+<svg class="shine-sm" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M50 0 C50 28 72 50 100 50 C72 50 50 72 50 100 C50 72 28 50 0 50 C28 50 50 28 50 0Z" fill="#34798D"/></svg>
+<span class="sec-title">Your information</span><div class="sec-rule"></div>
 </div>
 
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start">
+<div style="display:flex;flex-direction:column;gap:14px">
+<div class="field">
+<label>Your name <span class="req">*</span></label>
+<input type="text" id="mgr" placeholder="Full name" oninput="autoEmail()">
+</div>
+<div class="field">
+<label>Email <span class="req">*</span></label>
+<input type="email" id="em" placeholder="name@dentalcorp.ca">
+</div>
+</div>
 
-  <div class="footer">
-    <svg class="shine-ft" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M50 0 C50 28 72 50 100 50 C72 50 50 72 50 100 C50 72 28 50 0 50 C28 50 50 28 50 0Z" fill="#273221"/></svg>
-    <p>Questions? Contact our specialty development team | patrick.zarb@dentalcorp.com</p>
-  </div>
+<div class="field" style="position:relative">
+<label>Practice code <span class="req">*</span></label>
+<input type="text" id="cn" placeholder="Type a code or practice name..." autocomplete="off" oninput="searchPractice(this.value)" onkeydown="handlePracticeKey(event)" style="padding:9px 12px">
+<div id="practice-dropdown" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid #ccc8be;border-radius:0 0 6px 6px;max-height:220px;overflow-y:auto;z-index:200;box-shadow:0 4px 16px rgba(0,0,0,.12)"></div>
+<div id="practice-confirm" style="display:none;margin-top:8px;padding:10px 13px;background:#EEF6EE;border:1px solid #A1B9A1;border-left:3px solid #4a9460;border-radius:6px;font-size:13px;color:#1e4d2b;line-height:1.6"></div>
+<input type="hidden" id="cy">
+<input type="hidden" id="practice_name_hidden">
+</div>
+</div>
+
+<div class="mt">
+<div class="field"><label>RM sign-off? <span class="req">*</span></label>
+<select id="ram" onchange="chk()" style="max-width:360px">
+<option value="">Select...</option>
+<option value="yes">Yes — discussed and approved</option>
+<option value="pending">Discussed — awaiting formal sign-off</option>
+<option value="no">Not yet discussed</option>
+</select>
+</div>
+</div>
+<div id="ramq" style="display:none"></div>
+</div>
+
+<!-- 2. Role -->
+<div class="card">
+<div class="sec-eyebrow">
+<svg class="shine-sm" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M50 0 C50 28 72 50 100 50 C72 50 50 72 50 100 C50 72 28 50 0 50 C28 50 50 28 50 0Z" fill="#34798D"/></svg>
+<span class="sec-title">Role</span><div class="sec-rule"></div>
+</div>
+<div class="g2">
+<div class="field"><label>Specialty <span class="req">*</span></label>
+<select id="sp" onchange="onSpecialtyChange()">
+<option value="">Select...</option>
+<option value="Orthodontist">Orthodontist</option>
+<option value="Endodontist">Endodontist</option>
+<option value="Oral Surgeon">Oral Surgeon</option>
+<option value="Periodontist">Periodontist</option>
+<option value="Pediatric Dentist">Pediatric Dentist</option>
+</select>
+</div>
+<div class="field"><label>Days needed per month <span class="req">*</span></label>
+<div class="pills" id="dg">
+<span class="pill" onclick="togglePill(this,'dg')">1 day</span>
+<span class="pill" onclick="togglePill(this,'dg')">2 days</span>
+<span class="pill" onclick="togglePill(this,'dg')">4 days</span>
+<span class="pill" onclick="togglePill(this,'dg')">6 days</span>
+<span class="pill" onclick="togglePill(this,'dg')">8+ days</span>
+</div>
+</div>
+</div>
+</div>
+
+<!-- SPECIALTY CONDITIONAL: Orthodontist -->
+<div class="specialty-card" id="sc-ortho">
+<div class="sec-eyebrow">
+<svg class="shine-sm" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M50 0 C50 28 72 50 100 50 C72 50 50 72 50 100 C50 72 28 50 0 50 C28 50 50 28 50 0Z" fill="#34798D"/></svg>
+<span class="sec-title">Orthodontist — specialty questions</span><div class="sec-rule"></div>
+</div>
+<div class="g2">
+<div class="field"><label>Will the orthodontist be taking on net new cases only, or also inheriting an existing patient base? <span class="req">*</span></label>
+<select id="ortho_cases">
+<option value="">Select...</option>
+<option value="net_new">Net new cases only</option>
+<option value="existing">Taking over existing patient base</option>
+<option value="both">Both — new and existing</option>
+</select>
+</div>
+<div class="field"><label>Are there currently any providers doing ortho or Invisalign at this clinic? <span class="req">*</span></label>
+<select id="ortho_current" onchange="chk()">
+<option value="">Select...</option>
+<option value="yes_gp">Yes — GPs doing Invisalign / limited ortho</option>
+<option value="yes_specialist">Yes — visiting / part-time orthodontist</option>
+<option value="no">No — referring out entirely</option>
+</select>
+</div>
+<div class="field"><label>Is there an ortho hygienist to support the specialist? <span class="req">*</span></label>
+<select id="ortho_hyg" onchange="chk()">
+<option value="">Select...</option>
+<option value="yes">Yes — in place</option>
+<option value="hiring">Presently hiring for this role</option>
+<option value="maybe">Maybe — to be determined</option>
+<option value="no">No</option>
+</select>
+</div>
+<div class="field"><label>Does the clinic have a dedicated ortho bay / chair setup?</label>
+<select id="ortho_bay">
+<option value="">Select...</option>
+<option value="yes">Yes — dedicated ortho setup</option>
+<option value="shared">Shared — adaptable chair</option>
+<option value="no">No — needs to be established</option>
+</select>
+</div>
+</div>
+<div id="orthoq" class="qa"></div>
+</div>
+
+<!-- SPECIALTY CONDITIONAL: Endodontist -->
+<div class="specialty-card" id="sc-endo">
+<div class="sec-eyebrow">
+<svg class="shine-sm" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M50 0 C50 28 72 50 100 50 C72 50 50 72 50 100 C50 72 28 50 0 50 C28 50 50 28 50 0Z" fill="#34798D"/></svg>
+<span class="sec-title">Endodontist — specialty questions</span><div class="sec-rule"></div>
+</div>
+<div class="field" style="margin-bottom:14px">
+<label>Which of the following endo equipment does the clinic currently have? <span class="req">*</span></label>
+<div class="check-group">
+<label class="ci">
+<input type="checkbox" id="endo_apex" onchange="chk()">
+<span class="ci-pill">
+<span class="ci-box">
+<svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+<polyline points="2,6 5,9 10,3"/>
+</svg>
+</span>
+Apex locator
+</span>
+</label>
+
+<label class="ci">
+<input type="checkbox" id="endo_rotary" onchange="chk()">
+<span class="ci-pill">
+<span class="ci-box">
+<svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+<polyline points="2,6 5,9 10,3"/>
+</svg>
+</span>
+Rotary endo system
+</span>
+</label>
+
+<label class="ci">
+<input type="checkbox" id="endo_cbct" onchange="chk()">
+<span class="ci-pill">
+<span class="ci-box">
+<svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+<polyline points="2,6 5,9 10,3"/>
+</svg>
+</span>
+CBCT / cone beam imaging
+</span>
+</label>
+
+<label class="ci">
+<input type="checkbox" id="endo_scope" onchange="chk()">
+<span class="ci-pill">
+<span class="ci-box">
+<svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+<polyline points="2,6 5,9 10,3"/>
+</svg>
+</span>
+Dental microscope
+</span>
+</label>
+
+<label class="ci">
+<input type="checkbox" id="endo_dam" onchange="chk()">
+<span class="ci-pill">
+<span class="ci-box">
+<svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+<polyline points="2,6 5,9 10,3"/>
+</svg>
+</span>
+Rubber dam setup
+</span>
+</label>
+
+<label class="ci">
+<input type="checkbox" id="endo_obturation" onchange="chk()">
+<span class="ci-pill">
+<span class="ci-box">
+<svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+<polyline points="2,6 5,9 10,3"/>
+</svg>
+</span>
+Obturation system (e.g. Obtura, Calamus)
+</span>
+</label>
+</div>
+</div>
+<div class="g2">
+<div class="field"><label>Is the clinic open to purchasing additional endo equipment if required? <span class="req">*</span></label>
+<select id="endo_purchase" onchange="chk()">
+<option value="">Select...</option>
+<option value="yes">Yes — budgeted and ready</option>
+<option value="yes_approval">Yes — subject to approval</option>
+<option value="maybe">Open to discussion</option>
+<option value="no">No — limited to existing equipment</option>
+</select>
+</div>
+<div class="field"><label>Are GPs currently attempting molar endo or referring all cases out?</label>
+<select id="endo_gp_behavior">
+<option value="">Select...</option>
+<option value="all_out">Referring all endo cases out</option>
+<option value="simple_only">GPs do simple cases, refer complex</option>
+<option value="most_inhouse">GPs do most cases in-house</option>
+</select>
+</div>
+</div>
+<div id="endoq" class="qa"></div>
+</div>
+
+<!-- SPECIALTY CONDITIONAL: Oral Surgeon -->
+<div class="specialty-card" id="sc-oralsurg">
+<div class="sec-eyebrow">
+<svg class="shine-sm" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M50 0 C50 28 72 50 100 50 C72 50 50 72 50 100 C50 72 28 50 0 50 C28 50 50 28 50 0Z" fill="#34798D"/></svg>
+<span class="sec-title">Oral Surgeon — specialty questions</span><div class="sec-rule"></div>
+</div>
+<div class="g2">
+<div class="field"><label>Does the clinic have a dedicated surgical suite or operatory? <span class="req">*</span></label>
+<select id="os_suite" onchange="chk()">
+<option value="">Select...</option>
+<option value="yes">Yes — fully equipped surgical suite</option>
+<option value="adapted">Adapted operatory — functional</option>
+<option value="planned">Planned / in progress</option>
+<option value="no">No</option>
+</select>
+</div>
+<div class="field"><label>What is the highest level of sedation offered? <span class="req">*</span></label>
+<select id="os_sedation" onchange="chk()">
+<option value="">Select...</option>
+<option value="ga">General anaesthesia</option>
+<option value="iv">IV conscious sedation</option>
+<option value="nitrous">Nitrous oxide only</option>
+<option value="none">None</option>
+</select>
+</div>
+<div class="field"><label>Facility sedation permit <span class="req">*</span></label>
+<select id="os_permit" onchange="chk()">
+<option value="">Select...</option>
+<option value="type_a">Type A</option>
+<option value="type_ab">Type A/B</option>
+<option value="neither">Neither</option>
+</select>
+</div>
+<div class="field"><label>Does the surgeon have or need hospital privileges in the area?</label>
+<select id="os_privileges">
+<option value="">Select...</option>
+<option value="has">Surgeon will bring existing privileges</option>
+<option value="needs">Surgeon will need to establish privileges</option>
+<option value="na">Not applicable for planned case mix</option>
+</select>
+</div>
+<div class="field"><label>Is a surgical assistant available to support?</label>
+<select id="os_assistant">
+<option value="">Select...</option>
+<option value="yes">Yes — dedicated surgical assistant</option>
+<option value="shared">Shared with GP team</option>
+<option value="hiring">Currently hiring</option>
+<option value="no">No</option>
+</select>
+</div>
+<div class="field"><label>Primary case mix expected</label>
+<select id="os_casemix">
+<option value="">Select...</option>
+<option value="extractions">Extractions / wisdom teeth</option>
+<option value="implants">Implant surgery</option>
+<option value="mixed">Mixed — extractions and implants</option>
+<option value="complex">Complex / trauma cases</option>
+</select>
+</div>
+</div>
+<div id="osq" class="qa"></div>
+</div>
+
+<!-- SPECIALTY CONDITIONAL: Periodontist -->
+<div class="specialty-card" id="sc-perio">
+<div class="sec-eyebrow">
+<svg class="shine-sm" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M50 0 C50 28 72 50 100 50 C72 50 50 72 50 100 C50 72 28 50 0 50 C28 50 50 28 50 0Z" fill="#34798D"/></svg>
+<span class="sec-title">Periodontist — specialty questions</span><div class="sec-rule"></div>
+</div>
+
+<div class="field" style="margin-bottom:16px">
+<label>What is the primary focus of this periodontist role? <span class="req">*</span></label>
+<select id="perio_focus" onchange="onPerioFocusChange()">
+<option value="">Select...</option>
+<option value="surgical">Surgical focus — osseous surgery, implants, complex procedures</option>
+<option value="program">Program management — traditional perio, non-surgical, hygiene program oversight</option>
+<option value="both">Both — mixed surgical and program management responsibilities</option>
+</select>
+</div>
+
+<div class="g2">
+<div class="field"><label>Do hygienists currently perform perio charting and support perio therapy?</label>
+<select id="perio_hyg" onchange="chk()">
+<option value="">Select...</option>
+<option value="yes">Yes — active perio hygiene program</option>
+<option value="basic">Basic perio charting only</option>
+<option value="no">No — limited perio hygiene focus</option>
+</select>
+</div>
+<div class="field"><label>Number of hygienists at the clinic</label>
+<select id="perio_hyg_count">
+<option value="">Select...</option>
+<option value="one">1</option>
+<option value="two_three">2–3</option>
+<option value="four_plus">4+</option>
+</select>
+</div>
+</div>
+
+<div id="perio_surgical_fields" style="display:none;margin-top:14px">
+<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--atlantic);margin-bottom:10px;padding-bottom:6px;border-bottom:1px dashed var(--cool-aqua)">Surgical requirements</div>
+<div class="g2">
+<div class="field"><label>Does the clinic have a dedicated surgical bay? <span class="req">*</span></label>
+<select id="perio_bay" onchange="chk()">
+<option value="">Select...</option>
+<option value="yes">Yes — dedicated surgical bay</option>
+<option value="shared">Shared / adaptable operatory</option>
+<option value="no">No</option>
+</select>
+</div>
+<div class="field"><label>Is a surgical assistant available?</label>
+<select id="perio_assistant">
+<option value="">Select...</option>
+<option value="yes">Yes — dedicated</option>
+<option value="shared">Shared with GP team</option>
+<option value="hiring">Currently hiring</option>
+<option value="no">No</option>
+</select>
+</div>
+<div class="field"><label>Is an implant system already in use at the clinic?</label>
+<select id="perio_implant">
+<option value="">Select...</option>
+<option value="yes">Yes — active implant system</option>
+<option value="no_open">No — open to any system</option>
+<option value="no_pref">No — prefer a specific system</option>
+</select>
+</div>
+<div class="field"><label>Which implant brand / system (if applicable)?</label>
+<select id="perio_brand">
+<option value="">Select / not applicable...</option>
+<option value="Nobel">Nobel Biocare</option>
+<option value="Straumann">Straumann</option>
+<option value="Zimmer">Zimmer Biomet</option>
+<option value="Dentsply">Dentsply Sirona</option>
+<option value="BioHorizons">BioHorizons</option>
+<option value="Other">Other</option>
+</select>
+</div>
+</div>
+</div>
+
+<div id="perio_program_fields" style="display:none;margin-top:14px">
+<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--atlantic);margin-bottom:10px;padding-bottom:6px;border-bottom:1px dashed var(--cool-aqua)">Program management requirements</div>
+<div class="g2">
+<div class="field"><label>Does the clinic have an existing perio program the specialist would take over?</label>
+<select id="perio_existing_program">
+<option value="">Select...</option>
+<option value="yes">Yes — established program</option>
+<option value="partial">Partial — needs structure and oversight</option>
+<option value="no">No — building from scratch</option>
+</select>
+</div>
+<div class="field"><label>Is the expectation that the periodontist will train and mentor the hygiene team?</label>
+<select id="perio_mentor">
+<option value="">Select...</option>
+<option value="yes">Yes — mentorship is a key part of the role</option>
+<option value="some">Some coaching expected</option>
+<option value="no">No — independent clinical focus only</option>
+</select>
+</div>
+<div class="field"><label>What is the current perio recall / maintenance patient volume?</label>
+<select id="perio_recall_vol">
+<option value="">Select...</option>
+<option value="high">High — active perio maintenance base</option>
+<option value="med">Moderate</option>
+<option value="low">Low — building from referrals</option>
+</select>
+</div>
+<div class="field"><label>Will the periodontist have authority to update the perio protocol / hygiene workflow?</label>
+<select id="perio_authority">
+<option value="">Select...</option>
+<option value="yes">Yes — full clinical authority</option>
+<option value="partial">Partial — in consultation with clinic director</option>
+<option value="no">No — existing protocols to be maintained</option>
+</select>
+</div>
+</div>
+</div>
+
+<div id="perioq" class="qa"></div>
+</div>
+
+<!-- SPECIALTY CONDITIONAL: Pediatric Dentist -->
+<div class="specialty-card" id="sc-pedo">
+<div class="sec-eyebrow">
+<svg class="shine-sm" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M50 0 C50 28 72 50 100 50 C72 50 50 72 50 100 C50 72 28 50 0 50 C28 50 50 28 50 0Z" fill="#34798D"/></svg>
+<span class="sec-title">Pediatric Dentist — specialty questions</span><div class="sec-rule"></div>
+</div>
+<div class="g2">
+<div class="field"><label>Is nitrous oxide available at the clinic? <span class="req">*</span></label>
+<select id="pedo_nitrous" onchange="chk()">
+<option value="">Select...</option>
+<option value="yes">Yes — in place</option>
+<option value="planned">Planned / being installed</option>
+<option value="no">No</option>
+</select>
+</div>
+<div class="field"><label>Is there a child-friendly operatory setup? <span class="req">*</span></label>
+<select id="pedo_operatory" onchange="chk()">
+<option value="">Select...</option>
+<option value="yes">Yes — dedicated child-friendly space</option>
+<option value="partial">Partially — some elements in place</option>
+<option value="no">No — standard adult setup</option>
+</select>
+</div>
+<div class="field"><label>Does the clinical team have behaviour management experience with pediatric patients?</label>
+<select id="pedo_behavior">
+<option value="">Select...</option>
+<option value="yes">Yes — experienced team</option>
+<option value="some">Some experience</option>
+<option value="no">No — primarily adult patient focus</option>
+</select>
+</div>
+<div class="field"><label>What is the current pediatric patient volume?</label>
+<select id="pedo_volume">
+<option value="">Select...</option>
+<option value="high">High — strong pediatric base</option>
+<option value="med">Moderate</option>
+<option value="low">Low — building from scratch</option>
+</select>
+</div>
+<div class="field"><label>Is the clinic located near schools or family residential areas?</label>
+<select id="pedo_location">
+<option value="">Select...</option>
+<option value="yes">Yes — strong family / school proximity</option>
+<option value="somewhat">Somewhat</option>
+<option value="no">No — primarily commercial / adult area</option>
+</select>
+</div>
+</div>
+<div id="pedoq" class="qa"></div>
+</div>
+
+<!-- 3. Demand signal -->
+<div class="card">
+<div class="sec-eyebrow">
+<svg class="shine-sm" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M50 0 C50 28 72 50 100 50 C72 50 50 72 50 100 C50 72 28 50 0 50 C28 50 50 28 50 0Z" fill="#34798D"/></svg>
+<span class="sec-title">Demand signal</span><div class="sec-rule"></div>
+</div>
+<div class="g3">
+<div class="field"><label>Monthly referrals sent out <span class="req">*</span></label>
+<select id="ref" onchange="chk()">
+<option value="">Select...</option>
+<option value="low">Fewer than 10</option>
+<option value="med">10–25</option>
+<option value="high">26–50</option>
+<option value="vhigh">51+</option>
+</select>
+</div>
+<div class="field"><label>Referral data tracked?</label>
+<select id="rt" onchange="chk()">
+<option value="">Select...</option>
+<option value="yes">Yes — in our PMS</option>
+<option value="partial">Partially / informally</option>
+<option value="no">No</option>
+</select>
+</div>
+<div class="field"><label>Avg. patient wait time <span class="req">*</span></label>
+<select id="wt" onchange="chk()">
+<option value="">Select...</option>
+<option value="low">Under 2 weeks</option>
+<option value="med">2–4 weeks</option>
+<option value="high">4–8 weeks</option>
+<option value="vhigh">8+ weeks</option>
+</select>
+</div>
+<div class="field"><label>Avg. patient age profile <span class="req">*</span></label>
+<select id="age" onchange="chk()">
+<option value="">Select...</option>
+<option value="pediatric">Mostly pediatric (under 12)</option>
+<option value="young">Mostly younger (12–30)</option>
+<option value="mixed">Mixed / broad age range</option>
+<option value="adult">Mostly adults (30–55)</option>
+<option value="senior">Mostly seniors (55+)</option>
+</select>
+</div>
+<div class="field"><label>Insurance / coverage mix</label>
+<select id="ins">
+<option value="">Select...</option>
+<option value="mostly_insured">Mostly insured (&gt;70%)</option>
+<option value="mixed">Mixed (40–70% insured)</option>
+<option value="mostly_ffs">Mostly fee-for-service (&lt;40%)</option>
+</select>
+</div>
+<div class="field"><label>Associates require treatment planning training before specialist starts? <span class="req">*</span></label>
+<select id="gptrain" onchange="chk()">
+<option value="">Select...</option>
+<option value="no">No — associates are ready</option>
+<option value="some">Some associates need training</option>
+<option value="yes">Yes — training required first</option>
+</select>
+</div>
+<div class="field"><label>Partner influence on referral patterns <span class="req">*</span></label>
+<select id="partner_influence" onchange="chk()">
+<option value="">Select...</option>
+<option value="high">Partner can significantly influence referral patterns</option>
+<option value="some">Partner can influence a little</option>
+<option value="none">Partner cannot influence</option>
+<option value="unsure">Unsure</option>
+</select>
+</div>
+<div class="field">
+<label class="tooltip-label">Hygiene team knowledge on this specialty <span class="req">*</span>
+<span class="tooltip-icon" title="Are new patient or recall exams missing structure — and does this need coaching? Is the team unaware of what triggers a referral for this specialty?">?</span>
+</label>
+<select id="hyg_knowledge" onchange="chk()">
+<option value="">Select...</option>
+<option value="high">High — team understands referral triggers</option>
+<option value="low">Low — team needs coaching</option>
+<option value="unsure">Unsure</option>
+</select>
+</div>
+<div class="field"><label>Strength of hygiene program &amp; recalls <span class="req">*</span></label>
+<select id="hyg_strength" onchange="chk()">
+<option value="">Select...</option>
+<option value="strong">Strong — structured recall and active hygiene program</option>
+<option value="moderate">Moderate — some structure but inconsistent</option>
+<option value="weak">Weak — limited recall or hygiene program</option>
+<option value="none">No hygiene program</option>
+</select>
+</div>
+<div class="field"><label>Case acceptance rate on specialist tx plans</label>
+<select id="accept">
+<option value="">Select / estimate...</option>
+<option value="high">High (&gt;70%)</option>
+<option value="med">Moderate (40–70%)</option>
+<option value="low">Low (&lt;40%)</option>
+<option value="unknown">Unknown</option>
+</select>
+</div>
+<div class="field"><label>Recall system for deferred specialist treatment?</label>
+<select id="recall" onchange="chk()">
+<option value="">Select...</option>
+<option value="yes">Yes — active recall in place</option>
+<option value="partial">Partial / manual process</option>
+<option value="no">No</option>
+</select>
+</div>
+</div>
+<div id="dq" class="qa"></div>
+</div>
+
+<!-- 4. Clinic readiness -->
+<div class="card">
+<div class="sec-eyebrow">
+<svg class="shine-sm" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M50 0 C50 28 72 50 100 50 C72 50 50 72 50 100 C50 72 28 50 0 50 C28 50 50 28 50 0Z" fill="#34798D"/></svg>
+<span class="sec-title">Clinic readiness</span><div class="sec-rule"></div>
+</div>
+<div class="g3">
+<div class="field"><label>Dedicated specialist operatory? <span class="req">*</span></label>
+<select id="chair" onchange="chk()">
+<option value="">Select...</option>
+<option value="yes">Yes — available now</option>
+<option value="planned">Planned / in progress</option>
+<option value="no">No</option>
+</select>
+</div>
+<div class="field"><label>Number of active GPs <span class="req">*</span></label>
+<select id="gp" onchange="chk()">
+<option value="">Select...</option>
+<option value="one">1</option>
+<option value="two_three">2–3</option>
+<option value="four_five">4–5</option>
+<option value="six_plus">6+</option>
+</select>
+</div>
+<div class="field"><label>GPs actively discussing this specialty with patients? <span class="req">*</span></label>
+<select id="gbi" onchange="chk()">
+<option value="">Select...</option>
+<option value="yes">Yes — all of them</option>
+<option value="some">Some are</option>
+<option value="no">Not yet</option>
+</select>
+</div>
+<div class="field"><label>Dedicated booking coordinator?</label>
+<select id="coord" onchange="chk()">
+<option value="">Select...</option>
+<option value="yes">Yes — dedicated coordinator</option>
+<option value="shared">Shared with GP team</option>
+<option value="self">Specialist self-manages</option>
+</select>
+</div>
+<div class="field"><label>Same-day / short-notice capacity?</label>
+<select id="sameday" onchange="chk()">
+<option value="">Select...</option>
+<option value="yes">Yes — regularly available</option>
+<option value="sometimes">Sometimes</option>
+<option value="no">No</option>
+</select>
+</div>
+<div class="field"><label>How can GPs book the specialist?</label>
+<select id="gpbook" onchange="chk()">
+<option value="">Select...</option>
+<option value="oralinx">Via Oralinx</option>
+<option value="videa">Via Videa</option>
+<option value="direct">Direct booking (phone / in-person)</option>
+<option value="coordinator">Via referral coordinator only</option>
+<option value="none">No system in place</option>
+</select>
+</div>
+<div class="field"><label>Prior specialist integration at this clinic?</label>
+<select id="prior" onchange="chk()">
+<option value="">Select...</option>
+<option value="yes_success">Yes — successful</option>
+<option value="yes_mixed">Yes — mixed results</option>
+<option value="no">No — first time</option>
+</select>
+</div>
+</div>
+
+<div class="g2 mt">
+<div class="field"><label>Capital investment required? <span class="req">*</span></label>
+<select id="capex" onchange="toggleCapex()">
+<option value="">Select...</option>
+<option value="no">No — existing infrastructure sufficient</option>
+<option value="yes">Yes — additional investment needed</option>
+<option value="unsure">Unsure</option>
+</select>
+</div>
+<div class="field" id="capexBudgetWrap" style="display:none"><label>Capex approved / budgeted?</label>
+<select id="capexBudget" onchange="chk()">
+<option value="">Select...</option>
+<option value="approved">Approved and budgeted</option>
+<option value="inprogress">Approval in progress</option>
+<option value="no">Not yet — unfunded</option>
+</select>
+</div>
+</div>
+<div id="capexDetailWrap" style="display:none;margin-top:14px">
+<div class="field"><label>Describe the required investment</label>
+<textarea id="capexDetail" placeholder="e.g. New CBCT unit (~$80K), operatory renovation, surgical suite build-out, dental microscope..."></textarea>
+</div>
+</div>
+<div id="capexq" class="qa"></div>
+<div id="rq" class="qa mt8"></div>
+</div>
+
+<!-- 5. Local market -->
+<div class="card">
+<div class="sec-eyebrow">
+<svg class="shine-sm" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M50 0 C50 28 72 50 100 50 C72 50 50 72 50 100 C50 72 28 50 0 50 C28 50 50 28 50 0Z" fill="#34798D"/></svg>
+<span class="sec-title">Local market</span><div class="sec-rule"></div>
+</div>
+<div class="g3">
+<div class="field"><label>Competing specialists within 5–10km <span class="req">*</span></label>
+<select id="mcomp" onchange="chk()">
+<option value="">Select...</option>
+<option value="none">None</option>
+<option value="one_two">1–2</option>
+<option value="three_five">3–5</option>
+<option value="many">6+</option>
+</select>
+</div>
+<div class="field"><label>Clinic in a growth area?</label>
+<select id="growth" onchange="chk()">
+<option value="">Select...</option>
+<option value="yes">Yes — active development / underserved</option>
+<option value="stable">Established / stable community</option>
+<option value="declining">Declining / shrinking population</option>
+</select>
+</div>
+<div class="field"><label>Current referral destination</label>
+<select id="refdest">
+<option value="">Select...</option>
+<option value="nearby">Nearby — patients travel &lt;15 min</option>
+<option value="far">Far — patients travel 15–30+ min</option>
+<option value="varied">Varied — no single destination</option>
+</select>
+</div>
+</div>
+</div>
+
+<!-- Score -->
+<div class="score-card">
+<div class="score-eyebrow">Readiness assessment</div>
+<div class="score-main"><span id="sv">—</span><span id="ss">Complete the form to see your score</span></div>
+<div class="sbar"><div class="sfill" id="sf"></div></div>
+<div class="slbl" id="sl"></div>
+</div>
+
+<div class="card" id="export-actions-card">
+<div style="margin-bottom:14px;padding:12px 14px;background:#f0f8fb;border:1px solid #CDE1E0;border-left:3px solid #34798D;border-radius:7px;font-size:13px;color:#273221;line-height:1.55">
+When you click <strong>Submit to SharePoint</strong>, a PDF copy of this completed form will automatically download in your browser. Please save that PDF if you would like a record of your responses.
+</div>
+
+<div class="actions">
+<button class="btn-export" onclick="exportPDF(false)">
+Export to PDF
+</button>
+
+<button class="btn-export" onclick="openEmailModal()">
+Submit to SharePoint + Download PDF
+</button>
+
+<button class="btn-clear" onclick="clearForm()">
+Clear form
+</button>
+</div>
+</div>
+
+<div class="footer">
+<svg class="shine-ft" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M50 0 C50 28 72 50 100 50 C72 50 50 72 50 100 C50 72 28 50 0 50 C28 50 50 28 50 0Z" fill="#273221"/></svg>
+<p>Questions? Contact our specialty development team | patrick.zarb@dentalcorp.com</p>
+</div>
 </div>
 
 <div class="toast" id="toast">✓ Exported successfully</div>
@@ -876,108 +871,114 @@ var SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzXAYCH12j0dYNwJ21Ksvn
 // ────────────────────────────────────────────────────────────
 
 function searchPractice(query){
-  var dd=document.getElementById('practice-dropdown');
-  var confirm=document.getElementById('practice-confirm');
-  if(!query||query.length<1){dd.style.display='none';confirm.style.display='none';return;}
-  var q=query.toLowerCase();
-  var matches=PRACTICE_DB.filter(function(p){
-    return p['Practice Code'].toLowerCase().indexOf(q)===0||
-           p['Practicename'].toLowerCase().indexOf(q)>=0;
-  }).slice(0,8);
-  if(matches.length===0){dd.style.display='none';return;}
-  dd.innerHTML='';
-  matches.forEach(function(p,i){
-    var item=document.createElement('div');
-    item.style.cssText='padding:9px 12px;cursor:pointer;font-size:13px;border-bottom:0.5px solid #e9e7df;display:flex;gap:10px;align-items:baseline';
-    item.innerHTML='<span style="font-weight:700;color:#34798D;min-width:52px">'+p['Practice Code']+'</span><span style="color:#273221">'+p['Practicename']+'</span><span style="color:#7a8a74;margin-left:auto;font-size:12px">'+p['City']+'</span>';
-    item.dataset.idx=i;
-    item.onmouseenter=function(){
-      dd.querySelectorAll('div').forEach(function(d){d.style.background=''});
-      this.style.background='#f0f8fb';
-    };
-    item.onmouseleave=function(){this.style.background=''};
-    item.onclick=function(){selectPractice(matches[parseInt(this.dataset.idx)]);};
-    dd.appendChild(item);
-  });
-  dd.style.display='block';
+var dd=document.getElementById('practice-dropdown');
+var confirm=document.getElementById('practice-confirm');
+if(!query||query.length<1){dd.style.display='none';confirm.style.display='none';return;}
+var q=query.toLowerCase();
+var matches=PRACTICE_DB.filter(function(p){
+return p['Practice Code'].toLowerCase().indexOf(q)===0||
+p['Practicename'].toLowerCase().indexOf(q)>=0;
+}).slice(0,8);
+if(matches.length===0){dd.style.display='none';return;}
+dd.innerHTML='';
+matches.forEach(function(p,i){
+var item=document.createElement('div');
+item.style.cssText='padding:9px 12px;cursor:pointer;font-size:13px;border-bottom:0.5px solid #e9e7df;display:flex;gap:10px;align-items:baseline';
+item.innerHTML='<span style="font-weight:700;color:#34798D;min-width:52px">'+p['Practice Code']+'</span><span style="color:#273221">'+p['Practicename']+'</span><span style="color:#7a8a74;margin-left:auto;font-size:12px">'+p['City']+'</span>';
+item.dataset.idx=i;
+item.onmouseenter=function(){
+dd.querySelectorAll('div').forEach(function(d){d.style.background=''});
+this.style.background='#f0f8fb';
+};
+item.onmouseleave=function(){this.style.background=''};
+item.onclick=function(){selectPractice(matches[parseInt(this.dataset.idx)]);};
+dd.appendChild(item);
+});
+dd.style.display='block';
 }
 
 function selectPractice(p){
-  var input=document.getElementById('cn');
-  input.value=p['Practice Code'];
-  document.getElementById('cy').value=p['City'];
-  document.getElementById('practice_name_hidden').value=p['Practicename'];
-  document.getElementById('practice-dropdown').style.display='none';
-  var confirm=document.getElementById('practice-confirm');
-  confirm.style.display='block';
-  confirm.innerHTML='<strong>'+p['Practicename']+'</strong> &nbsp;·&nbsp; '+p['City'];
-  chk();
+var input=document.getElementById('cn');
+input.value=p['Practice Code'];
+document.getElementById('cy').value=p['City'];
+document.getElementById('practice_name_hidden').value=p['Practicename'];
+document.getElementById('practice-dropdown').style.display='none';
+var confirm=document.getElementById('practice-confirm');
+confirm.style.display='block';
+confirm.innerHTML='<strong>'+p['Practicename']+'</strong> &nbsp;·&nbsp; '+p['City'];
+chk();
 }
 
 function handlePracticeKey(e){
-  var dd=document.getElementById('practice-dropdown');
-  var items=dd.querySelectorAll('div');
-  var active=dd.querySelector('div[data-active]');
-  if(e.key==='ArrowDown'){
-    e.preventDefault();
-    if(!active&&items.length) {items[0].dataset.active='1';items[0].style.background='#f0f8fb';}
-    else if(active){
-      var idx=Array.from(items).indexOf(active);
-      delete active.dataset.active; active.style.background='';
-      var next=items[idx+1]||items[0];
-      next.dataset.active='1'; next.style.background='#f0f8fb';
-    }
-  } else if(e.key==='ArrowUp'){
-    e.preventDefault();
-    if(active){
-      var idx=Array.from(items).indexOf(active);
-      delete active.dataset.active; active.style.background='';
-      var prev=items[idx-1]||items[items.length-1];
-      prev.dataset.active='1'; prev.style.background='#f0f8fb';
-    }
-  } else if(e.key==='Enter'&&active){
-    e.preventDefault();
-    active.click();
-  } else if(e.key==='Escape'){
-    dd.style.display='none';
-  }
+var dd=document.getElementById('practice-dropdown');
+var items=dd.querySelectorAll('div');
+var active=dd.querySelector('div[data-active]');
+if(e.key==='ArrowDown'){
+e.preventDefault();
+if(!active&&items.length) {items[0].dataset.active='1';items[0].style.background='#f0f8fb';}
+else if(active){
+var idx=Array.from(items).indexOf(active);
+delete active.dataset.active; active.style.background='';
+var next=items[idx+1]||items[0];
+next.dataset.active='1'; next.style.background='#f0f8fb';
+}
+} else if(e.key==='ArrowUp'){
+e.preventDefault();
+if(active){
+var idx=Array.from(items).indexOf(active);
+delete active.dataset.active; active.style.background='';
+var prev=items[idx-1]||items[items.length-1];
+prev.dataset.active='1'; prev.style.background='#f0f8fb';
+}
+} else if(e.key==='Enter'&&active){
+e.preventDefault();
+active.click();
+} else if(e.key==='Escape'){
+dd.style.display='none';
+}
 }
 
 // Close dropdown on outside click
 document.addEventListener('click',function(e){
-  if(!document.getElementById('cn').contains(e.target)&&
-     !document.getElementById('practice-dropdown').contains(e.target)){
-    document.getElementById('practice-dropdown').style.display='none';
-  }
+var cn=document.getElementById('cn');
+var dd=document.getElementById('practice-dropdown');
+if(cn && dd && !cn.contains(e.target) && !dd.contains(e.target)){
+dd.style.display='none';
+}
 });
 
 function autoEmail(){
-  var name=document.getElementById('mgr').value.trim();
-  var emailField=document.getElementById('em');
+var name=document.getElementById('mgr').value.trim();
+var emailField=document.getElementById('em');
 
-  if(!name){
-    emailField.placeholder='name@dentalcorp.com';
-    if(!emailField.dataset.userEdited) emailField.value='';
-    return;
-  }
+if(!name){
+emailField.placeholder='name@dentalcorp.com';
+if(!emailField.dataset.userEdited) emailField.value='';
+return;
+}
 
-  var parts=name.split(/\s+/);
-  if(parts.length >= 2){
-    var generated = parts[0].toLowerCase() + '.' + parts[parts.length - 1].toLowerCase() + '@dentalcorp.com';
-    if(!emailField.dataset.userEdited){
-      emailField.value = generated;
-    }
-  }
+var parts=name.split(/\s+/);
+if(parts.length >= 2){
+var generated = parts[0].toLowerCase() + '.' + parts[parts.length - 1].toLowerCase() + '@dentalcorp.com';
+if(!emailField.dataset.userEdited){
+emailField.value = generated;
+}
+}
 }
 
 // Mark email as user-edited if they type in it directly
 document.addEventListener('DOMContentLoaded',function(){
-  document.getElementById('em').addEventListener('input',function(){
-    this.dataset.userEdited='1';
-  });
+var em=document.getElementById('em');
+if(em){
+em.addEventListener('input',function(){
+this.dataset.userEdited='1';
+});
+}
 });
 
-var PRACTICE_DB=[{"Practice Code": "3AGA", "Practicename": "Hollick-Kenyon Dental", "City": "Edmonton"}, {"Practice Code": "3BGA", "Practicename": "Brentwood Dental Centre", "City": "Calgary"}, {"Practice Code": "3CGK", "Practicename": "Centre Dentaire Amirault", "City": "Dieppe"}, {"Practice Code": "3DGO", "Practicename": "Aspen Springs Dental Centre", "City": "Bowmanville"}, {"Practice Code": "3EGO", "Practicename": "Dentistry on Liverpool", "City": "Pickering"}, {"Practice Code": "3FGO", "Practicename": "Sheridan Dental Centre", "City": "Pickering"}, {"Practice Code": "3GGO", "Practicename": "Live Well Dental", "City": "Toronto"}, {"Practice Code": "3IGM", "Practicename": "Artistic Smiles", "City": "Winnipeg"}, {"Practice Code": "3JGA", "Practicename": "Ellerslie Dental Studio", "City": "Edmonton"}, {"Practice Code": "3KGS", "Practicename": "Fairhaven Dental", "City": "Saskatoon"}, {"Practice Code": "3LGS", "Practicename": "Rosthern Dental", "City": "Rosthern"}, {"Practice Code": "3MGO", "Practicename": "Warmstone Family Dentistry", "City": "Stittsville"}, {"Practice Code": "3OGB", "Practicename": "Smile Esthetics", "City": "Victoria"}, {"Practice Code": "3PGS", "Practicename": "Albert Park Dental Clinic", "City": "Regina"}, {"Practice Code": "3QGO", "Practicename": "Concession Street Dental Care", "City": "Cambridge"}, {"Practice Code": "3QGQ", "Practicename": "Centre Dentaire Jardins Dorval", "City": "Dorval"}, {"Practice Code": "3RGQ", "Practicename": "Clinique Dentaire B\u00e9langer", "City": "Saint-Jean-Chrysostome"}, {"Practice Code": "3SGQ", "Practicename": "Centre Dentaire de Beauce", "City": "Saint-Georges"}, {"Practice Code": "3TGA", "Practicename": "Township Road Family Dental Centre", "City": "Leduc"}, {"Practice Code": "3TGB", "Practicename": "Brush Dental Clinic - Renfrew", "City": "Vancouver"}, {"Practice Code": "3UGB", "Practicename": "Brush Dental Clinic - Victoria", "City": "Vancouver"}, {"Practice Code": "3UGQ", "Practicename": "AURA Clinique Dentaire Elite", "City": "Boucherville"}, {"Practice Code": "3VGO", "Practicename": "Falls Family Dental", "City": "Niagara Falls"}, {"Practice Code": "3VGQ", "Practicename": "Centre Dentaire St-Onge", "City": "La Prairie"}, {"Practice Code": "3WGA", "Practicename": "Northland Dental", "City": "Calgary"}, {"Practice Code": "3WGQ", "Practicename": "Clinique Dentaire Beaubien", "City": "Montreal"}, {"Practice Code": "3XGK", "Practicename": "Main Street Dental", "City": "Fredericton"}, {"Practice Code": "3YGK", "Practicename": "Sussex Dental Clinic", "City": "Sussex"}, {"Practice Code": "3ZGQ", "Practicename": "BUCCA Sant\u00e9 Dentaire", "City": "Longueuil"}, {"Practice Code": "4CGO", "Practicename": "Big Bay Point Dentistry", "City": "Barrie"}, {"Practice Code": "4DGO", "Practicename": "Kingswood Dentistry", "City": "Barrie"}, {"Practice Code": "4FGO", "Practicename": "KMA Dental", "City": "Kingston"}, {"Practice Code": "4GGB", "Practicename": "Pleasant Valley Dental", "City": "Vernon"}, {"Practice Code": "4HGO", "Practicename": "Gloucester Dental Centre", "City": "Gloucester"}, {"Practice Code": "4IGO", "Practicename": "Smyth Dental Centre", "City": "Ottawa"}, {"Practice Code": "4JGS", "Practicename": "Circle Drive & 8th Street Dental", "City": "Saskatoon"}, {"Practice Code": "4KGO", "Practicename": "Avery Dental", "City": "Port Hope"}, {"Practice Code": "4LGO", "Practicename": "Dentistry on Sheppard", "City": "North York"}, {"Practice Code": "4MGO", "Practicename": "O'Connor Dental Centre", "City": "East York"}, {"Practice Code": "4NGB", "Practicename": "Civic Dental", "City": "Vernon"}, {"Practice Code": "4OGA", "Practicename": "Affinity Dental - Sherwood Park", "City": "Sherwood Park"}, {"Practice Code": "4PGQ", "Practicename": "Centre Dentaire Dre Guylaine Raymond", "City": "Val-des-Monts"}, {"Practice Code": "4QGQ", "Practicename": "Centre Dentaire Saint-Georges", "City": "Saint-Georges"}, {"Practice Code": "4RGM", "Practicename": "Cityplace Dental Group", "City": "Winnipeg"}, {"Practice Code": "4SGA", "Practicename": "Cornerstone Highstreet Dental", "City": "Calgary"}, {"Practice Code": "4TGO", "Practicename": "Dentistry on Bank", "City": "Ottawa"}, {"Practice Code": "4UGA", "Practicename": "Cedar Ridge Dental", "City": "Wetaskiwin"}, {"Practice Code": "4VGQ", "Practicename": "Clinique Dentaire Dr lannick Charlebois", "City": "Lachute"}, {"Practice Code": "4XGQ", "Practicename": "Centre Dentaire Ricard & Tran", "City": "Gatineau"}, {"Practice Code": "4YGA", "Practicename": "Karo Dental Care", "City": "Spruce Grove"}, {"Practice Code": "4ZGQ", "Practicename": "Clinique Dentaire France Gascon", "City": "Sainte-Genevieve"}, {"Practice Code": "5AGA", "Practicename": "Mill Woods Town Centre Dental", "City": "Edmonton"}, {"Practice Code": "5EGB", "Practicename": "Smiles at Fleetwood Dental Centre", "City": "Surrey"}, {"Practice Code": "5FGK", "Practicename": "Brookside Dental", "City": "Fredericton"}, {"Practice Code": "5GGA", "Practicename": "MarPark Dental Care", "City": "Calgary"}, {"Practice Code": "5HGB", "Practicename": "Accent Dental", "City": "Fort St. John"}, {"Practice Code": "5IGO", "Practicename": "EJC Dentistry", "City": "Hamilton"}, {"Practice Code": "5JGS", "Practicename": "Preston Dental Centre", "City": "Saskatoon"}, {"Practice Code": "5KGB", "Practicename": "Apex Dental", "City": "Fort St. John"}, {"Practice Code": "5MGN", "Practicename": "Atlantic Smile Dentistry", "City": "Amherst"}, {"Practice Code": "5PGB", "Practicename": "Kimberley Family Dental", "City": "Kimberley"}, {"Practice Code": "5QGB", "Practicename": "Cranbrook Family Dental", "City": "Cranbrook"}, {"Practice Code": "5RGO", "Practicename": "Dr. Todd Watts Dental Centre", "City": "St. Catharines"}, {"Practice Code": "5SGO", "Practicename": "Bowmanville Dental", "City": "Bowmanville"}, {"Practice Code": "5TGO", "Practicename": "Laurelwood Family Dentistry", "City": "Waterloo"}, {"Practice Code": "5UGO", "Practicename": "Waterloo Family Dental", "City": "Waterloo"}, {"Practice Code": "5WGQ", "Practicename": "Clinique Dentaire Ecladent", "City": "Saint-Laurent"}, {"Practice Code": "5XGO", "Practicename": "SKH Dentistry", "City": "Kitchener"}, {"Practice Code": "5YGL", "Practicename": "Airport Heights Dental Health Centre", "City": "St. John's"}, {"Practice Code": "6CGK", "Practicename": "Bayside Dental", "City": "Saint John"}, {"Practice Code": "6DGA", "Practicename": "Westmount Dental Centre", "City": "Edmonton"}, {"Practice Code": "6EGO", "Practicename": "Rouge Valley Dental Care", "City": "Pickering"}, {"Practice Code": "6FGO", "Practicename": "Dr. Naji Louis Family Dentistry", "City": "Almonte"}, {"Practice Code": "6GGQ", "Practicename": "Art Dentaire Familial", "City": "Candiac"}, {"Practice Code": "6HGO", "Practicename": "Tall Pines Dental Centre", "City": "Kitchener"}, {"Practice Code": "6KGA", "Practicename": "Orion Dental Group", "City": "Lloydminster"}, {"Practice Code": "6LGA", "Practicename": "Oliver Park Dental", "City": "Edmonton"}, {"Practice Code": "6MGS", "Practicename": "Courtside Dental", "City": "Regina"}, {"Practice Code": "6OGO", "Practicename": "de Man & H\u00f6ediono Dentistry", "City": "Kitchener"}, {"Practice Code": "6PGO", "Practicename": "Orleans Family Dentistry", "City": "Orleans"}, {"Practice Code": "6QGN", "Practicename": "Lakeside Dental", "City": "Halifax"}, {"Practice Code": "6RGA", "Practicename": "Garrison Woods Dental", "City": "Calgary"}, {"Practice Code": "6SGO", "Practicename": "Fifth Avenue Dental", "City": "Orangeville"}, {"Practice Code": "6VGB", "Practicename": "Oaklands Dental", "City": "Victoria"}, {"Practice Code": "6XGO", "Practicename": "Shelburne Smile Centre", "City": "Shelburne"}, {"Practice Code": "6YGO", "Practicename": "DDS Collingwood", "City": "Collingwood"}, {"Practice Code": "7CGO", "Practicename": "Skyline Dental Associates", "City": "Ottawa"}, {"Practice Code": "7DGA", "Practicename": "Magrath Dental", "City": "Edmonton"}, {"Practice Code": "7EGN", "Practicename": "Elmwood Dental Clinic", "City": "Liverpool"}, {"Practice Code": "7FGN", "Practicename": "Westmount Dental Clinic", "City": "Sydney"}, {"Practice Code": "7GGM", "Practicename": "Lakewood Dental Centre", "City": "Winnipeg"}, {"Practice Code": "7HGO", "Practicename": "Platinum Dental Care", "City": "North York"}, {"Practice Code": "7IGO", "Practicename": "North Oshawa Dental", "City": "Oshawa"}, {"Practice Code": "7JGA", "Practicename": "Lakewood Dental Centre (AB)", "City": "Edmonton"}, {"Practice Code": "7KGQ", "Practicename": "Clinique Dentaire Fortin Poirier", "City": "Laval"}, {"Practice Code": "7LGB", "Practicename": "Keystone Dental", "City": "Prince George"}, {"Practice Code": "7MGQ", "Practicename": "Clinique Dentaire Nathalie Ross", "City": "Drummondville"}, {"Practice Code": "7NGM", "Practicename": "Affinity Dental", "City": "Winnipeg"}, {"Practice Code": "7OGN", "Practicename": "Noftall Family Dentistry", "City": "New Glasgow"}, {"Practice Code": "7RGO", "Practicename": "Alderwood Family Dentistry", "City": "Etobicoke"}, {"Practice Code": "7SGN", "Practicename": "Hockley Family Dentistry", "City": "Middleton"}, {"Practice Code": "7TGO", "Practicename": "Dentistry @ Momentum", "City": "Toronto"}, {"Practice Code": "7VGQ", "Practicename": "Centre Dentaire Vienneau Losier", "City": "Qu\u00e9bec"}, {"Practice Code": "7WGA", "Practicename": "Southgate Dental Centre", "City": "Edmonton"}, {"Practice Code": "7YGA", "Practicename": "Canmore Downtown Dental", "City": "Canmore"}, {"Practice Code": "7ZGN", "Practicename": "Amherst Family Dental Clinic", "City": "Amherst"}, {"Practice Code": "8AGO", "Practicename": "Limoges Dental Centre", "City": "Limoges"}, {"Practice Code": "8NGO", "Practicename": "Carlingwood Dental Centre", "City": "Ottawa"}, {"Practice Code": "8PGB", "Practicename": "North Shore Smile Dentistry-West", "City": "Vancouver"}, {"Practice Code": "8QGB", "Practicename": "North Shore Smile Dentistry- North", "City": "North Vancouver"}, {"Practice Code": "8SGO", "Practicename": "West Humber Dentistry", "City": "Toronto"}, {"Practice Code": "8TGQ", "Practicename": "Dentistes de la Cit\u00e9", "City": "Quebec"}, {"Practice Code": "8UGO", "Practicename": "14th Avenue Dentistry", "City": "Markham"}, {"Practice Code": "8WGO", "Practicename": "Thornhill Dental", "City": "Thornhill"}, {"Practice Code": "8XGQ", "Practicename": "Clinique Dentaire Nicolas Beaudoin & Associ\u00e9e", "City": "Saint-Jean-sur-Richelieu"}, {"Practice Code": "8YGO", "Practicename": "Ferguson Family Dental Care", "City": "Barrie"}, {"Practice Code": "8ZGN", "Practicename": "Mountain Road Dental Group", "City": "New Glasgow"}, {"Practice Code": "9BGK", "Practicename": "Northside Dental Clinic", "City": "Fredericton"}, {"Practice Code": "9CGA", "Practicename": "Chan Chang Boruah Dentistry", "City": "Calgary"}, {"Practice Code": "9CGB", "Practicename": "Port Moody Smile Dental", "City": "Port Moody"}, {"Practice Code": "9DGA", "Practicename": "Lacombe Park Dental", "City": "St. Albert"}, {"Practice Code": "9DGB", "Practicename": "Aberdeen Dental Centre", "City": "Vernon"}, {"Practice Code": "9FGA", "Practicename": "GC Dental (Central Landmark)", "City": "Calgary"}, {"Practice Code": "9GGL", "Practicename": "Dr. Kohli Dental Clinic", "City": "Carbonear"}, {"Practice Code": "9IGO", "Practicename": "Discovery Dental", "City": "Ajax"}, {"Practice Code": "9YGO", "Practicename": "Sheppard Yorkland Dental", "City": "North York"}, {"Practice Code": "A1GO", "Practicename": "Spring Street Dental", "City": "Cobourg"}, {"Practice Code": "A2GO", "Practicename": "Capitol Dentistry", "City": "Toronto"}, {"Practice Code": "A3GO", "Practicename": "Downtown Dental of Hamilton", "City": "Hamilton"}, {"Practice Code": "A5GO", "Practicename": "Monarch Dental", "City": "Leamington"}, {"Practice Code": "A7GO", "Practicename": "Creditview Dental", "City": "Mississauga"}, {"Practice Code": "A8GO", "Practicename": "Fairview Dentistry", "City": "St. Thomas"}, {"Practice Code": "AAGO", "Practicename": "Ottawa West Dental", "City": "Ottawa"}, {"Practice Code": "AEGO", "Practicename": "Sandy Hill Dental Centre", "City": "Ottawa"}, {"Practice Code": "AFGO", "Practicename": "Kent Street Dental Centre", "City": "Ottawa"}, {"Practice Code": "AGGO", "Practicename": "Bearbrook Dental Centre", "City": "Ottawa"}, {"Practice Code": "AHGO", "Practicename": "Greenbank Hunt Club Dental Centre", "City": "Ottawa"}, {"Practice Code": "AIGO", "Practicename": "Clarmain Dental", "City": "Burlington"}, {"Practice Code": "AJGO", "Practicename": "Cornerstone Dentistry", "City": "Brantford"}, {"Practice Code": "ALGO", "Practicename": "York Lanes Dental", "City": "Toronto"}, {"Practice Code": "AOGN", "Practicename": "Gladstone Dental Centre", "City": "Halifax"}, {"Practice Code": "APGN", "Practicename": "Robie Street Dental Centre", "City": "Halifax"}, {"Practice Code": "AQGN", "Practicename": "Brooklyn Dental Centre", "City": "Brooklyn"}, {"Practice Code": "ARGN", "Practicename": "Parkland Dental Centre", "City": "Halifax"}, {"Practice Code": "ASGN", "Practicename": "New Minas Dental Centre", "City": "New Minas"}, {"Practice Code": "ATGO", "Practicename": "Wellspring Dental Pembroke", "City": "Pembroke"}, {"Practice Code": "AUGO", "Practicename": "Wellspring Dental Deep River", "City": "Deep River"}, {"Practice Code": "AYGN", "Practicename": "Clayton Park Dental", "City": "Halifax"}, {"Practice Code": "B0GO", "Practicename": "Dentistry on Green Lane", "City": "Thornhill"}, {"Practice Code": "B1GO", "Practicename": "Dentistry in Ajax", "City": "Ajax"}, {"Practice Code": "B2GO", "Practicename": "Sheppard West Dental", "City": "North York"}, {"Practice Code": "B3GO", "Practicename": "River Oaks Dental", "City": "Oakville"}, {"Practice Code": "B5GN", "Practicename": "Alderney Dental Group", "City": "Dartmouth"}, {"Practice Code": "B6GO", "Practicename": "Madison Dental", "City": "Windsor"}, {"Practice Code": "B7GO", "Practicename": "Alexis Dental", "City": "Belle River"}, {"Practice Code": "B8GO", "Practicename": "St. Clair Beach Dental Centre", "City": "Tecumseh"}, {"Practice Code": "BAGO", "Practicename": "Ridge Smile Dental Clinic", "City": "Ridgetown"}, {"Practice Code": "BBGO", "Practicename": "Collins Bay Dental", "City": "Kingston"}, {"Practice Code": "BCGB", "Practicename": "Granville Station Dental", "City": "Vancouver"}, {"Practice Code": "BCGO", "Practicename": "Rideau Dental Centre", "City": "Ottawa"}, {"Practice Code": "BDGK", "Practicename": "Uptown Dentistry", "City": "Saint John"}, {"Practice Code": "BEGA", "Practicename": "Green Plaza Dental", "City": "Calgary"}, {"Practice Code": "BGGB", "Practicename": "Dr. Kelly Davidoff Family Dentistry", "City": "Nelson"}, {"Practice Code": "BHGA", "Practicename": "Legacy Dental", "City": "Lethbridge"}, {"Practice Code": "BIGB", "Practicename": "Westport Dental", "City": "Port Moody"}, {"Practice Code": "BJGM", "Practicename": "Cor-Dent Dental Centre", "City": "Winnipeg"}, {"Practice Code": "BKGS", "Practicename": "Aspen Dental", "City": "Moose Jaw"}, {"Practice Code": "BOGM", "Practicename": "Lorette Dental Care", "City": "Lorette"}, {"Practice Code": "BQGM", "Practicename": "Norwood Dental Centre", "City": "Winnipeg"}, {"Practice Code": "BRGA", "Practicename": "Saddletowne Dental", "City": "Calgary"}, {"Practice Code": "BSGB", "Practicename": "Life Dental on 6th St.", "City": "New Westminster"}, {"Practice Code": "BTGB", "Practicename": "Beaufort Family Dental", "City": "Comox"}, {"Practice Code": "BUGB", "Practicename": "Quadra Dental Centre", "City": "Victoria"}, {"Practice Code": "BVGB", "Practicename": "Country Club Dental Centre", "City": "Nanaimo"}, {"Practice Code": "BWGB", "Practicename": "Vic West Dentistry", "City": "Victoria"}, {"Practice Code": "BXGB", "Practicename": "Driftwood Dental", "City": "Smithers"}, {"Practice Code": "BYGB", "Practicename": "Coquitlam BC Dental", "City": "Coquitlam"}, {"Practice Code": "C0GO", "Practicename": "The Avenue Dental Centre", "City": "Windsor"}, {"Practice Code": "C2GM", "Practicename": "Academy Dental Group", "City": "Winnipeg"}, {"Practice Code": "C3GO", "Practicename": "Bay Dental Group", "City": "Sault Ste. Marie"}, {"Practice Code": "C4GB", "Practicename": "Broadway Station Dental Centre", "City": "Vancouver"}, {"Practice Code": "C6GO", "Practicename": "Park Lawn Dental", "City": "Etobicoke"}, {"Practice Code": "C9GO", "Practicename": "Royal York Dental", "City": "Toronto"}, {"Practice Code": "CAGL", "Practicename": "Mount Pearl Dental", "City": "Mount Pearl"}, {"Practice Code": "CBGL", "Practicename": "Carbonear Dental", "City": "Carbonear"}, {"Practice Code": "CCGL", "Practicename": "Southern Shore Dental", "City": "Goulds"}, {"Practice Code": "CDGL", "Practicename": "Elliott Dental Studio", "City": "Clarenville"}, {"Practice Code": "CGGB", "Practicename": "Eckhardt Dental Centre", "City": "Penticton"}, {"Practice Code": "CHGA", "Practicename": "Southridge Dental", "City": "Lethbridge"}, {"Practice Code": "CKGM", "Practicename": "Southwood Dental Centre", "City": "Winnipeg"}, {"Practice Code": "CMGM", "Practicename": "Fort Rouge Dental Group", "City": "Winnipeg"}, {"Practice Code": "CNGB", "Practicename": "Quesnel Dental Group - Dr. Mirko Pellizzari", "City": "Quesnel"}, {"Practice Code": "COGO", "Practicename": "Peterborough Dental Clinic", "City": "Peterborough"}, {"Practice Code": "CQGA", "Practicename": "Canyon Creek Dental Clinic", "City": "Calgary"}, {"Practice Code": "CRGS", "Practicename": "Marquis Dental Group", "City": "Saskatoon"}, {"Practice Code": "CTGO", "Practicename": "Popp Dentistry", "City": "Aylmer"}, {"Practice Code": "CUGO", "Practicename": "Rutherford Village Dental", "City": "Thornhill"}, {"Practice Code": "CVGA", "Practicename": "Bankers Hall Dental", "City": "Calgary"}, {"Practice Code": "CYGA", "Practicename": "Metro Dental Care", "City": "Calgary"}, {"Practice Code": "D0GK", "Practicename": "Perth-Andover Dental", "City": "Perth-Andover"}, {"Practice Code": "D1GB", "Practicename": "Alouette Dental Centre", "City": "Maple Ridge"}, {"Practice Code": "D2GO", "Practicename": "Fort Malden Dentistry", "City": "Amherstburg"}, {"Practice Code": "D4GB", "Practicename": "Mountain View Dental Centre", "City": "Fernie"}, {"Practice Code": "D5GO", "Practicename": "Country Hills Dentistry", "City": "Kitchener"}, {"Practice Code": "D6GP", "Practicename": "Downtown Dental", "City": "Charlottetown"}, {"Practice Code": "D7GK", "Practicename": "Demmings Dental Group", "City": "Fredericton"}, {"Practice Code": "D8GB", "Practicename": "Cedar Dental Centre", "City": "Kamloops"}, {"Practice Code": "D9GK", "Practicename": "Dentisterie Int\u00e9grale", "City": "Edmundston"}, {"Practice Code": "DAGN", "Practicename": "Mayflower Dental", "City": "Sydney"}, {"Practice Code": "DBGN", "Practicename": "Mayflower Dental - Northside", "City": "Sydney Mines"}, {"Practice Code": "DCGN", "Practicename": "Mayflower Dental - Sydney River", "City": "Sydney River"}, {"Practice Code": "DDGN", "Practicename": "Bayside Dental", "City": "Glace Bay"}, {"Practice Code": "DEGN", "Practicename": "Harbourside Dental", "City": "North Sydney"}, {"Practice Code": "DGGN", "Practicename": "Alexandra Street Dental", "City": "Sydney"}, {"Practice Code": "DKGB", "Practicename": "Downtown Chilliwack Dental", "City": "Chilliwack"}, {"Practice Code": "DTGA", "Practicename": "Pensak Houghton Dentistry", "City": "Calgary"}, {"Practice Code": "EEGB", "Practicename": "Brooks Landing Dental Clinic", "City": "Nanaimo"}, {"Practice Code": "EFGB", "Practicename": "Arrowsmith Dental Group", "City": "Parksville"}, {"Practice Code": "EKGO", "Practicename": "Ottawa Downtown Dentist", "City": "Ottawa"}, {"Practice Code": "ELGO", "Practicename": "Cloverdale Dental", "City": "Etobicoke"}, {"Practice Code": "EMGO", "Practicename": "Markham 7 Dental", "City": "Markham"}, {"Practice Code": "ENGO", "Practicename": "Arenson Dental & Associates", "City": "Richmond Hill"}, {"Practice Code": "EPGA", "Practicename": "Today's Dental", "City": "Edmonton"}, {"Practice Code": "EVGO", "Practicename": "Say Cheese Dentistry", "City": "Ottawa"}, {"Practice Code": "EWGK", "Practicename": "Beaverbrook Dental", "City": "Fredericton"}, {"Practice Code": "EXGK", "Practicename": "McMillan Dentistry", "City": "Fredericton"}, {"Practice Code": "EYGK", "Practicename": "Minto Dental Clinic", "City": "Minto"}, {"Practice Code": "F0GO", "Practicename": "Dawson Dental - Newmarket", "City": "Newmarket"}, {"Practice Code": "F1GO", "Practicename": "Dawson Dental - Aurora", "City": "Aurora"}, {"Practice Code": "F2GO", "Practicename": "Dawson Dental - Brooklin", "City": "Whitby"}, {"Practice Code": "F3GO", "Practicename": "Dawson Dental - Cambridge", "City": "Cambridge"}, {"Practice Code": "F4GO", "Practicename": "Dawson Dental - Guelph North", "City": "Guelph"}, {"Practice Code": "F5GO", "Practicename": "Dawson Dental - Guelph South", "City": "Guelph"}, {"Practice Code": "F6GO", "Practicename": "Dawson Dental - Kingston", "City": "Kingston"}, {"Practice Code": "F8GO", "Practicename": "Dawson Dental - Oshawa", "City": "Oshawa"}, {"Practice Code": "F9GO", "Practicename": "Dawson Dental - Rosedale", "City": "Toronto"}, {"Practice Code": "FEGO", "Practicename": "Dental Care Kingston", "City": "Kingston"}, {"Practice Code": "FGGO", "Practicename": "Portrait Dental", "City": "Toronto"}, {"Practice Code": "FHGO", "Practicename": "Applewood Dental", "City": "Innisfil"}, {"Practice Code": "G0GO", "Practicename": "Dawson Dental - Scarborough", "City": "Scarborough"}, {"Practice Code": "G1GO", "Practicename": "Dawson Dental - Waterloo", "City": "Waterloo"}, {"Practice Code": "G3GO", "Practicename": "Dawson Dental - Toronto (Downtown)", "City": "Toronto"}, {"Practice Code": "G4GO", "Practicename": "The Art of Dentistry", "City": "Toronto"}, {"Practice Code": "G5GO", "Practicename": "Dawson Dental - Kitchener", "City": "Kitchener"}, {"Practice Code": "G6GO", "Practicename": "Dawson Dental - Barrie", "City": "Barrie"}, {"Practice Code": "G8GO", "Practicename": "Dawson Dental Hanover", "City": "Hanover"}, {"Practice Code": "G9GO", "Practicename": "Dawson Dental - Lucknow", "City": "Lucknow"}, {"Practice Code": "H0GN", "Practicename": "Scotia Dental", "City": "Halifax"}, {"Practice Code": "H1GO", "Practicename": "Dawson Dental - North Bay", "City": "North Bay"}, {"Practice Code": "H3GO", "Practicename": "Dawson Dental - King City", "City": "King City"}, {"Practice Code": "H5GO", "Practicename": "Dawson Dental - Midtown", "City": "Toronto"}, {"Practice Code": "H6GO", "Practicename": "Southwest Dental Care", "City": "London"}, {"Practice Code": "HAGO", "Practicename": "Ainslie Street Dental", "City": "Cambridge"}, {"Practice Code": "HEGO", "Practicename": "Ferris Lane Dental", "City": "Barrie"}, {"Practice Code": "HFGO", "Practicename": "Dentistry at FCP", "City": "Toronto"}, {"Practice Code": "HIGA", "Practicename": "Riverbend Family Dental Care", "City": "Edmonton"}, {"Practice Code": "HJGO", "Practicename": "Dawson Dental - East York", "City": "Toronto"}, {"Practice Code": "HKGO", "Practicename": "Dawson Dental - Callander Bay", "City": "Callander"}, {"Practice Code": "HMGO", "Practicename": "Southwood Dental Studio - Colonel Talbot", "City": "London"}, {"Practice Code": "HNGO", "Practicename": "Southwood Dental Studio - Southdale (Jalna)", "City": "London"}, {"Practice Code": "HOGO", "Practicename": "Southwood Dental Studio - Highbury (Kilally)", "City": "London"}, {"Practice Code": "HPGO", "Practicename": "Southwood Dental Centre - Fanshawe", "City": "London"}, {"Practice Code": "HRGO", "Practicename": "LightHouse Dental London", "City": "London"}, {"Practice Code": "HTGO", "Practicename": "Dawson Dental - Brampton", "City": "Brampton"}, {"Practice Code": "HUGO", "Practicename": "Cedarwood Dental", "City": "Keswick"}, {"Practice Code": "HVGO", "Practicename": "Dawson Dental - Keswick", "City": "Keswick"}, {"Practice Code": "I3GA", "Practicename": "Orijin Dental", "City": "Calgary"}, {"Practice Code": "I7GB", "Practicename": "Wellington Dental Clinic", "City": "Nanaimo"}, {"Practice Code": "I9GQ", "Practicename": "Centre Dentaire \u00cele-Perrot", "City": "L'ile-Perrot"}, {"Practice Code": "IAGQ", "Practicename": "Clinique Dentaire Dr. S. Sgro & Dr. J. Lang", "City": "Greenfield Park"}, {"Practice Code": "ICGA", "Practicename": "Duggan Dental", "City": "Camrose"}, {"Practice Code": "IEGA", "Practicename": "River Dental", "City": "Medicine Hat"}, {"Practice Code": "IKGA", "Practicename": "Valley Centre Dental Clinic", "City": "Whitecourt"}, {"Practice Code": "ILGS", "Practicename": "Melfort Dental Group", "City": "Melfort"}, {"Practice Code": "IMGQ", "Practicename": "Clinique Dentaire d'Aylmer", "City": "Gatineau"}, {"Practice Code": "INGO", "Practicename": "Southcommon Dental", "City": "Mississauga"}, {"Practice Code": "IOGQ", "Practicename": "Clinique Dentaire Beaumont Michaud et Associ\u00e9s", "City": "Alma"}, {"Practice Code": "IPGQ", "Practicename": "Clinique Dentaire Sherbrooke", "City": "Sherbrooke"}, {"Practice Code": "IQGQ", "Practicename": "Clinique Dentaire Gatineau", "City": "Gatineau"}, {"Practice Code": "IRGO", "Practicename": "R.A. Campbell Dentistry", "City": "Bowmanville"}, {"Practice Code": "IUGK", "Practicename": "Riverview Dentistry", "City": "Riverview"}, {"Practice Code": "IVGQ", "Practicename": "Dr Tina Dorfman Family Dentist", "City": "Pointe-Claire"}, {"Practice Code": "IYGQ", "Practicename": "Clinique Dentaire Familiale de St-Eustache", "City": "Saint-Eustache"}, {"Practice Code": "J2GB", "Practicename": "Carrington Dental Centre", "City": "West Kelowna"}, {"Practice Code": "J3GB", "Practicename": "HighGate Dental", "City": "Burnaby"}, {"Practice Code": "J4GA", "Practicename": "Airdrie Dental Studio", "City": "Airdrie"}, {"Practice Code": "J5GQ", "Practicename": "Centre Dentaire Jobin", "City": "Boisbriand"}, {"Practice Code": "J6GM", "Practicename": "Boundary Trails Dental Centre", "City": "Morden"}, {"Practice Code": "J8GM", "Practicename": "Reflections Dental Health Centre", "City": "Winnipeg"}, {"Practice Code": "JAGO", "Practicename": "Lake of the Woods Dental Health", "City": "Kenora"}, {"Practice Code": "JFGO", "Practicename": "Dentistry in Bolton", "City": "Bolton"}, {"Practice Code": "JNGO", "Practicename": "The Accolade Dental Centre", "City": "Toronto"}, {"Practice Code": "JOGO", "Practicename": "Church Wellesley Dental Centre", "City": "Toronto"}, {"Practice Code": "JRGQ", "Practicename": "Clinique Dentaire Albert & Cayouette", "City": "Carleton-sur-mer"}, {"Practice Code": "JUGO", "Practicename": "Foxcreek Dental", "City": "Oakville"}, {"Practice Code": "JVGB", "Practicename": "Orchard Park Dental & Implant Centre", "City": "Kelowna"}, {"Practice Code": "JWGB", "Practicename": "Tuscany Dental Centre", "City": "Victoria"}, {"Practice Code": "KBGO", "Practicename": "Big Bay Dental", "City": "Barrie"}, {"Practice Code": "KCGO", "Practicename": "Birchmount Dental Group", "City": "Scarborough"}, {"Practice Code": "KGGO", "Practicename": "Kaplan Dental Clinic", "City": "Toronto"}, {"Practice Code": "KHGB", "Practicename": "W Dental", "City": "Vancouver"}, {"Practice Code": "KJGB", "Practicename": "Royal Centre Dental Group", "City": "VANCOUVER"}, {"Practice Code": "KKGO", "Practicename": "Manor Park Dental", "City": "Ottawa"}, {"Practice Code": "KLGO", "Practicename": "Got Smile Dental Centre", "City": "Napanee"}, {"Practice Code": "KMGA", "Practicename": "Apple Dental Care", "City": "Edmonton"}, {"Practice Code": "KNGB", "Practicename": "North Delta Dental Professionals", "City": "Delta"}, {"Practice Code": "KOGA", "Practicename": "Slave Lake Dental", "City": "Slave Lake"}, {"Practice Code": "KPGO", "Practicename": "Ottawa Dentistry", "City": "Ottawa"}, {"Practice Code": "KQGQ", "Practicename": "Centre Dentaire Familial Ste-Doroth\u00e9e", "City": "Laval"}, {"Practice Code": "KRGB", "Practicename": "Image Smiles Dental", "City": "vancouver"}, {"Practice Code": "KSGO", "Practicename": "Hunter Dental", "City": "Markham"}, {"Practice Code": "KTGA", "Practicename": "South 40 Dental - Grande Prairie", "City": "Grande Prairie"}, {"Practice Code": "KUGA", "Practicename": "South 40 Dental - Sexsmith", "City": "Sexsmith"}, {"Practice Code": "KWGA", "Practicename": "Progressive Dental", "City": "Calgary"}, {"Practice Code": "KXGO", "Practicename": "Yonge Street Dental", "City": "Toronto"}, {"Practice Code": "L1GB", "Practicename": "Summit Dental", "City": "Kamloops"}, {"Practice Code": "L1GO", "Practicename": "Dentalhouse - Glen Abbey", "City": "Oakville"}, {"Practice Code": "L3GO", "Practicename": "Toronto Liberty Dental", "City": "Toronto"}, {"Practice Code": "L4GO", "Practicename": "Toothworks King York Dental", "City": "Toronto"}, {"Practice Code": "L5GO", "Practicename": "Dentalhouse - Woodbridge Dental", "City": "Woodbridge"}, {"Practice Code": "L6GO", "Practicename": "Dentalhouse - Victoria Dental Arts", "City": "Belleville"}, {"Practice Code": "L8GO", "Practicename": "Eastside Dental", "City": "Windsor"}, {"Practice Code": "L9GQ", "Practicename": "Clinique Dentaire Sourire Sant\u00e9", "City": "Mascouche"}, {"Practice Code": "LAGB", "Practicename": "Penticton Dental Centre", "City": "Penticton"}, {"Practice Code": "LBGO", "Practicename": "Pickering Village Dental Office", "City": "Ajax"}, {"Practice Code": "LCGM", "Practicename": "Interlake Dental Centre", "City": "Selkirk"}, {"Practice Code": "LDGO", "Practicename": "Expressions Dental Care", "City": "Richmond Hill"}, {"Practice Code": "LGGS", "Practicename": "Northgate Dental Clinic", "City": "Regina"}, {"Practice Code": "LIGS", "Practicename": "Emerald Park Dental Clinic", "City": "Emerald Park"}, {"Practice Code": "LJGS", "Practicename": "Moosomin Dental Centre", "City": "Moosomin"}, {"Practice Code": "LOGS", "Practicename": "Battlefords Dental Centre", "City": "North Battleford"}, {"Practice Code": "LPGS", "Practicename": "Anchor Dental Group", "City": "Swift Current"}, {"Practice Code": "LQGQ", "Practicename": "Clinique Dentaire Mass\u00e9 & Rioux", "City": "L'Ancienne-Lorette"}, {"Practice Code": "LRGB", "Practicename": "Revelstoke Dental Centre", "City": "Revelstoke"}, {"Practice Code": "LSGB", "Practicename": "Hilltop Dental", "City": "Duncan"}, {"Practice Code": "LTGO", "Practicename": "Sault Family Dental", "City": "Sault Ste. Marie"}, {"Practice Code": "LUGK", "Practicename": "Centre Dentaire Boucher Levesque Maltais", "City": "Dieppe"}, {"Practice Code": "LVGS", "Practicename": "Sutherland Dental", "City": "Saskatoon"}, {"Practice Code": "LWGN", "Practicename": "Trimac Dental Centre", "City": "Halifax"}, {"Practice Code": "LYGS", "Practicename": "Health Style Dental", "City": "Regina"}, {"Practice Code": "M0GO", "Practicename": "Riverdale Dental", "City": "Toronto"}, {"Practice Code": "M2GO", "Practicename": "Kerhoulas Dental Rosedale", "City": "Toronto"}, {"Practice Code": "M4GO", "Practicename": "Dr. Daniel Mahler Dentistry", "City": "Hamilton"}, {"Practice Code": "M5GN", "Practicename": "Evergreen Dental", "City": "Dartmouth"}, {"Practice Code": "M6GQ", "Practicename": "Centre Dentaire Masse", "City": "Quebec City"}, {"Practice Code": "M8GO", "Practicename": "St. Laurent Dental Centre", "City": "Ottawa"}, {"Practice Code": "M9GP", "Practicename": "Cornwall Dental Care", "City": "Cornwall"}, {"Practice Code": "MAGP", "Practicename": "Water Street Dental Clinic", "City": "Summerside"}, {"Practice Code": "MBGA", "Practicename": "Canada Place Dental", "City": "Edmonton"}, {"Practice Code": "MCGM", "Practicename": "Fort Richmond Dental Centre", "City": "Winnipeg"}, {"Practice Code": "MDGO", "Practicename": "Delisle Dental Group", "City": "Toronto"}, {"Practice Code": "MGGO", "Practicename": "Bloor Kipling Dentistry", "City": "Etobicoke"}, {"Practice Code": "MHGB", "Practicename": "Wembley Dental Clinic", "City": "Parksville"}, {"Practice Code": "MIGM", "Practicename": "Brandon Dental Centre", "City": "Brandon"}, {"Practice Code": "MJGS", "Practicename": "Westlake Dental", "City": "Lloydminster"}, {"Practice Code": "MKGA", "Practicename": "Market Mall Dental Care", "City": "Calgary"}, {"Practice Code": "MMGM", "Practicename": "Sturgeon Creek Dental", "City": "Winnipeg"}, {"Practice Code": "MNGA", "Practicename": "Timberlands Dental Care", "City": "Red Deer"}, {"Practice Code": "MOGA", "Practicename": "Southpointe Dental", "City": "Red Deer"}, {"Practice Code": "MQGQ", "Practicename": "Dentavie", "City": "Sherbrooke"}, {"Practice Code": "MRGQ", "Practicename": "Clinique Dentaire Gervais et Associ\u00e9s", "City": "Longueuil"}, {"Practice Code": "MTGO", "Practicename": "West Mall Dental Group", "City": "Etobicoke"}, {"Practice Code": "MUGQ", "Practicename": "Centre Dentaire et d'Implantologie Francis C\u00f4t\u00e9", "City": "Sept-\u00celes"}, {"Practice Code": "MVGO", "Practicename": "Arthur Dental", "City": "Arthur"}, {"Practice Code": "MWGS", "Practicename": "Lake Country Dental Centre", "City": "Prince Albert"}, {"Practice Code": "MXGQ", "Practicename": "Centre Dentaire Pierre Viau", "City": "Granby"}, {"Practice Code": "N0GA", "Practicename": "Hall Dental", "City": "Lethbridge"}, {"Practice Code": "N1GQ", "Practicename": "Espace Sourire Chomedey", "City": "Laval"}, {"Practice Code": "N2GQ", "Practicename": "Espace Sourire St-Fran\u00e7ois", "City": "Laval"}, {"Practice Code": "N3GM", "Practicename": "Odyssey Dental Care", "City": "Winnipeg"}, {"Practice Code": "NCGQ", "Practicename": "Centre Dentaire De l'Ouest", "City": "Pierrefonds"}, {"Practice Code": "NEGQ", "Practicename": "Clinique Dentaire Claremont", "City": "Westmount"}, {"Practice Code": "NGGQ", "Practicename": "Centre Dentaire Fancelli", "City": "Longueuil"}, {"Practice Code": "NHGQ", "Practicename": "Sant\u00e9 Dentaire Richard B\u00e9langer", "City": "Ville St-Laurent"}, {"Practice Code": "NIGB", "Practicename": "Ocean Dental", "City": "Burnaby"}, {"Practice Code": "NJGB", "Practicename": "Northgate Dental Centre", "City": "Burnaby"}, {"Practice Code": "NKGB", "Practicename": "Marine Way Dental Centre", "City": "Burnaby"}, {"Practice Code": "NMGB", "Practicename": "Thompson River Dental", "City": "Kamloops"}, {"Practice Code": "NNGB", "Practicename": "Peace Country Dental Clinic", "City": "Dawson Creek"}, {"Practice Code": "NPGS", "Practicename": "Souris Family Dental", "City": "Weyburn"}, {"Practice Code": "NSGN", "Practicename": "Spryfield Dentistry", "City": "Halifax"}, {"Practice Code": "NTGO", "Practicename": "Bay Street Dental Associates", "City": "Toronto"}, {"Practice Code": "NWGQ", "Practicename": "Clinique Dentaire Chambly", "City": "Chambly"}, {"Practice Code": "NXGQ", "Practicename": "Centre Dentaire Carole Gignac", "City": "Saint-Augustin-de-Desmaures"}, {"Practice Code": "O0GN", "Practicename": "Antigonish Family Dentistry", "City": "Antigonish"}, {"Practice Code": "O1GN", "Practicename": "Port Hawkesbury Dental Group", "City": "Port Hawkesbury"}, {"Practice Code": "O3GN", "Practicename": "SouthWest Dental - Yarmouth", "City": "Yarmouth"}, {"Practice Code": "O4GN", "Practicename": "Acadian Smiles", "City": "Meteghan"}, {"Practice Code": "OAGO", "Practicename": "Belleville Dental Care", "City": "Belleville"}, {"Practice Code": "OBGO", "Practicename": "Tweed Dental Care", "City": "Tweed"}, {"Practice Code": "ODGB", "Practicename": "One Dental Centre", "City": "Kelowna"}, {"Practice Code": "OGGS", "Practicename": "Moosomin Dental Clinic", "City": "Moosomin"}, {"Practice Code": "OHGS", "Practicename": "Acre 21 Dental", "City": "Regina"}, {"Practice Code": "OJGO", "Practicename": "Stayner Dental", "City": "Stayner"}, {"Practice Code": "OLGO", "Practicename": "Dentistry at Lifestyles", "City": "Midland"}, {"Practice Code": "OMGO", "Practicename": "Hawkesbury Dental Centre", "City": "Hawkesbury"}, {"Practice Code": "ONGO", "Practicename": "North Park Dental Care", "City": "Toronto"}, {"Practice Code": "OPGA", "Practicename": "Crawford Dental Clinic", "City": "Taber"}, {"Practice Code": "ORGP", "Practicename": "Montague River Dentistry", "City": "Montague"}, {"Practice Code": "OSGQ", "Practicename": "Centre Dentaire Nicolet", "City": "Nicolet"}, {"Practice Code": "OTGO", "Practicename": "Hazeldean Dental Group", "City": "Kanata"}, {"Practice Code": "OYGQ", "Practicename": "Clinique Dentaire Gauvin et Michaud", "City": "Becancour"}, {"Practice Code": "P2GQ", "Practicename": "Clinique Dentaire B\u00e9langer Bennett", "City": "Boucherville"}, {"Practice Code": "P5GB", "Practicename": "Promontory Dental Centre", "City": "Chilliwack"}, {"Practice Code": "P6GB", "Practicename": "Comox Valley Dental Centre", "City": "Comox"}, {"Practice Code": "P8GY", "Practicename": "Dandelion Dental", "City": "Whitehorse"}, {"Practice Code": "PCGO", "Practicename": "Downtown Dental Centre", "City": "Toronto"}, {"Practice Code": "PDGO", "Practicename": "The Studio for Aesthetic Dentistry", "City": "Toronto"}, {"Practice Code": "PEGN", "Practicename": "Atlantic Dental Centre", "City": "Halifax"}, {"Practice Code": "PFGB", "Practicename": "Kits Point Dental Group", "City": "Vancouver"}, {"Practice Code": "PHGB", "Practicename": "Dr. M. Jawanda Dentistry", "City": "Quesnel"}, {"Practice Code": "PIGO", "Practicename": "Chapman Mills Dental", "City": "Ottawa"}, {"Practice Code": "PJGB", "Practicename": "Omega Dental", "City": "Delta"}, {"Practice Code": "PKGB", "Practicename": "My Tsawwassen Dentist", "City": "Delta"}, {"Practice Code": "PLGA", "Practicename": "Village Lane Dental Centre", "City": "Okotoks"}, {"Practice Code": "PMGA", "Practicename": "iDental", "City": "Okotoks"}, {"Practice Code": "PNGA", "Practicename": "West Market Dental", "City": "Calgary"}, {"Practice Code": "POGO", "Practicename": "Herongate Dental", "City": "Ottawa"}, {"Practice Code": "PPGO", "Practicename": "Alta Vista Dental Clinic", "City": "Ottawa"}, {"Practice Code": "PQGP", "Practicename": "Dr. Kerby Bruce and Associates", "City": "Charlottetown"}, {"Practice Code": "PRGM", "Practicename": "All Smiles Dental", "City": "East Saint Paul"}, {"Practice Code": "PVGQ", "Practicename": "Clinique Dentaire Samuel Holland", "City": "Qu\u00e9bec"}, {"Practice Code": "PWGQ", "Practicename": "Clinique Dentaire ADF", "City": "L'\u00cele-Perrot"}, {"Practice Code": "Q0GB", "Practicename": "Clayburn Dental", "City": "Abbotsford"}, {"Practice Code": "Q1GA", "Practicename": "Go Dental", "City": "Calgary"}, {"Practice Code": "Q3GB", "Practicename": "Grasslands Dental Care", "City": "Kamloops"}, {"Practice Code": "Q5GB", "Practicename": "James Bay Dental", "City": "Victoria"}, {"Practice Code": "Q6GB", "Practicename": "Driftwood Dental", "City": "Courtenay"}, {"Practice Code": "Q8GA", "Practicename": "Access Dental", "City": "Grande Prairie"}, {"Practice Code": "Q9GA", "Practicename": "Prairie Mall Dental Clinic", "City": "Grande Prairie"}, {"Practice Code": "QDGA", "Practicename": "Blunston Dental Group", "City": "Airdrie"}, {"Practice Code": "QEGO", "Practicename": "Alinea Dental", "City": "Ottawa"}, {"Practice Code": "QFGO", "Practicename": "Allegra Dental", "City": "Ottawa"}, {"Practice Code": "QIGO", "Practicename": "Richmond Village Dental", "City": "Richmond"}, {"Practice Code": "QJGO", "Practicename": "The Hunt Club Dental Centre", "City": "Ottawa"}, {"Practice Code": "QKGO", "Practicename": "Lighthouse Dental - Kingston", "City": "Kingston"}, {"Practice Code": "QMGO", "Practicename": "LightHouse Dental - Chatham", "City": "Chatham"}, {"Practice Code": "QNGO", "Practicename": "LightHouse Dental - Cobourg", "City": "Cobourg"}, {"Practice Code": "QPGQ", "Practicename": "Carrefour Dentaire de Montr\u00e9al", "City": "Montr\u00e9al"}, {"Practice Code": "QQGQ", "Practicename": "Clinique Dentaire Du Quartier", "City": "Qu\u00e9bec"}, {"Practice Code": "QRGB", "Practicename": "Westside Dental Centre", "City": "Westbank"}, {"Practice Code": "QVGB", "Practicename": "Dr. Sandy Crocker, Dr. Peter Mitchell and Associates", "City": "Kelowna"}, {"Practice Code": "QXGM", "Practicename": "Fort Garry Dental Centre", "City": "Winnipeg"}, {"Practice Code": "R9GO", "Practicename": "Forest City Dental", "City": "London"}, {"Practice Code": "RAGB", "Practicename": "Family Dental Care - River Point", "City": "Prince George"}, {"Practice Code": "RBGB", "Practicename": "Family Dental Care - Spruceland", "City": "Prince George"}, {"Practice Code": "RCGB", "Practicename": "Family Dental Care - Downtown", "City": "Prince George"}, {"Practice Code": "RDGB", "Practicename": "Family Dental Care - College Heights", "City": "Prince George"}, {"Practice Code": "RHGB", "Practicename": "Family Dental Care - Kitsilano", "City": "Vancouver"}, {"Practice Code": "RKGA", "Practicename": "Ivory Dental", "City": "Lethbridge"}, {"Practice Code": "RLGS", "Practicename": "Warman Dental", "City": "Warman"}, {"Practice Code": "RMGO", "Practicename": "Sudbury Dental Group", "City": "Sudbury"}, {"Practice Code": "RNGM", "Practicename": "Wildwood Dental Group", "City": "Winnipeg"}, {"Practice Code": "ROGO", "Practicename": "Dr. Rachel Navaneelan & Associates", "City": "Cornwall"}, {"Practice Code": "RPGQ", "Practicename": "Centre Dentaire Gaudreault Marquis", "City": "Qu\u00e9bec"}, {"Practice Code": "RQGB", "Practicename": "Warmland Dental", "City": "Duncan"}, {"Practice Code": "RRGO", "Practicename": "Midland Family Dentistry", "City": "Midland"}, {"Practice Code": "RTGB", "Practicename": "Cornerstone Dental - Dr. Rex Hawthorne", "City": "Vernon"}, {"Practice Code": "RYGA", "Practicename": "Wheatfield Dental", "City": "Morinville"}, {"Practice Code": "S0GN", "Practicename": "Highland Dental Centre", "City": "New Glasgow"}, {"Practice Code": "S1GB", "Practicename": "Pure Dental", "City": "Kamloops"}, {"Practice Code": "S2GO", "Practicename": "West End Dental Centre", "City": "Trenton"}, {"Practice Code": "S3GA", "Practicename": "Harker, Chan & Associates", "City": "Calgary"}, {"Practice Code": "S4GA", "Practicename": "Tower Dental Clinic", "City": "Calgary"}, {"Practice Code": "S5GA", "Practicename": "Park Square Dental", "City": "Wetaskiwin"}, {"Practice Code": "S6GA", "Practicename": "Dentistry at Market Mall", "City": "Calgary"}, {"Practice Code": "S7GQ", "Practicename": "Clinique Dentaire Saint-Jean-Baptiste Ch\u00e2teauguay", "City": "Ch\u00e2teauguay"}, {"Practice Code": "S8GO", "Practicename": "Orleans Queensway Dental", "City": "Ottawa"}, {"Practice Code": "S9GB", "Practicename": "Canyon Dental Centre", "City": "North Vancouver"}, {"Practice Code": "SBGM", "Practicename": "Munroe Dental Centre", "City": "Winnipeg"}, {"Practice Code": "SCGB", "Practicename": "Oakmount Dental", "City": "Burnaby"}, {"Practice Code": "SDGQ", "Practicename": "Clinique Dentaire St-Louis", "City": "Qu\u00e9bec"}, {"Practice Code": "SEGO", "Practicename": "Uptowne Dental Centre", "City": "Toronto"}, {"Practice Code": "SFGO", "Practicename": "Amberwood Dental Centre", "City": "Newmarket"}, {"Practice Code": "SHGA", "Practicename": "Spackman Dental", "City": "Calgary"}, {"Practice Code": "SKGA", "Practicename": "Canmore Dental Centre", "City": "Canmore"}, {"Practice Code": "SLGQ", "Practicename": "Centre Dentaire St-Nicolas", "City": "L\u00e9vis"}, {"Practice Code": "SMGQ", "Practicename": "Clinique Dentaire Pointe-du-Lac", "City": "Trois-Rivi\u00e8res"}, {"Practice Code": "SNGM", "Practicename": "Assiniboine Dental Group", "City": "Winnipeg"}, {"Practice Code": "SOGQ", "Practicename": "Clinique Dentaire St-Gabriel", "City": "st-gabriel-de-brandon"}, {"Practice Code": "SPGQ", "Practicename": "Centre Dentaire Deslauriers", "City": "Repentigny"}, {"Practice Code": "SQGO", "Practicename": "Kennedy East Dental", "City": "Hamilton"}, {"Practice Code": "SSGQ", "Practicename": "Clinique Dentaire Familiale Windsor", "City": "Windsor"}, {"Practice Code": "STGB", "Practicename": "Midtown Kelowna Dental", "City": "Kelowna"}, {"Practice Code": "SUGB", "Practicename": "Landmark Dental Centre", "City": "Kelowna"}, {"Practice Code": "SWGO", "Practicename": "Cedars Dental", "City": "Ottawa"}, {"Practice Code": "SXGB", "Practicename": "Oceanfront Dental", "City": "Vancouver"}, {"Practice Code": "SYGS", "Practicename": "Prairie Smiles Dental Group", "City": "Yorkton"}, {"Practice Code": "T1GL", "Practicename": "Big Smiles Dental", "City": "Gander"}, {"Practice Code": "T2GL", "Practicename": "Big Smiles Dental - Fogo Island", "City": "Fogo Island"}, {"Practice Code": "T6GO", "Practicename": "Kerhoulas Dental", "City": "Mississauga"}, {"Practice Code": "T8GA", "Practicename": "Arbour Lake Dental Care", "City": "Calgary"}, {"Practice Code": "TCGM", "Practicename": "LifeSmiles Dental - La Salle", "City": "La Salle"}, {"Practice Code": "TDGM", "Practicename": "LifeSmiles Dental - Grant Park Mall", "City": "winnipeg"}, {"Practice Code": "TEGM", "Practicename": "LifeSmiles Dental - Selkirk", "City": "Selkirk"}, {"Practice Code": "TFGM", "Practicename": "LifeSmiles Dental - Sargent Ave", "City": "Winnipeg"}, {"Practice Code": "TIGM", "Practicename": "LifeSmiles Dental-Westminster", "City": "Winnipeg"}, {"Practice Code": "TLGO", "Practicename": "Toothworks Kilborn Dental Centre", "City": "Ottawa"}, {"Practice Code": "TMGO", "Practicename": "Toothworks College Park Dental", "City": "Toronto"}, {"Practice Code": "TNGO", "Practicename": "Toothworks Bay Adelaide Dental", "City": "Toronto"}, {"Practice Code": "TOGO", "Practicename": "Toothworks Richmond-Adelaide Dental", "City": "Toronto"}, {"Practice Code": "TPGO", "Practicename": "Toothworks Brookfield Place Dental", "City": "Toronto"}, {"Practice Code": "TQGO", "Practicename": "Toothworks The Boardwalk Dental", "City": "Waterloo"}, {"Practice Code": "TRGO", "Practicename": "Toothworks Fairview Park Dental", "City": "Kitchener"}, {"Practice Code": "TSGO", "Practicename": "Toothworks Square One Dental", "City": "Mississauga"}, {"Practice Code": "TTGO", "Practicename": "Toothworks Sterling Dental", "City": "Scarborough"}, {"Practice Code": "TUGO", "Practicename": "Toothworks Masonville Place Dental", "City": "London"}, {"Practice Code": "TXGO", "Practicename": "Toothworks - Pine Ridge Dental Centre", "City": "Scarborough"}, {"Practice Code": "U0GA", "Practicename": "Affinity Dental - Mayfield Common", "City": "Edmonton"}, {"Practice Code": "U3GB", "Practicename": "Peachland Dental Centre", "City": "Peachland"}, {"Practice Code": "U4GA", "Practicename": "Greentree Dental", "City": "Drumheller"}, {"Practice Code": "U5GB", "Practicename": "True Dental", "City": "West Kelowna"}, {"Practice Code": "U6GB", "Practicename": "Alaska Avenue Dental Clinic", "City": "Fort St. John"}, {"Practice Code": "U7GO", "Practicename": "Riverside Family Dentistry", "City": "Ottawa"}, {"Practice Code": "U8GO", "Practicename": "Hollinger Dental Group", "City": "Timmins"}, {"Practice Code": "U9GO", "Practicename": "O'Connor Dental Health Group", "City": "Ottawa"}, {"Practice Code": "UGGQ", "Practicename": "Centre Dentaire Pellan & Lessard", "City": "Qu\u00e9bec"}, {"Practice Code": "UIGO", "Practicename": "Collingwood Dental Centre", "City": "Collingwood"}, {"Practice Code": "UJGA", "Practicename": "Sunset Ridge Dental", "City": "Cochrane"}, {"Practice Code": "UKGO", "Practicename": "Montrose Dental", "City": "Niagara Falls"}, {"Practice Code": "ULGA", "Practicename": "Deer Valley Dental Care", "City": "Calgary"}, {"Practice Code": "UMGL", "Practicename": "West Coast Family Dental", "City": "Corner Brook"}, {"Practice Code": "UMGM", "Practicename": "Chancellor Dental Centre", "City": "Winnipeg"}, {"Practice Code": "UNGM", "Practicename": "Redwood Dental Centre", "City": "Winnipeg"}, {"Practice Code": "URGA", "Practicename": "Azarko Dental Group", "City": "Edmonton"}, {"Practice Code": "UTGA", "Practicename": "Highmoor Dental", "City": "Edmonton"}, {"Practice Code": "UVGO", "Practicename": "Pembroke Dental", "City": "Pembroke"}, {"Practice Code": "UWGO", "Practicename": "Saugeen Dental", "City": "Hanover"}, {"Practice Code": "UXGO", "Practicename": "Barrhaven South Dentistry", "City": "Nepean"}, {"Practice Code": "UYGO", "Practicename": "Bridlewood Dental", "City": "Kanata"}, {"Practice Code": "W1GO", "Practicename": "Beach Road Dental", "City": "Innisfil"}, {"Practice Code": "W2GO", "Practicename": "Green Meadows Dental", "City": "Guelph"}, {"Practice Code": "W5GO", "Practicename": "Log Home Dental", "City": "Caledon East"}, {"Practice Code": "W6GO", "Practicename": "Upper Ottawa Dental", "City": "Hamilton"}, {"Practice Code": "W7GO", "Practicename": "Wiarton Dental", "City": "Wiarton"}, {"Practice Code": "WAGQ", "Practicename": "Anjou Centre Dentaire d'Urgence", "City": "Montr\u00e9al"}, {"Practice Code": "WBGQ", "Practicename": "Centre Dentaire 1450", "City": "Longueuil"}, {"Practice Code": "WCGQ", "Practicename": "Centre Dentaire Monk", "City": "Montr\u00e9al"}, {"Practice Code": "WDGQ", "Practicename": "Centre Dentaire et d'Implantologie Chicoutimi-Nord", "City": "Saguenay"}, {"Practice Code": "WEGQ", "Practicename": "Centre Dentaire Serge Chauss\u00e9", "City": "Montr\u00e9al"}, {"Practice Code": "WFGQ", "Practicename": "Centre Dentaire St-Luc", "City": "Saint-Jean-sur-Richelieu"}, {"Practice Code": "WHGQ", "Practicename": "Clinique Dentaire B\u00e9dard Couture", "City": "Longueuil"}, {"Practice Code": "WIGQ", "Practicename": "Clinique Dentaire Denis Monier", "City": "Qu\u00e9bec"}, {"Practice Code": "WJGQ", "Practicename": "Clinique Dentaire Sainte-Justine", "City": "Sainte-Justine"}, {"Practice Code": "WKGQ", "Practicename": "Clinique Dentaire Centre-Ville Sept-\u00celes", "City": "Sept-\u00celes"}, {"Practice Code": "WLGQ", "Practicename": "Dentaire Espace Pur", "City": "Boucherville"}, {"Practice Code": "WNGQ", "Practicename": "Centre De Soins Dentaires Des Sept-\u00celes", "City": "Sept-\u00celes"}, {"Practice Code": "WRGB", "Practicename": "Vancouver Dental at Victoria & 54th", "City": "Vancouver"}, {"Practice Code": "WSGO", "Practicename": "Smile Dental Centre", "City": "London"}, {"Practice Code": "WTGO", "Practicename": "My Care Dental", "City": "Niagara Falls"}, {"Practice Code": "WUGO", "Practicename": "Thorncliffe Dental Centre", "City": "Toronto"}, {"Practice Code": "WVGO", "Practicename": "Kanata Lakes Dental Centre", "City": "Kanata"}, {"Practice Code": "WWGO", "Practicename": "Pacifica Dental", "City": "Clarence-Rockland"}, {"Practice Code": "Y1GQ", "Practicename": "Centre Dentaire Linda B\u00e9langer", "City": "Saint-Hyacinthe"}, {"Practice Code": "Y2GO", "Practicename": "Centre Dentaire VIVA Alfred", "City": "Alfred"}, {"Practice Code": "Y3GQ", "Practicename": "Centre Dentaire VIVA Beauharnois", "City": "Beauharnois"}, {"Practice Code": "Y4GO", "Practicename": "Centre Dentaire VIVA Cornwall", "City": "Cornwall"}, {"Practice Code": "Y5GQ", "Practicename": "Centre Dentaire VIVA Ormstown", "City": "Ormstown"}, {"Practice Code": "Y6GQ", "Practicename": "Centre Dentaire VIVA Saint-Zotique", "City": "Saint-Zotique"}, {"Practice Code": "Y7GQ", "Practicename": "Centre Dentaire VIVA Saint-Constant", "City": "Saint-Constant"}, {"Practice Code": "Y8GQ", "Practicename": "Centre dentaire VIVA Saint-Joseph-du-Lac", "City": "Saint-Joseph-du-Lac"}, {"Practice Code": "Y9GQ", "Practicename": "Centre Dentaire VIVA Saint-Pie", "City": "Saint-Pie"}, {"Practice Code": "YAGQ", "Practicename": "Centre Dentaire VIVA Valleyfield", "City": "Salaberry-de-Valleyfield"}, {"Practice Code": "YBGQ", "Practicename": "Centre Dentaire VIVA Vaudreuil", "City": "Vaudreuil-Dorion"}, {"Practice Code": "YDGQ", "Practicename": "Clinique Dentaire Myrand", "City": "Qu\u00e9bec"}, {"Practice Code": "YFGA", "Practicename": "Chaparral Dental Wellness", "City": "Calgary"}, {"Practice Code": "YGGA", "Practicename": "Township Dental Wellness", "City": "Calgary"}, {"Practice Code": "YHGA", "Practicename": "Temple Dental Wellness", "City": "Calgary"}, {"Practice Code": "YIGA", "Practicename": "Cornerstone Dental Wellness", "City": "Okotoks"}, {"Practice Code": "YKGA", "Practicename": "Mahogany Dental Wellness", "City": "Calgary"}, {"Practice Code": "YLGA", "Practicename": "Cimarron Dental Wellness", "City": "Okotoks"}, {"Practice Code": "YMGA", "Practicename": "Seton Dental Wellness", "City": "Calgary"}, {"Practice Code": "YNGA", "Practicename": "Silverado Dental Wellness", "City": "Calgary"}, {"Practice Code": "YOGA", "Practicename": "Midnapore Dental Wellness", "City": "Calgary"}, {"Practice Code": "YRGA", "Practicename": "Southwood Dental", "City": "Edmonton"}, {"Practice Code": "YSGA", "Practicename": "West Central Dental", "City": "Edmonton"}, {"Practice Code": "YTGA", "Practicename": "Diamond Dental", "City": "Edmonton"}, {"Practice Code": "YUGK", "Practicename": "Hampton Dental Clinic", "City": "Hampton"}, {"Practice Code": "YVGB", "Practicename": "Victoria BC Dental", "City": "Victoria"}, {"Practice Code": "YWGP", "Practicename": "Southport Dental Clinic", "City": "Stratford"}, {"Practice Code": "YXGO", "Practicename": "Gage Dentistry", "City": "Deep River"}, {"Practice Code": "YYGO", "Practicename": "Chapel Hill Dental", "City": "Orleans"}];
+var PRACTICE_DB = [
+  /* PASTE YOUR FULL EXISTING PRACTICE_DB ARRAY HERE EXACTLY AS-IS */
+];
 
 var pillSel={};
 var specialtyCards={
@@ -990,30 +991,35 @@ var specialtyCards={
 
 function togglePill(el,gid){
   document.querySelectorAll('#'+gid+' .pill').forEach(function(p){p.classList.remove('sel')});
-  el.classList.add('sel');pillSel[gid]=el.textContent.trim();chk();
+  el.classList.add('sel');
+  pillSel[gid]=el.textContent.trim();
+  chk();
 }
 
 function onPerioFocusChange(){
   var focus=document.getElementById("perio_focus").value;
   var sf=document.getElementById("perio_surgical_fields");
   var pf=document.getElementById("perio_program_fields");
-  sf.style.display=(focus==="surgical"||focus==="both")?"block":"none";
-  pf.style.display=(focus==="program"||focus==="both")?"block":"none";
+  if(sf) sf.style.display=(focus==="surgical"||focus==="both")?"block":"none";
+  if(pf) pf.style.display=(focus==="program"||focus==="both")?"block":"none";
   chk();
 }
 
 function onSpecialtyChange(){
-  // Hide all specialty cards
   Object.values(specialtyCards).forEach(function(id){
-    document.getElementById(id).classList.remove('show');
+	var el=document.getElementById(id);
+	if(el) el.classList.remove('show');
   });
+
   var sp=document.getElementById('sp').value;
   if(sp && specialtyCards[sp]){
-    document.getElementById(specialtyCards[sp]).classList.add('show');
-    // Scroll card into view smoothly
-    setTimeout(function(){
-      document.getElementById(specialtyCards[sp]).scrollIntoView({behavior:'smooth',block:'nearest'});
-    },100);
+	var card=document.getElementById(specialtyCards[sp]);
+	if(card){
+  	card.classList.add('show');
+  	setTimeout(function(){
+    	card.scrollIntoView({behavior:'smooth',block:'nearest'});
+  	},100);
+	}
   }
   chk();
 }
@@ -1022,11 +1028,18 @@ function toggleCapex(){
   var val=document.getElementById('capex').value;
   var bw=document.getElementById('capexBudgetWrap');
   var dw=document.getElementById('capexDetailWrap');
+
   if(val==='yes'){
-    bw.style.display='flex';bw.style.flexDirection='column';
-    dw.style.display='block';
+	if(bw){
+  	bw.style.display='flex';
+  	bw.style.flexDirection='column';
+	}
+	if(dw) dw.style.display='block';
   } else {
-    bw.style.display='none';dw.style.display='none';
+	if(bw) bw.style.display='none';
+	if(dw) dw.style.display='none';
+	var capexBudget=document.getElementById('capexBudget');
+	if(capexBudget) capexBudget.value='';
   }
   chk();
 }
@@ -1034,8 +1047,15 @@ function toggleCapex(){
 function showQ(id,cls,msg){
   var el=document.getElementById(id);
   if(!el) return;
-  if(msg){el.className='qa '+cls;el.style.display='block';el.innerHTML=msg;}
-  else{el.style.display='none';}
+  if(msg){
+	el.className='qa '+cls;
+	el.style.display='block';
+	el.innerHTML=msg;
+  } else {
+	el.style.display='none';
+	el.className='qa';
+	el.innerHTML='';
+  }
 }
 
 function chk(){
@@ -1049,146 +1069,160 @@ function chk(){
   var gptrain=document.getElementById('gptrain').value;
   var sp=document.getElementById('sp').value;
 
+  // RM sign-off
+  if(ram==='no'){
+	showQ('ramq','warn','<strong>RM sign-off not confirmed.</strong> This should be discussed with the RM before the request is submitted.');
+  } else if(ram==='pending'){
+	showQ('ramq','warn','<strong>RM sign-off pending.</strong> The request can be drafted, but approval should be confirmed before moving forward.');
+  } else if(ram==='yes'){
+	showQ('ramq','ok','<strong>RM sign-off confirmed.</strong> This request is aligned for submission.');
+  } else {
+	showQ('ramq','',null);
+  }
+
   // Demand
   var dm=null,dc='ok';
   if(ref==='low'){
-    dm='<strong>Low referral volume.</strong> Fewer than 10/month may not sustainably fill a specialist schedule. Validate demand before opening a search.';
-    dc='warn';
+	dm='<strong>Low referral volume.</strong> Fewer than 10/month may not sustainably fill a specialist schedule. Validate demand before opening a search.';
+	dc='warn';
   } else if(rt==='no' && ref){
-    dm='<strong>No referral tracking in place.</strong> The insourcing team may request a tracking period before approving this search.';
-    dc='warn';
+	dm='<strong>No referral tracking in place.</strong> The insourcing team may request a tracking period before approving this search.';
+	dc='warn';
   } else if(gptrain==='yes'){
-    dm='<strong>Treatment planning training required.</strong> Associates will need to complete training before the specialist can be fully utilised. Factor this into your timeline.';
-    dc='warn';
+	dm='<strong>Treatment planning training required.</strong> Associates will need to complete training before the specialist can be fully utilised. Factor this into your timeline.';
+	dc='warn';
   } else if((ref==='high'||ref==='vhigh') && rt==='yes' && gptrain==='no'){
-    dm='<strong>Strong demand signal.</strong> Volume, tracking and associate readiness all support moving forward.';
+	dm='<strong>Strong demand signal.</strong> Volume, tracking and associate readiness all support moving forward.';
   }
   if(dm) showQ('dq',dc,dm); else showQ('dq','',null);
 
   // Capex
   if(capex==='yes' && capexBudget==='no'){
-    showQ('capexq','block','<strong>Unfunded capex.</strong> Required capital investment has not been approved. Resolve funding before a search is opened.');
+	showQ('capexq','block','<strong>Unfunded capex.</strong> Required capital investment has not been approved. Resolve funding before a search is opened.');
   } else if(capex==='yes' && capexBudget==='inprogress'){
-    showQ('capexq','warn','<strong>Capex approval in progress.</strong> Search can begin in parallel but hire should not be confirmed until funding is secured.');
+	showQ('capexq','warn','<strong>Capex approval in progress.</strong> Search can begin in parallel but hire should not be confirmed until funding is secured.');
   } else if(capex==='yes' && capexBudget==='approved'){
-    showQ('capexq','ok','<strong>Capex approved.</strong> Investment is funded and ready.');
+	showQ('capexq','ok','<strong>Capex approved.</strong> Investment is funded and ready.');
   } else {
-    showQ('capexq','',null);
+	showQ('capexq','',null);
   }
 
   // Readiness
   var rm=null,rc='ok';
   if(chair==='no'){
-    rm='<strong>No dedicated operatory.</strong> A specialist needs their own chair — this is a hard requirement. Confirm a solution before opening a search.';
-    rc='block';
+	rm='<strong>No dedicated operatory.</strong> A specialist needs their own chair — this is a hard requirement. Confirm a solution before opening a search.';
+	rc='block';
   } else if(gbi==='no'){
-    rm='<strong>GP buy-in needed.</strong> Specialists succeed when GPs actively co-diagnose. A team alignment session is recommended before hire.';
-    rc='warn';
+	rm='<strong>GP buy-in needed.</strong> Specialists succeed when GPs actively co-diagnose. A team alignment session is recommended before hire.';
+	rc='warn';
   } else if(chair==='yes' && gbi==='yes'){
-    rm='<strong>Clinic is ready.</strong> Dedicated operatory in place and GPs are aligned.';
+	rm='<strong>Clinic is ready.</strong> Dedicated operatory in place and GPs are aligned.';
   } else if(chair==='planned'){
-    rm='<strong>Operatory in progress.</strong> Search can begin in parallel but hire should not be confirmed until the space is ready.';
-    rc='warn';
+	rm='<strong>Operatory in progress.</strong> Search can begin in parallel but hire should not be confirmed until the space is ready.';
+	rc='warn';
   }
   if(rm) showQ('rq',rc,rm); else showQ('rq','',null);
 
   // Specialty-specific flags
   if(sp==='Orthodontist'){
-    var ortho_current=document.getElementById('ortho_current').value;
-    var ortho_hyg=document.getElementById('ortho_hyg').value;
+	var ortho_current=document.getElementById('ortho_current').value;
+	var ortho_hyg=document.getElementById('ortho_hyg').value;
 
-    if(ortho_current==='yes_gp'){
-      showQ('orthoq','warn','<strong>GPs currently doing ortho.</strong> Transition plan needed — clarify whether GPs will continue Invisalign cases or hand off entirely to the orthodontist.');
-    } else if(ortho_hyg==='no'){
-      showQ('orthoq','warn','<strong>No ortho hygienist.</strong> An ortho hygienist is critical to specialist throughput. Confirm a hiring plan before the search opens.');
-    } else {
-      showQ('orthoq','',null);
-    }
+	if(ortho_current==='yes_gp'){
+  	showQ('orthoq','warn','<strong>GPs currently doing ortho.</strong> Transition plan needed — clarify whether GPs will continue Invisalign cases or hand off entirely to the orthodontist.');
+	} else if(ortho_hyg==='no'){
+  	showQ('orthoq','warn','<strong>No ortho hygienist.</strong> An ortho hygienist is critical to specialist throughput. Confirm a hiring plan before the search opens.');
+	} else {
+  	showQ('orthoq','',null);
+	}
   } else {
-    showQ('orthoq','',null);
+	showQ('orthoq','',null);
   }
 
   if(sp==='Endodontist'){
-    var endo_purchase=document.getElementById('endo_purchase').value;
-    var endoEquip=['endo_apex','endo_rotary','endo_cbct','endo_scope','endo_dam','endo_obturation'];
-    var endoCount=endoEquip.filter(function(id){ return document.getElementById(id).checked; }).length;
+	var endo_purchase=document.getElementById('endo_purchase').value;
+	var endoEquip=['endo_apex','endo_rotary','endo_cbct','endo_scope','endo_dam','endo_obturation'];
+	var endoCount=endoEquip.filter(function(id){
+  	var el=document.getElementById(id);
+  	return el && el.checked;
+	}).length;
 
-    if(endoCount < 2 && endo_purchase === 'no'){
-      showQ('endoq','block','<strong>Limited endo equipment and no purchase plan.</strong> The clinic has fewer than 2 key endo items and is not open to additional equipment. Resolve before moving forward.');
-    } else if(endoCount < 2){
-      showQ('endoq','warn','<strong>Limited endo equipment.</strong> The clinic has fewer than 2 key endo items. Confirm equipment plan or flag for capex.');
-    } else if(endoCount >= 4){
-      showQ('endoq','ok','<strong>Well-equipped for endo.</strong> Strong equipment base in place.');
-    } else {
-      showQ('endoq','',null);
-    }
+	if(endoCount < 2 && endo_purchase === 'no'){
+  	showQ('endoq','block','<strong>Limited endo equipment and no purchase plan.</strong> The clinic has fewer than 2 key endo items and is not open to additional equipment. Resolve before moving forward.');
+	} else if(endoCount < 2){
+  	showQ('endoq','warn','<strong>Limited endo equipment.</strong> The clinic has fewer than 2 key endo items. Confirm equipment plan or flag for capex.');
+	} else if(endoCount >= 4){
+  	showQ('endoq','ok','<strong>Well-equipped for endo.</strong> Strong equipment base in place.');
+	} else {
+  	showQ('endoq','',null);
+	}
   } else {
-    showQ('endoq','',null);
+	showQ('endoq','',null);
   }
 
   if(sp==='Oral Surgeon'){
-    var os_suite=document.getElementById('os_suite').value;
-    var os_sedation=document.getElementById('os_sedation').value;
-    var os_permit=document.getElementById('os_permit').value;
+	var os_suite=document.getElementById('os_suite').value;
+	var os_sedation=document.getElementById('os_sedation').value;
+	var os_permit=document.getElementById('os_permit').value;
 
-    var osMsg=null, osClass='warn';
+	var osMsg=null, osClass='warn';
 
-    if(os_suite==='no'){
-      osMsg='<strong>No surgical suite.</strong> Oral surgery requires a proper surgical environment. This is a hard requirement — resolve before opening a search.';
-      osClass='block';
-    } else if(os_sedation==='none'){
-      osMsg='<strong>No sedation offered.</strong> Oral surgery without sedation capability significantly limits case mix and specialist utilisation.';
-      osClass='warn';
-    } else if(os_sedation!=='none' && os_permit==='neither'){
-      osMsg='<strong>No facility sedation permit.</strong> A Type A or Type A/B permit is typically required to support an oral surgeon. Flag for resolution before the search opens.';
-      osClass='warn';
-    }
+	if(os_suite==='no'){
+  	osMsg='<strong>No surgical suite.</strong> Oral surgery requires a proper surgical environment. This is a hard requirement — resolve before opening a search.';
+  	osClass='block';
+	} else if(os_sedation==='none'){
+  	osMsg='<strong>No sedation offered.</strong> Oral surgery without sedation capability significantly limits case mix and specialist utilisation.';
+  	osClass='warn';
+	} else if(os_sedation!=='none' && os_permit==='neither'){
+  	osMsg='<strong>No facility sedation permit.</strong> A Type A or Type A/B permit is typically required to support an oral surgeon. Flag for resolution before the search opens.';
+  	osClass='warn';
+	}
 
-    if(osMsg) showQ('osq',osClass,osMsg); else showQ('osq','',null);
+	if(osMsg) showQ('osq',osClass,osMsg); else showQ('osq','',null);
   } else {
-    showQ('osq','',null);
+	showQ('osq','',null);
   }
 
   if(sp==='Periodontist'){
-    var perio_focus=document.getElementById('perio_focus').value;
-    var perio_hyg=document.getElementById('perio_hyg').value;
-    var perio_bay_el=document.getElementById('perio_bay');
-    var perio_bay=perio_bay_el ? perio_bay_el.value : '';
+	var perio_focus=document.getElementById('perio_focus').value;
+	var perio_hyg=document.getElementById('perio_hyg').value;
+	var perio_bay_el=document.getElementById('perio_bay');
+	var perio_bay=perio_bay_el ? perio_bay_el.value : '';
 
-    var perioMsg=null, perioClass='warn';
+	var perioMsg=null, perioClass='warn';
 
-    if(perio_focus==='both' && perio_hyg==='no' && perio_bay==='no'){
-      perioMsg='<strong>Multiple gaps.</strong> A surgical bay and an active hygiene perio program are both needed for a combined role. Resolve before opening a search.';
-      perioClass='block';
-    } else if((perio_focus==='surgical'||perio_focus==='both') && perio_bay==='no'){
-      perioMsg='<strong>No surgical bay.</strong> A surgical-focused periodontist requires a dedicated or adaptable surgical space. This must be resolved before the search opens.';
-      perioClass='block';
-    } else if(perio_focus==='program' && perio_hyg==='no'){
-      perioMsg='<strong>Weak hygiene perio program.</strong> A program-focused periodontist needs an active hygiene perio base to manage. Consider building this before hire.';
-      perioClass='warn';
-    } else if(perio_focus && perio_hyg==='yes' && (perio_focus==='program' || (perio_bay && perio_bay!=='no'))){
-      perioMsg='<strong>Perio setup looks solid.</strong> Hygiene program and infrastructure align with the role focus.';
-      perioClass='ok';
-    }
+	if(perio_focus==='both' && perio_hyg==='no' && perio_bay==='no'){
+  	perioMsg='<strong>Multiple gaps.</strong> A surgical bay and an active hygiene perio program are both needed for a combined role. Resolve before opening a search.';
+  	perioClass='block';
+	} else if((perio_focus==='surgical'||perio_focus==='both') && perio_bay==='no'){
+  	perioMsg='<strong>No surgical bay.</strong> A surgical-focused periodontist requires a dedicated or adaptable surgical space. This must be resolved before the search opens.';
+  	perioClass='block';
+	} else if(perio_focus==='program' && perio_hyg==='no'){
+  	perioMsg='<strong>Weak hygiene perio program.</strong> A program-focused periodontist needs an active hygiene perio base to manage. Consider building this before hire.';
+  	perioClass='warn';
+	} else if(perio_focus && perio_hyg==='yes' && (perio_focus==='program' || (perio_bay && perio_bay!=='no'))){
+  	perioMsg='<strong>Perio setup looks solid.</strong> Hygiene program and infrastructure align with the role focus.';
+  	perioClass='ok';
+	}
 
-    if(perioMsg) showQ('perioq',perioClass,perioMsg); else showQ('perioq','',null);
+	if(perioMsg) showQ('perioq',perioClass,perioMsg); else showQ('perioq','',null);
   } else {
-    showQ('perioq','',null);
+	showQ('perioq','',null);
   }
 
   if(sp==='Pediatric Dentist'){
-    var pedo_nitrous=document.getElementById('pedo_nitrous').value;
-    var pedo_operatory=document.getElementById('pedo_operatory').value;
+	var pedo_nitrous=document.getElementById('pedo_nitrous').value;
+	var pedo_operatory=document.getElementById('pedo_operatory').value;
 
-    if(pedo_nitrous==='no'){
-      showQ('pedoq','warn','<strong>No nitrous oxide.</strong> Nitrous is a baseline requirement for pediatric dentistry. Flag for capex or confirm before opening a search.');
-    } else if(pedo_operatory==='no'){
-      showQ('pedoq','warn','<strong>No child-friendly operatory.</strong> A standard adult setup will limit the pediatric patient experience and throughput.');
-    } else {
-      showQ('pedoq','',null);
-    }
+	if(pedo_nitrous==='no'){
+  	showQ('pedoq','warn','<strong>No nitrous oxide.</strong> Nitrous is a baseline requirement for pediatric dentistry. Flag for capex or confirm before opening a search.');
+	} else if(pedo_operatory==='no'){
+  	showQ('pedoq','warn','<strong>No child-friendly operatory.</strong> A standard adult setup will limit the pediatric patient experience and throughput.');
+	} else {
+  	showQ('pedoq','',null);
+	}
   } else {
-    showQ('pedoq','',null);
+	showQ('pedoq','',null);
   }
 
   calcScore();
@@ -1220,101 +1254,107 @@ function calcScore(){
   var filled=(ram||ref||wt||chair||gbi||sp);
   if(!filled){resetScore();return;}
 
-  // Hard blockers
-  var osBlocked=(sp==='Oral Surgeon'&&document.getElementById('os_suite').value==='no');
-  if(chair==='no'||(capex==='yes'&&capexBudget==='no')||osBlocked){
-    document.getElementById('sv').textContent='—';
-    document.getElementById('ss').textContent='Blockers present — see flags above';
-    document.getElementById('ss').style.color='#d4a8a8';
-    document.getElementById('sf').style.width='8%';
-    document.getElementById('sf').style.background='#c07070';
-    document.getElementById('sl').textContent='Resolve the flagged issues before this submission can be assessed.';
-    return;
+  var osSuiteEl=document.getElementById('os_suite');
+  var osBlocked=(sp==='Oral Surgeon' && osSuiteEl && osSuiteEl.value==='no');
+
+  if(chair==='no' || (capex==='yes' && capexBudget==='no') || osBlocked){
+	document.getElementById('sv').textContent='—';
+	document.getElementById('ss').textContent='Blockers present — see flags above';
+	document.getElementById('ss').style.color='#d4a8a8';
+	document.getElementById('sf').style.width='8%';
+	document.getElementById('sf').style.background='#c07070';
+	document.getElementById('sl').textContent='Resolve the flagged issues before this submission can be assessed.';
+	return;
   }
 
   var score=0;
 
-  // ── DEMAND SIGNAL 40pts ──────────────────────────────────
-  // Referral volume (16pts)
+  // Demand signal 40
   var rmap={low:2,med:8,high:13,vhigh:16}; if(ref) score+=(rmap[ref]||0);
-  // Wait time (6pts)
   var wtmap={low:1,med:3,high:5,vhigh:6}; if(wt) score+=(wtmap[wt]||0);
-  // Partner influence (8pts)
   var pmap={high:8,some:4,none:0,unsure:2}; if(partner) score+=(pmap[partner]||0);
-  // Hygiene team knowledge (5pts)
   var hkmap={high:5,low:0,unsure:2}; if(hygKnow) score+=(hkmap[hygKnow]||0);
-  // Hygiene program strength (5pts)
   var hsmap={strong:5,moderate:3,weak:1,none:0}; if(hygStr) score+=(hsmap[hygStr]||0);
 
-  // ── GP BUY-IN 20pts ──────────────────────────────────────
+  // GP buy-in 20
   var gmap={yes:20,some:10,no:0}; if(gbi) score+=(gmap[gbi]||0);
 
-  // ── DEDICATED OPERATORY 10pts ────────────────────────────
+  // Dedicated operatory 10
   if(chair==='yes') score+=10; else if(chair==='planned') score+=5;
 
-  // ── GP COUNT 8pts ────────────────────────────────────────
+  // GP count 8
   var gpmap={one:1,two_three:4,four_five:7,six_plus:8}; if(gp) score+=(gpmap[gp]||0);
 
-  // ── DEDICATED COORDINATOR 6pts ───────────────────────────
+  // Dedicated coordinator 6
   if(coord==='yes') score+=6; else if(coord==='shared') score+=2;
 
-  // ── PRIOR SUCCESSFUL INTEGRATION 5pts ────────────────────
+  // Prior integration 5
   if(prior==='yes_success') score+=5; else if(prior==='yes_mixed') score+=1;
 
-  // ── PATIENT AGE FIT 5pts ─────────────────────────────────
+  // Patient age fit 5
   var age_ok=false;
   if((sp==='Orthodontist'||sp==='Pediatric Dentist')&&(age==='pediatric'||age==='young')) age_ok=true;
   if((sp==='Oral Surgeon'||sp==='Periodontist')&&(age==='adult'||age==='senior'||age==='mixed')) age_ok=true;
   if(sp==='Endodontist'&&(age==='mixed'||age==='adult'||age==='senior')) age_ok=true;
   if(age_ok) score+=5; else if(age==='mixed') score+=2;
 
-  // ── OPERATIONS 4pts ──────────────────────────────────────
+  // Operations 4
   if(sameday==='yes') score+=1; else if(sameday==='sometimes') score+=0.5;
   var bookmap={oralinx:2,videa:2,direct:1,coordinator:0.5,none:0}; if(gpbook) score+=(bookmap[gpbook]||0);
   if(recall==='yes') score+=1;
 
-  // ── LOCAL MARKET 2pts ────────────────────────────────────
+  // Local market 2
   var mmap={none:1,one_two:0.5,three_five:0,many:0}; if(mcomp) score+=(mmap[mcomp]||0);
   if(growth==='yes') score+=1;
 
-  // ── SPECIALTY BONUS/PENALTY up to ±8 ────────────────────
+  // Specialty bonus/penalty
   if(sp==='Orthodontist'){
-    var oh=document.getElementById('ortho_hyg').value;
-    if(oh==='yes') score+=5; else if(oh==='hiring') score+=2; else if(oh==='no') score-=5;
+	var oh=document.getElementById('ortho_hyg').value;
+	if(oh==='yes') score+=5; else if(oh==='hiring') score+=2; else if(oh==='no') score-=5;
   }
   if(sp==='Endodontist'){
-    var eqList=['endo_apex','endo_rotary','endo_cbct','endo_scope','endo_dam','endo_obturation'];
-    var eqCount=eqList.filter(function(id){return document.getElementById(id).checked}).length;
-    score+=Math.min(8,eqCount*1.5);
+	var eqList=['endo_apex','endo_rotary','endo_cbct','endo_scope','endo_dam','endo_obturation'];
+	var eqCount=eqList.filter(function(id){
+  	var el=document.getElementById(id);
+  	return el && el.checked;
+	}).length;
+	score+=Math.min(8,eqCount*1.5);
   }
   if(sp==='Periodontist'){
-    var pb=document.getElementById('perio_bay')?document.getElementById('perio_bay').value:'';
-    if(pb==='yes') score+=5; else if(pb==='shared') score+=2; else if(pb==='no') score-=5;
+	var pbEl=document.getElementById('perio_bay');
+	var pb=pbEl ? pbEl.value : '';
+	if(pb==='yes') score+=5; else if(pb==='shared') score+=2; else if(pb==='no') score-=5;
   }
   if(sp==='Pediatric Dentist'){
-    var pn=document.getElementById('pedo_nitrous').value;
-    if(pn==='yes') score+=5; else if(pn==='no') score-=5;
+	var pn=document.getElementById('pedo_nitrous').value;
+	if(pn==='yes') score+=5; else if(pn==='no') score-=5;
   }
 
-  // Associate training flag (no pts — demand signal qualifier only)
-
   score=Math.max(0,score);
-  var pct=Math.min(100,Math.round(score/100*100));
+  var pct=Math.min(100,Math.round(score));
+
   document.getElementById('sv').textContent=pct+'%';
   document.getElementById('sf').style.width=pct+'%';
-  var ss=document.getElementById('ss'),sf=document.getElementById('sf'),sl=document.getElementById('sl');
+
+  var ss=document.getElementById('ss'),
+  	sf=document.getElementById('sf'),
+  	sl=document.getElementById('sl');
+
   if(pct>=75){
-    ss.textContent='Ready to open search';ss.style.color='#A1B9A1';
-    sf.style.background='#A1B9A1';
-    sl.textContent='All key criteria are met. Recommend proceeding to search.';
+	ss.textContent='Ready to open search';
+	ss.style.color='#A1B9A1';
+	sf.style.background='#A1B9A1';
+	sl.textContent='All key criteria are met. Recommend proceeding to search.';
   } else if(pct>=50){
-    ss.textContent='Conditional — insourcing team review needed';ss.style.color='#CDE1E0';
-    sf.style.background='#99BAC1';
-    sl.textContent='Some gaps to address. The insourcing team will review before approving.';
+	ss.textContent='Conditional — insourcing team review needed';
+	ss.style.color='#CDE1E0';
+	sf.style.background='#99BAC1';
+	sl.textContent='Some gaps to address. The insourcing team will review before approving.';
   } else {
-    ss.textContent='Not ready — development plan recommended';ss.style.color='#d4a8a8';
-    sf.style.background='#c07070';
-    sl.textContent='Significant gaps remain. A development plan is recommended before a search is opened.';
+	ss.textContent='Not ready — development plan recommended';
+	ss.style.color='#d4a8a8';
+	sf.style.background='#c07070';
+	sl.textContent='Significant gaps remain. A development plan is recommended before a search is opened.';
   }
 }
 
@@ -1323,11 +1363,19 @@ function resetScore(){
   document.getElementById('ss').textContent='Complete the form to see your score';
   document.getElementById('ss').style.color='';
   document.getElementById('sf').style.width='0%';
+  document.getElementById('sf').style.background='var(--atlantic)';
   document.getElementById('sl').textContent='';
 }
 
-function v(id){var el=document.getElementById(id);return el?el.value:'';}
-function cb(id){var el=document.getElementById(id);return el&&el.checked?'Yes':'No';}
+function v(id){
+  var el=document.getElementById(id);
+  return el?el.value:'';
+}
+
+function cb(id){
+  var el=document.getElementById(id);
+  return el&&el.checked?'Yes':'No';
+}
 
 function validateRequired(){
   var missing=[];
@@ -1353,160 +1401,198 @@ function validateRequired(){
   if(!v('capex')) missing.push('Capital investment required');
   if(!v('mcomp')) missing.push('Competing specialists within 5–10km');
 
+  if(v('sp')==='Orthodontist'){
+	if(!v('ortho_cases')) missing.push('Orthodontist case type');
+	if(!v('ortho_current')) missing.push('Current ortho provider status');
+	if(!v('ortho_hyg')) missing.push('Ortho hygienist support');
+  }
+
+  if(v('sp')==='Endodontist'){
+	if(!v('endo_purchase')) missing.push('Endo equipment purchase openness');
+  }
+
+  if(v('sp')==='Oral Surgeon'){
+	if(!v('os_suite')) missing.push('Surgical suite');
+	if(!v('os_sedation')) missing.push('Sedation level');
+	if(!v('os_permit')) missing.push('Facility sedation permit');
+  }
+
+  if(v('sp')==='Periodontist'){
+	if(!v('perio_focus')) missing.push('Perio role focus');
+  }
+
+  if(v('sp')==='Pediatric Dentist'){
+	if(!v('pedo_nitrous')) missing.push('Nitrous oxide availability');
+	if(!v('pedo_operatory')) missing.push('Child-friendly operatory');
+  }
+
   return missing;
 }
 
 function buildPayload(){
   var sp=v('sp');
   return {
-    practiceCode:     v('cn'),
-    practiceName:     document.getElementById('practice_name_hidden').value,
-    city:             v('cy'),
-    director:         v('mgr'),
-    email:            v('em'),
-    managerSignoff:   v('ram'),
-    specialty:        sp,
-    daysPerMonth:     pillSel['dg']||'',
-    // Ortho
-    orthoCases:       sp==='Orthodontist'?v('ortho_cases'):'',
-    orthoCurrent:     sp==='Orthodontist'?v('ortho_current'):'',
-    orthoHyg:         sp==='Orthodontist'?v('ortho_hyg'):'',
-    orthoBay:         sp==='Orthodontist'?v('ortho_bay'):'',
-    // Endo
-    endoApex:         sp==='Endodontist'?(document.getElementById('endo_apex').checked?'Yes':'No'):'',
-    endoRotary:       sp==='Endodontist'?(document.getElementById('endo_rotary').checked?'Yes':'No'):'',
-    endoCbct:         sp==='Endodontist'?(document.getElementById('endo_cbct').checked?'Yes':'No'):'',
-    endoScope:        sp==='Endodontist'?(document.getElementById('endo_scope').checked?'Yes':'No'):'',
-    endoDam:          sp==='Endodontist'?(document.getElementById('endo_dam').checked?'Yes':'No'):'',
-    endoObturation:   sp==='Endodontist'?(document.getElementById('endo_obturation').checked?'Yes':'No'):'',
-    endoPurchase:     sp==='Endodontist'?v('endo_purchase'):'',
-    endoGpBehavior:   sp==='Endodontist'?v('endo_gp_behavior'):'',
-    // Oral Surgeon
-    osSuite:          sp==='Oral Surgeon'?v('os_suite'):'',
-    osSedation:       sp==='Oral Surgeon'?v('os_sedation'):'',
-    osPermit:         sp==='Oral Surgeon'?v('os_permit'):'',
-    osPrivileges:     sp==='Oral Surgeon'?v('os_privileges'):'',
-    osAssistant:      sp==='Oral Surgeon'?v('os_assistant'):'',
-    osCasemix:        sp==='Oral Surgeon'?v('os_casemix'):'',
-    // Perio
-    perioFocus:       sp==='Periodontist'?v('perio_focus'):'',
-    perioHyg:         sp==='Periodontist'?v('perio_hyg'):'',
-    perioHygCount:    sp==='Periodontist'?v('perio_hyg_count'):'',
-    perioBay:         sp==='Periodontist'?v('perio_bay'):'',
-    perioAssistant:   sp==='Periodontist'?v('perio_assistant'):'',
-    perioImplant:     sp==='Periodontist'?v('perio_implant'):'',
-    perioBrand:       sp==='Periodontist'?v('perio_brand'):'',
-    perioExistingProg:sp==='Periodontist'?v('perio_existing_program'):'',
-    perioMentor:      sp==='Periodontist'?v('perio_mentor'):'',
-    perioRecallVol:   sp==='Periodontist'?v('perio_recall_vol'):'',
-    perioAuthority:   sp==='Periodontist'?v('perio_authority'):'',
-    // Pedo
-    pedoNitrous:      sp==='Pediatric Dentist'?v('pedo_nitrous'):'',
-    pedoOperatory:    sp==='Pediatric Dentist'?v('pedo_operatory'):'',
-    pedoBehavior:     sp==='Pediatric Dentist'?v('pedo_behavior'):'',
-    pedoVolume:       sp==='Pediatric Dentist'?v('pedo_volume'):'',
-    pedoLocation:     sp==='Pediatric Dentist'?v('pedo_location'):'',
-    // Demand
-    referrals:        v('ref'),
-    refTracked:       v('rt'),
-    waitTime:         v('wt'),
-    ageProfile:       v('age'),
-    insuranceMix:        v('ins'),
-    gpTraining:          v('gptrain'),
-    partnerInfluence:    v('partner_influence'),
-    hygTeamKnowledge:    v('hyg_knowledge'),
-    hygProgramStrength:  v('hyg_strength'),
-    caseAcceptance:      v('accept'),
-    recallSystem:        v('recall'),
-    // Readiness
-    operatory:        v('chair'),
-    gpCount:          v('gp'),
-    gpBuyin:          v('gbi'),
-    coordinator:      v('coord'),
-    sameDay:          v('sameday'),
-    gpBooking:        v('gpbook'),
-    priorIntegration: v('prior'),
-    capex:            v('capex'),
-    capexBudget:      v('capexBudget'),
-    capexDetail:      v('capexDetail'),
-    // Market
-    competition:      v('mcomp'),
-    growthArea:       v('growth'),
-    refDestination:   v('refdest'),
-    // Score
-    score:            document.getElementById('sv').textContent,
-    scoreStatus:      document.getElementById('ss').textContent
+	practiceCode: 	v('cn'),
+	practiceName: 	document.getElementById('practice_name_hidden').value,
+	city:         	v('cy'),
+	director:     	v('mgr'),
+	email:        	v('em'),
+	managerSignoff:   v('ram'),
+	specialty:    	sp,
+	daysPerMonth: 	pillSel['dg']||'',
+
+	// Ortho
+	orthoCases:   	sp==='Orthodontist'?v('ortho_cases'):'',
+	orthoCurrent: 	sp==='Orthodontist'?v('ortho_current'):'',
+	orthoHyg:     	sp==='Orthodontist'?v('ortho_hyg'):'',
+	orthoBay:     	sp==='Orthodontist'?v('ortho_bay'):'',
+
+	// Endo
+	endoApex:     	sp==='Endodontist'?cb('endo_apex'):'',
+	endoRotary:   	sp==='Endodontist'?cb('endo_rotary'):'',
+	endoCbct:     	sp==='Endodontist'?cb('endo_cbct'):'',
+	endoScope:    	sp==='Endodontist'?cb('endo_scope'):'',
+	endoDam:      	sp==='Endodontist'?cb('endo_dam'):'',
+	endoObturation:   sp==='Endodontist'?cb('endo_obturation'):'',
+	endoPurchase: 	sp==='Endodontist'?v('endo_purchase'):'',
+	endoGpBehavior:   sp==='Endodontist'?v('endo_gp_behavior'):'',
+
+	// Oral Surgeon
+	osSuite:      	sp==='Oral Surgeon'?v('os_suite'):'',
+	osSedation:   	sp==='Oral Surgeon'?v('os_sedation'):'',
+	osPermit:     	sp==='Oral Surgeon'?v('os_permit'):'',
+	osPrivileges: 	sp==='Oral Surgeon'?v('os_privileges'):'',
+	osAssistant:  	sp==='Oral Surgeon'?v('os_assistant'):'',
+	osCasemix:    	sp==='Oral Surgeon'?v('os_casemix'):'',
+
+	// Perio
+	perioFocus:   	sp==='Periodontist'?v('perio_focus'):'',
+	perioHyg:     	sp==='Periodontist'?v('perio_hyg'):'',
+	perioHygCount:	sp==='Periodontist'?v('perio_hyg_count'):'',
+	perioBay:     	sp==='Periodontist'?v('perio_bay'):'',
+	perioAssistant:   sp==='Periodontist'?v('perio_assistant'):'',
+	perioImplant: 	sp==='Periodontist'?v('perio_implant'):'',
+	perioBrand:   	sp==='Periodontist'?v('perio_brand'):'',
+	perioExistingProg:sp==='Periodontist'?v('perio_existing_program'):'',
+	perioMentor:  	sp==='Periodontist'?v('perio_mentor'):'',
+	perioRecallVol:   sp==='Periodontist'?v('perio_recall_vol'):'',
+	perioAuthority:   sp==='Periodontist'?v('perio_authority'):'',
+
+	// Pedo
+	pedoNitrous:  	sp==='Pediatric Dentist'?v('pedo_nitrous'):'',
+	pedoOperatory:	sp==='Pediatric Dentist'?v('pedo_operatory'):'',
+	pedoBehavior: 	sp==='Pediatric Dentist'?v('pedo_behavior'):'',
+	pedoVolume:   	sp==='Pediatric Dentist'?v('pedo_volume'):'',
+	pedoLocation: 	sp==='Pediatric Dentist'?v('pedo_location'):'',
+
+	// Demand
+	referrals:       	v('ref'),
+	refTracked:      	v('rt'),
+	waitTime:        	v('wt'),
+	ageProfile:      	v('age'),
+	insuranceMix:    	v('ins'),
+	gpTraining:      	v('gptrain'),
+	partnerInfluence:	v('partner_influence'),
+	hygTeamKnowledge:	v('hyg_knowledge'),
+	hygProgramStrength:  v('hyg_strength'),
+	caseAcceptance:  	v('accept'),
+	recallSystem:    	v('recall'),
+
+	// Readiness
+	operatory:    	v('chair'),
+	gpCount:      	v('gp'),
+	gpBuyin:      	v('gbi'),
+	coordinator:  	v('coord'),
+	sameDay:      	v('sameday'),
+	gpBooking:    	v('gpbook'),
+	priorIntegration: v('prior'),
+	capex:        	v('capex'),
+	capexBudget:  	v('capexBudget'),
+	capexDetail:  	v('capexDetail'),
+
+	// Market
+	competition:  	v('mcomp'),
+	growthArea:   	v('growth'),
+	refDestination:   v('refdest'),
+
+	// Score
+	score:        	document.getElementById('sv').textContent,
+	scoreStatus:  	document.getElementById('ss').textContent
   };
 }
 
 function submitToSheets(userEmail, pdfData){
   if(SHEETS_URL==='PASTE_YOUR_WEB_APP_URL_HERE'){
-    alert('Google Sheets not connected yet.\n\nPaste your Apps Script Web App URL into the SHEETS_URL variable at the top of the script.');
-    return;
+	alert('Google Sheets not connected yet.\n\nPaste your Apps Script Web App URL into the SHEETS_URL variable at the top of the script.');
+	return;
   }
 
   var missing=validateRequired();
   if(missing.length>0){
-    alert('Please complete the following required fields before submitting:\n\n• ' + missing.join('\n• '));
-    return;
+	alert('Please complete the following required fields before submitting:\n\n• ' + missing.join('\n• '));
+	return;
   }
 
-  var actionButtons = document.querySelectorAll('.btn-export, .btn-clear');
-  actionButtons.forEach(function(btn){ btn.disabled = true; });
+  var actionButtons=document.querySelectorAll('.btn-export, .btn-clear');
+  actionButtons.forEach(function(btn){ btn.disabled=true; });
 
   var payload=buildPayload();
-  payload.userEmail = userEmail || '';
-  payload.pdfData = pdfData || '';
+  payload.userEmail=userEmail||'';
+  payload.pdfData=pdfData||'';
 
   fetch(SHEETS_URL,{
-    method:'POST',
-    mode:'no-cors',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify(payload)
+	method:'POST',
+	mode:'no-cors',
+	headers:{'Content-Type':'application/json'},
+	body:JSON.stringify(payload)
   }).then(function(){
-    actionButtons.forEach(function(btn){ btn.disabled = false; });
+	actionButtons.forEach(function(btn){ btn.disabled=false; });
 
-    var t=document.getElementById('toast');
-    t.textContent='✓ Submitted successfully';
-    t.style.display='block';
+	var t=document.getElementById('toast');
+	t.textContent='✓ Submitted successfully';
+	t.style.display='block';
 
-    setTimeout(function(){
-      t.style.display='none';
-      t.textContent='✓ Exported successfully';
-    },3000);
+	setTimeout(function(){
+  	t.style.display='none';
+  	t.textContent='✓ Exported successfully';
+	},3000);
   }).catch(function(err){
-    actionButtons.forEach(function(btn){ btn.disabled = false; });
-    alert('Submission failed. Check your internet connection and try again.\n\n' + err);
+	actionButtons.forEach(function(btn){ btn.disabled=false; });
+	alert('Submission failed. Check your internet connection and try again.\n\n' + err);
   });
 }
 
-
-function openEmailModal() {
-  var defaultEmail = document.getElementById('em').value || '';
-  document.getElementById('userEmail').value = defaultEmail;
-  document.getElementById('emailModal').style.display = 'flex';
+function openEmailModal(){
+  var defaultEmail=document.getElementById('em').value||'';
+  document.getElementById('userEmail').value=defaultEmail;
+  document.getElementById('emailModal').style.display='flex';
 }
 
-function closeModal() {
-  document.getElementById('emailModal').style.display = 'none';
+function closeModal(){
+  document.getElementById('emailModal').style.display='none';
 }
 
-async function confirmSubmit() {
-  var email = document.getElementById("userEmail").value.trim();
+async function confirmSubmit(){
+  var email=document.getElementById("userEmail").value.trim();
 
-  if (!email) {
-    alert("Please enter your email");
-    return;
+  if(!email){
+	alert("Please enter your email");
+	return;
   }
 
-  document.getElementById('emailModal').style.display = 'none';
+  document.getElementById('emailModal').style.display='none';
 
-  var pdfData = await exportPDF(true);
-  submitToSheets(email, pdfData);
+  var pdfData=await exportPDF(true);
+  submitToSheets(email,pdfData);
 }
 
-async function exportPDF(returnOnly) {
+async function exportPDF(returnOnly){
   chk();
+
+  if(typeof html2canvas==='undefined' || !window.jspdf || !window.jspdf.jsPDF){
+	alert('PDF libraries failed to load. Please refresh the page and try again.');
+	return '';
+  }
 
   const { jsPDF } = window.jspdf;
   const pageElement = document.querySelector('.page');
@@ -1514,198 +1600,101 @@ async function exportPDF(returnOnly) {
   document.body.classList.add('pdf-export');
 
   try {
-    const canvas = await html2canvas(pageElement, {
-      scale: 2,
-      useCORS: true,
-      backgroundColor: '#F5F2EA',
-      windowWidth: pageElement.scrollWidth,
-      scrollY: 0
-    });
+	const canvas = await html2canvas(pageElement, {
+  	scale: 2,
+  	useCORS: true,
+  	backgroundColor: '#F5F2EA',
+  	windowWidth: pageElement.scrollWidth,
+  	scrollY: 0
+	});
 
-    const imgData = canvas.toDataURL('image/png');
-    const pdf = new jsPDF('p', 'pt', 'letter');
+	const imgData = canvas.toDataURL('image/png');
+	const pdf = new jsPDF('p', 'pt', 'letter');
 
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const pageHeight = pdf.internal.pageSize.getHeight();
+	const pageWidth = pdf.internal.pageSize.getWidth();
+	const pageHeight = pdf.internal.pageSize.getHeight();
 
-    const margin = 24;
-    const usableWidth = pageWidth - margin * 2;
-    const usableHeight = pageHeight - margin * 2;
+	const margin = 24;
+	const usableWidth = pageWidth - margin * 2;
+	const usableHeight = pageHeight - margin * 2;
 
-    const imgWidth = usableWidth;
-    const imgHeight = canvas.height * imgWidth / canvas.width;
+	const imgWidth = usableWidth;
+	const imgHeight = canvas.height * imgWidth / canvas.width;
 
-    let heightLeft = imgHeight;
-    let position = margin;
+	let heightLeft = imgHeight;
+	let position = margin;
 
-    pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
-    heightLeft -= usableHeight;
+	pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
+	heightLeft -= usableHeight;
 
-    while (heightLeft > 0) {
-      pdf.addPage();
-      position = margin - (imgHeight - heightLeft);
-      pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
-      heightLeft -= usableHeight;
-    }
+	while (heightLeft > 0) {
+  	pdf.addPage();
+  	position = margin - (imgHeight - heightLeft);
+  	pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
+  	heightLeft -= usableHeight;
+	}
 
-    var clinic = (v('cn') || 'clinic').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-    var spec = (v('sp') || 'specialist-hire-request').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-    var fileName = clinic + '-' + spec + '-hire-request';
+	var clinic=(v('cn') || 'clinic').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+	var spec=(v('sp') || 'specialist-hire-request').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+	var fileName=clinic + '-' + spec + '-hire-request';
 
-    if (!returnOnly) {
-      pdf.save(fileName + '.pdf');
+	if(!returnOnly){
+  	pdf.save(fileName + '.pdf');
 
-      var t = document.getElementById('toast');
-      t.textContent = '✓ PDF exported successfully';
-      t.style.display = 'block';
+  	var t=document.getElementById('toast');
+  	t.textContent='✓ PDF exported successfully';
+  	t.style.display='block';
 
-      setTimeout(function(){
-        t.style.display = 'none';
-        t.textContent = '✓ Exported successfully';
-      }, 2500);
-    } else {
-      pdf.save(fileName + '.pdf');
-    }
+  	setTimeout(function(){
+    	t.style.display='none';
+    	t.textContent='✓ Exported successfully';
+  	},2500);
+	} else {
+  	pdf.save(fileName + '.pdf');
+	}
 
-    return pdf.output('datauristring');
+	return pdf.output('datauristring');
 
   } catch (err) {
-    console.error(err);
-    alert('PDF export failed. Please use your browser print option and select "Save as PDF".');
-    return '';
+	console.error(err);
+	alert('PDF export failed. Please use your browser print option and select "Save as PDF".');
+	return '';
   } finally {
-    document.body.classList.remove('pdf-export');
+	document.body.classList.remove('pdf-export');
   }
-}
-
-  // Specialty-specific section
-  if(sp==='Orthodontist'){
-    rows.push(['ORTHODONTIST — SPECIALTY','']);
-    rows.push(['Case type',v('ortho_cases')]);
-    rows.push(['Providers currently doing ortho',v('ortho_current')]);
-    rows.push(['Ortho hygienist support',v('ortho_hyg')]);
-    rows.push(['Dedicated ortho bay',v('ortho_bay')]);
-    rows.push(['','']);
-  }
-  if(sp==='Endodontist'){
-    rows.push(['ENDODONTIST — SPECIALTY','']);
-    rows.push(['Apex locator',cb('endo_apex')]);
-    rows.push(['Rotary endo system',cb('endo_rotary')]);
-    rows.push(['CBCT / cone beam',cb('endo_cbct')]);
-    rows.push(['Dental microscope',cb('endo_scope')]);
-    rows.push(['Rubber dam setup',cb('endo_dam')]);
-    rows.push(['Obturation system',cb('endo_obturation')]);
-    rows.push(['Open to purchasing equipment',v('endo_purchase')]);
-    rows.push(['GP endo behaviour',v('endo_gp_behavior')]);
-    rows.push(['','']);
-  }
-  if(sp==='Oral Surgeon'){
-    rows.push(['ORAL SURGEON — SPECIALTY','']);
-    rows.push(['Surgical suite',v('os_suite')]);
-    rows.push(['Highest level of sedation offered',v('os_sedation')]);
-    rows.push(['Facility sedation permit',v('os_permit')]);
-    rows.push(['Hospital privileges',v('os_privileges')]);
-    rows.push(['Surgical assistant',v('os_assistant')]);
-    rows.push(['Primary case mix',v('os_casemix')]);
-    rows.push(['','']);
-  }
-  if(sp==='Periodontist'){
-    rows.push(['PERIODONTIST — SPECIALTY','']);
-    rows.push(['Role focus',v('perio_focus')]);
-    rows.push(['Hygiene perio program',v('perio_hyg')]);
-    rows.push(['Number of hygienists',v('perio_hyg_count')]);
-    // Surgical fields
-    rows.push(['Surgical bay',v('perio_bay')]);
-    rows.push(['Surgical assistant',v('perio_assistant')]);
-    rows.push(['Implant system in use',v('perio_implant')]);
-    rows.push(['Implant brand / system',v('perio_brand')]);
-    // Program fields
-    rows.push(['Existing perio program',v('perio_existing_program')]);
-    rows.push(['Hygiene team mentorship expected',v('perio_mentor')]);
-    rows.push(['Perio recall / maintenance volume',v('perio_recall_vol')]);
-    rows.push(['Periodontist protocol authority',v('perio_authority')]);
-    rows.push(['','']);
-  }
-  if(sp==='Pediatric Dentist'){
-    rows.push(['PEDIATRIC DENTIST — SPECIALTY','']);
-    rows.push(['Nitrous oxide available',v('pedo_nitrous')]);
-    rows.push(['Child-friendly operatory',v('pedo_operatory')]);
-    rows.push(['Behaviour management experience',v('pedo_behavior')]);
-    rows.push(['Pediatric patient volume',v('pedo_volume')]);
-    rows.push(['Proximity to schools / families',v('pedo_location')]);
-    rows.push(['','']);
-  }
-
-  rows=rows.concat([
-    ['DEMAND SIGNAL',''],
-    ['Monthly referrals sent out',v('ref')],
-    ['Referral data tracked',v('rt')],
-    ['Avg. patient wait time',v('wt')],
-    ['Avg. patient age profile',v('age')],
-    ['Insurance / coverage mix',v('ins')],
-    ['Partner influence',v('partner_influence')],
-    ['Hygiene team knowledge on specialty',v('hyg_knowledge')],
-    ['Hygiene program strength',v('hyg_strength')],
-    ['Associates require tx planning training',v('gptrain')],
-    ['Case acceptance rate',v('accept')],
-    ['Recall system for deferred treatment',v('recall')],
-    ['',''],
-    ['CLINIC READINESS',''],
-    ['Dedicated specialist operatory',v('chair')],
-    ['Number of active GPs',v('gp')],
-    ['GPs discussing specialty with patients',v('gbi')],
-    ['Dedicated booking coordinator',v('coord')],
-    ['Same-day / short-notice capacity',v('sameday')],
-    ['GP specialist booking method',v('gpbook')],
-    ['Prior specialist integration',v('prior')],
-    ['Capital investment required',v('capex')],
-    ['Capex approved / budgeted',v('capexBudget')],
-    ['Investment description',v('capexDetail')],
-    ['',''],
-    ['LOCAL MARKET',''],
-    ['Competing specialists within 5-10km',v('mcomp')],
-    ['Clinic in a growth area',v('growth')],
-    ['Current referral destination',v('refdest')],
-    ['',''],
-    ['READINESS ASSESSMENT',''],
-    ['Score',document.getElementById('sv').textContent],
-    ['Status',document.getElementById('ss').textContent]
-  ]);
-
-  var ws=XLSX.utils.aoa_to_sheet(rows);
-  ws['!cols']=[{wch:42},{wch:52}];
-  var wb=XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb,ws,'Specialist Intake');
-  var clinic=(v('cn')||'clinic').replace(/[^a-zA-Z0-9]/g,'-').toLowerCase().replace(/-+/g,'-');
-  var spec=(sp||'specialist').replace(/[^a-zA-Z0-9]/g,'-').toLowerCase();
-  XLSX.writeFile(wb,'specialist-intake-'+clinic+'-'+spec+'.xlsx');
-  var t=document.getElementById('toast');t.style.display='block';
-  setTimeout(function(){t.style.display='none'},2500);
 }
 
 function clearForm(){
   document.querySelectorAll('input[type=text],input[type=email],select,textarea').forEach(function(el){
-    el.value='';
+	el.value='';
   });
 
   document.querySelectorAll('input[type=checkbox]').forEach(function(el){
-    el.checked=false;
+	el.checked=false;
   });
 
   document.querySelectorAll('.pill').forEach(function(p){
-    p.classList.remove('sel');
+	p.classList.remove('sel');
   });
 
   Object.values(specialtyCards).forEach(function(id){
-    document.getElementById(id).classList.remove('show');
+	var el=document.getElementById(id);
+	if(el) el.classList.remove('show');
   });
 
-  document.getElementById('capexBudgetWrap').style.display='none';
-  document.getElementById('capexDetailWrap').style.display='none';
-  document.getElementById('practice-confirm').style.display='none';
-  document.getElementById('practice-dropdown').style.display='none';
-  document.getElementById('practice_name_hidden').value='';
-  document.getElementById('cy').value='';
+  var capexBudgetWrap=document.getElementById('capexBudgetWrap');
+  var capexDetailWrap=document.getElementById('capexDetailWrap');
+  var practiceConfirm=document.getElementById('practice-confirm');
+  var practiceDropdown=document.getElementById('practice-dropdown');
+  var practiceNameHidden=document.getElementById('practice_name_hidden');
+  var cy=document.getElementById('cy');
+
+  if(capexBudgetWrap) capexBudgetWrap.style.display='none';
+  if(capexDetailWrap) capexDetailWrap.style.display='none';
+  if(practiceConfirm) practiceConfirm.style.display='none';
+  if(practiceDropdown) practiceDropdown.style.display='none';
+  if(practiceNameHidden) practiceNameHidden.value='';
+  if(cy) cy.value='';
 
   var psf=document.getElementById('perio_surgical_fields');
   if(psf) psf.style.display='none';
@@ -1715,19 +1704,19 @@ function clearForm(){
 
   var emailField=document.getElementById('em');
   if(emailField){
-    emailField.dataset.userEdited='';
-    emailField.placeholder='name@dentalcorp.com';
+	emailField.dataset.userEdited='';
+	emailField.placeholder='name@dentalcorp.com';
   }
 
   pillSel={};
 
-  ['dq','capexq','rq','orthoq','endoq','osq','perioq','pedoq'].forEach(function(id){
-    var el=document.getElementById(id);
-    if(el){
-      el.style.display='none';
-      el.innerHTML='';
-      el.className='qa';
-    }
+  ['ramq','dq','capexq','rq','orthoq','endoq','osq','perioq','pedoq'].forEach(function(id){
+	var el=document.getElementById(id);
+	if(el){
+  	el.style.display='none';
+  	el.innerHTML='';
+  	el.className=id==='ramq' ? '' : 'qa';
+	}
   });
 
   resetScore();
@@ -1736,57 +1725,53 @@ function clearForm(){
 window.addEventListener('DOMContentLoaded', function(){
   chk();
 });
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.jsript src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-  
 </script>
 
-  <div id="emailModal" style="display:none; position:fixed; inset:0; background:rgba(39,50,33,0.42); justify-content:center; align-items:center; z-index:1000; padding:20px;">
+<div id="emailModal" style="display:none; position:fixed; inset:0; background:rgba(39,50,33,0.42); justify-content:center; align-items:center; z-index:1000; padding:20px;">
   <div style="background:var(--white); border:1px solid #ddd9ce; border-radius:12px; width:100%; max-width:420px; padding:24px; box-shadow:0 16px 40px rgba(39,50,33,0.18);">
-    
-    <div style="font-family:var(--sans); font-weight:700; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--atlantic); margin-bottom:10px;">
-      Submission
-    </div>
 
-    <h3 style="font-family:var(--serif); font-weight:400; font-size:28px; line-height:1.2; color:var(--black-olive); margin:0 0 10px 0;">
-      Enter your email
-    </h3>
+	<div style="font-family:var(--sans); font-weight:700; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--atlantic); margin-bottom:10px;">
+  	Submission
+	</div>
 
-    <p style="font-family:var(--sans); font-size:14px; line-height:1.65; color:var(--text-secondary); margin:0 0 16px 0;">
-      When you submit, a PDF copy of this completed form will automatically download in your browser. Please save it if you would like a record of your responses.
-    </p>
+	<h3 style="font-family:var(--serif); font-weight:400; font-size:28px; line-height:1.2; color:var(--black-olive); margin:0 0 10px 0;">
+  	Enter your email
+	</h3>
 
-    <div style="display:flex; flex-direction:column; gap:6px; margin-bottom:18px;">
-      <label for="userEmail" style="font-size:12px; font-weight:600; color:var(--text-secondary); letter-spacing:.01em;">
-        Email address <span style="color:var(--atlantic);">*</span>
-      </label>
-      <input
-        type="email"
-        id="userEmail"
-        placeholder="your@email.com"
-        style="font-family:var(--sans); font-size:14px; padding:10px 12px; border:1px solid #ccc8be; border-radius:6px; background:var(--latte); color:var(--text-primary); width:100%;"
-      >
-    </div>
+	<p style="font-family:var(--sans); font-size:14px; line-height:1.65; color:var(--text-secondary); margin:0 0 16px 0;">
+  	When you submit, a PDF copy of this completed form will automatically download in your browser. Please save it if you would like a record of your responses.
+	</p>
 
-    <div style="display:flex; gap:10px; justify-content:flex-start; align-items:center;">
-      <button
-        onclick="confirmSubmit()"
-        style="display:inline-flex; align-items:center; justify-content:center; padding:11px 20px; background:var(--atlantic); color:var(--white); border:none; border-radius:7px; font-family:var(--sans); font-size:14px; font-weight:700; cursor:pointer;"
-      >
-        Submit
-      </button>
+	<div style="display:flex; flex-direction:column; gap:6px; margin-bottom:18px;">
+  	<label for="userEmail" style="font-size:12px; font-weight:600; color:var(--text-secondary); letter-spacing:.01em;">
+    	Email address <span style="color:var(--atlantic);">*</span>
+  	</label>
+  	<input
+    	type="email"
+    	id="userEmail"
+    	placeholder="your@email.com"
+    	style="font-family:var(--sans); font-size:14px; padding:10px 12px; border:1px solid #ccc8be; border-radius:6px; background:var(--latte); color:var(--text-primary); width:100%;"
+  	>
+	</div>
 
-      <button
-        onclick="closeModal()"
-        style="display:inline-flex; align-items:center; justify-content:center; padding:11px 18px; background:var(--white); color:var(--text-secondary); border:1px solid #ccc8be; border-radius:7px; font-family:var(--sans); font-size:14px; cursor:pointer;"
-      >
-        Cancel
-      </button>
-    </div>
+	<div style="display:flex; gap:10px; justify-content:flex-start; align-items:center;">
+  	<button
+    	onclick="confirmSubmit()"
+    	style="display:inline-flex; align-items:center; justify-content:center; padding:11px 20px; background:var(--atlantic); color:var(--white); border:none; border-radius:7px; font-family:var(--sans); font-size:14px; font-weight:700; cursor:pointer;"
+  	>
+    	Submit
+  	</button>
+
+  	<button
+    	onclick="closeModal()"
+    	style="display:inline-flex; align-items:center; justify-content:center; padding:11px 18px; background:var(--white); color:var(--text-secondary); border:1px solid #ccc8be; border-radius:7px; font-family:var(--sans); font-size:14px; cursor:pointer;"
+  	>
+    	Cancel
+  	</button>
+	</div>
   </div>
 </div>
 
-  
 </body>
 </html>
+
