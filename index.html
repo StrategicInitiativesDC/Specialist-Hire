@@ -900,15 +900,23 @@ dd.style.display='block';
 }
 
 function selectPractice(p){
-var input=document.getElementById('cn');
-input.value=p['Practice Code'];
-document.getElementById('cy').value=p['City'];
-document.getElementById('practice_name_hidden').value=p['Practicename'];
-document.getElementById('practice-dropdown').style.display='none';
-var confirm=document.getElementById('practice-confirm');
-confirm.style.display='block';
-confirm.innerHTML='<strong>'+p['Practicename']+'</strong> &nbsp;·&nbsp; '+p['City'];
-chk();
+  var input=document.getElementById('cn');
+  input.value=p['Practice Code'];
+
+  document.getElementById('cy').value=p['City'];
+  document.getElementById('practice_name_hidden').value=p['Practicename'];
+
+  // Visible auto-filled fields
+  document.getElementById('practice_name_display').value=p['Practicename'];
+  document.getElementById('city_display').value=p['City'];
+
+  document.getElementById('practice-dropdown').style.display='none';
+
+  var confirm=document.getElementById('practice-confirm');
+  confirm.style.display='block';
+  confirm.innerHTML='<strong>'+p['Practicename']+'</strong> &nbsp;·&nbsp; '+p['City'];
+
+  chk();
 }
 
 function handlePracticeKey(e){
@@ -1688,15 +1696,19 @@ function clearForm(){
   var capexDetailWrap=document.getElementById('capexDetailWrap');
   var practiceConfirm=document.getElementById('practice-confirm');
   var practiceDropdown=document.getElementById('practice-dropdown');
-  var practiceNameHidden=document.getElementById('practice_name_hidden');
-  var cy=document.getElementById('cy');
+var practiceNameHidden=document.getElementById('practice_name_hidden');
+var cy=document.getElementById('cy');
+var practiceNameDisplay=document.getElementById('practice_name_display');
+var cityDisplay=document.getElementById('city_display');
 
-  if(capexBudgetWrap) capexBudgetWrap.style.display='none';
-  if(capexDetailWrap) capexDetailWrap.style.display='none';
-  if(practiceConfirm) practiceConfirm.style.display='none';
-  if(practiceDropdown) practiceDropdown.style.display='none';
-  if(practiceNameHidden) practiceNameHidden.value='';
-  if(cy) cy.value='';
+if(capexBudgetWrap) capexBudgetWrap.style.display='none';
+if(capexDetailWrap) capexDetailWrap.style.display='none';
+if(practiceConfirm) practiceConfirm.style.display='none';
+if(practiceDropdown) practiceDropdown.style.display='none';
+if(practiceNameHidden) practiceNameHidden.value='';
+if(cy) cy.value='';
+if(practiceNameDisplay) practiceNameDisplay.value='';
+if(cityDisplay) cityDisplay.value='';
 
   var psf=document.getElementById('perio_surgical_fields');
   if(psf) psf.style.display='none';
