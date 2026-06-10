@@ -60,8 +60,15 @@ body{font-family:var(--sans);background:var(--body-bg);color:var(--text-primary)
 
 /* Check groups */
 .check-group{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
-.ci{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--text-primary);cursor:pointer;line-height:1.4}
-.ci input[type=checkbox]{width:15px;height:15px;margin-top:2px;accent-color:var(--atlantic);cursor:pointer;flex-shrink:0}
+.ci{display:flex;align-items:center;gap:0;cursor:pointer;line-height:1.4}
+.ci input[type=checkbox]{position:absolute;opacity:0;width:0;height:0;pointer-events:none}
+.ci-pill{display:flex;align-items:center;gap:8px;width:100%;padding:9px 13px;border:1.5px solid #ccc8be;border-radius:8px;background:#fff;font-size:13px;color:var(--text-secondary);cursor:pointer;transition:border-color .15s,background .15s,color .15s;line-height:1.35;user-select:none}
+.ci-pill .ci-box{width:18px;height:18px;flex-shrink:0;border:1.5px solid #ccc8be;border-radius:4px;background:#fff;display:flex;align-items:center;justify-content:center;transition:border-color .15s,background .15s}
+.ci-pill .ci-box svg{display:none}
+.ci input[type=checkbox]:checked + .ci-pill{border-color:var(--atlantic);background:#f0f8fb;color:var(--black-olive);font-weight:600}
+.ci input[type=checkbox]:checked + .ci-pill .ci-box{background:var(--atlantic);border-color:var(--atlantic)}
+.ci input[type=checkbox]:checked + .ci-pill .ci-box svg{display:block}
+.ci-pill:hover{border-color:var(--atlantic);background:#f7fcfd}
 
 /* Pills */
 .pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
@@ -246,16 +253,82 @@ body{font-family:var(--sans);background:var(--body-bg);color:var(--text-primary)
       <svg class="shine-sm" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M50 0 C50 28 72 50 100 50 C72 50 50 72 50 100 C50 72 28 50 0 50 C28 50 50 28 50 0Z" fill="#34798D"/></svg>
       <span class="sec-title">Endodontist — specialty questions</span><div class="sec-rule"></div>
     </div>
-    <div class="field" style="margin-bottom:14px"><label>Which of the following endo equipment does the clinic currently have? <span class="req">*</span></label>
-      <div class="check-group">
-        <label class="ci"><input type="checkbox" id="endo_apex"> Apex locator</label>
-        <label class="ci"><input type="checkbox" id="endo_rotary"> Rotary endo system</label>
-        <label class="ci"><input type="checkbox" id="endo_cbct"> CBCT / cone beam imaging</label>
-        <label class="ci"><input type="checkbox" id="endo_scope"> Dental microscope</label>
-        <label class="ci"><input type="checkbox" id="endo_dam"> Rubber dam setup</label>
-        <label class="ci"><input type="checkbox" id="endo_obturation"> Obturation system (e.g. Obtura, Calamus)</label>
-      </div>
-    </div>
+    <div class="field" style="margin-bottom:14px">
+  <label>Which of the following endo equipment does the clinic currently have? <span class="req">*</span></label>
+  <div class="check-group">
+    <label class="ci">
+      <input type="checkbox" id="endo_apex" onchange="chk()">
+      <span class="ci-pill">
+        <span class="ci-box">
+          <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </span>
+        Apex locator
+      </span>
+    </label>
+
+    <label class="ci">
+      <input type="checkbox" id="endo_rotary" onchange="chk()">
+      <span class="ci-pill">
+        <span class="ci-box">
+          <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </span>
+        Rotary endo system
+      </span>
+    </label>
+
+    <label class="ci">
+      <input type="checkbox" id="endo_cbct" onchange="chk()">
+      <span class="ci-pill">
+        <span class="ci-box">
+          <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </span>
+        CBCT / cone beam imaging
+      </span>
+    </label>
+
+    <label class="ci">
+      <input type="checkbox" id="endo_scope" onchange="chk()">
+      <span class="ci-pill">
+        <span class="ci-box">
+          <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </span>
+        Dental microscope
+      </span>
+    </label>
+
+    <label class="ci">
+      <input type="checkbox" id="endo_dam" onchange="chk()">
+      <span class="ci-pill">
+        <span class="ci-box">
+          <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </span>
+        Rubber dam setup
+      </span>
+    </label>
+
+    <label class="ci">
+      <input type="checkbox" id="endo_obturation" onchange="chk()">
+      <span class="ci-pill">
+        <span class="ci-box">
+          <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="2,6 5,9 10,3"/>
+          </svg>
+        </span>
+        Obturation system (e.g. Obtura, Calamus)
+      </span>
+    </label>
+  </div>
+</div>
     <div class="g2">
       <div class="field"><label>Is the clinic open to purchasing additional endo equipment if required? <span class="req">*</span></label>
         <select id="endo_purchase" onchange="chk()">
@@ -865,12 +938,19 @@ document.addEventListener('click',function(e){
 function autoEmail(){
   var name=document.getElementById('mgr').value.trim();
   var emailField=document.getElementById('em');
-  if(!name){emailField.placeholder='name@dentalcorp.ca';return;}
-  var parts=name.trim().split(/\s+/);
-  if(parts.length>=2){
-    var generated=parts[0].toLowerCase()+'.'+parts[parts.length-1].toLowerCase()+'@dentalcorp.com';
-    // Only autofill if user hasn't manually typed something
-    if(!emailField.dataset.userEdited) emailField.value=generated;
+
+  if(!name){
+    emailField.placeholder='name@dentalcorp.com';
+    if(!emailField.dataset.userEdited) emailField.value='';
+    return;
+  }
+
+  var parts=name.split(/\s+/);
+  if(parts.length >= 2){
+    var generated = parts[0].toLowerCase() + '.' + parts[parts.length - 1].toLowerCase() + '@dentalcorp.com';
+    if(!emailField.dataset.userEdited){
+      emailField.value = generated;
+    }
   }
 }
 
@@ -953,79 +1033,146 @@ function chk(){
   var gptrain=document.getElementById('gptrain').value;
   var sp=document.getElementById('sp').value;
 
-
   // Demand
   var dm=null,dc='ok';
-  if(ref==='low'){dm='<strong>Low referral volume.</strong> Fewer than 10/month may not sustainably fill a specialist schedule. Validate demand before opening a search.';dc='warn';}
-  else if(rt==='no'&&ref){dm='<strong>No referral tracking in place.</strong> The insourcing team may request a tracking period before approving this search.';dc='warn';}
-  else if(gptrain==='yes'){dm='<strong>Treatment planning training required.</strong> Associates will need to complete training before the specialist can be fully utilised. Factor this into your timeline.';dc='warn';}
-  else if((ref==='high'||ref==='vhigh')&&rt==='yes'&&gptrain==='no') dm='<strong>Strong demand signal.</strong> Volume, tracking and associate readiness all support moving forward.';
+  if(ref==='low'){
+    dm='<strong>Low referral volume.</strong> Fewer than 10/month may not sustainably fill a specialist schedule. Validate demand before opening a search.';
+    dc='warn';
+  } else if(rt==='no' && ref){
+    dm='<strong>No referral tracking in place.</strong> The insourcing team may request a tracking period before approving this search.';
+    dc='warn';
+  } else if(gptrain==='yes'){
+    dm='<strong>Treatment planning training required.</strong> Associates will need to complete training before the specialist can be fully utilised. Factor this into your timeline.';
+    dc='warn';
+  } else if((ref==='high'||ref==='vhigh') && rt==='yes' && gptrain==='no'){
+    dm='<strong>Strong demand signal.</strong> Volume, tracking and associate readiness all support moving forward.';
+  }
   if(dm) showQ('dq',dc,dm); else showQ('dq','',null);
 
   // Capex
-  if(capex==='yes'&&capexBudget==='no') showQ('capexq','block','<strong>Unfunded capex.</strong> Required capital investment has not been approved. Resolve funding before a search is opened.');
-  else if(capex==='yes'&&capexBudget==='inprogress') showQ('capexq','warn','<strong>Capex approval in progress.</strong> Search can begin in parallel but hire should not be confirmed until funding is secured.');
-  else if(capex==='yes'&&capexBudget==='approved') showQ('capexq','ok','<strong>Capex approved.</strong> Investment is funded and ready.');
-  else showQ('capexq','',null);
+  if(capex==='yes' && capexBudget==='no'){
+    showQ('capexq','block','<strong>Unfunded capex.</strong> Required capital investment has not been approved. Resolve funding before a search is opened.');
+  } else if(capex==='yes' && capexBudget==='inprogress'){
+    showQ('capexq','warn','<strong>Capex approval in progress.</strong> Search can begin in parallel but hire should not be confirmed until funding is secured.');
+  } else if(capex==='yes' && capexBudget==='approved'){
+    showQ('capexq','ok','<strong>Capex approved.</strong> Investment is funded and ready.');
+  } else {
+    showQ('capexq','',null);
+  }
 
   // Readiness
   var rm=null,rc='ok';
-  if(chair==='no'){rm='<strong>No dedicated operatory.</strong> A specialist needs their own chair — this is a hard requirement. Confirm a solution before opening a search.';rc='block';}
-  else if(gbi==='no'){rm='<strong>GP buy-in needed.</strong> Specialists succeed when GPs actively co-diagnose. A team alignment session is recommended before hire.';rc='warn';}
-  else if(chair==='yes'&&gbi==='yes') rm='<strong>Clinic is ready.</strong> Dedicated operatory in place and GPs are aligned.';
-  else if(chair==='planned'){rm='<strong>Operatory in progress.</strong> Search can begin in parallel but hire should not be confirmed until the space is ready.';rc='warn';}
+  if(chair==='no'){
+    rm='<strong>No dedicated operatory.</strong> A specialist needs their own chair — this is a hard requirement. Confirm a solution before opening a search.';
+    rc='block';
+  } else if(gbi==='no'){
+    rm='<strong>GP buy-in needed.</strong> Specialists succeed when GPs actively co-diagnose. A team alignment session is recommended before hire.';
+    rc='warn';
+  } else if(chair==='yes' && gbi==='yes'){
+    rm='<strong>Clinic is ready.</strong> Dedicated operatory in place and GPs are aligned.';
+  } else if(chair==='planned'){
+    rm='<strong>Operatory in progress.</strong> Search can begin in parallel but hire should not be confirmed until the space is ready.';
+    rc='warn';
+  }
   if(rm) showQ('rq',rc,rm); else showQ('rq','',null);
 
   // Specialty-specific flags
   if(sp==='Orthodontist'){
     var ortho_current=document.getElementById('ortho_current').value;
     var ortho_hyg=document.getElementById('ortho_hyg').value;
-    if(ortho_current==='yes_gp') showQ('orthoq','warn','<strong>GPs currently doing ortho.</strong> Transition plan needed — clarify whether GPs will continue Invisalign cases or hand off entirely to the orthodontist.');
-    else if(ortho_hyg==='no') showQ('orthoq','warn','<strong>No ortho hygienist.</strong> An ortho hygienist is critical to specialist throughput. Confirm a hiring plan before the search opens.');
-    else showQ('orthoq','',null);
+
+    if(ortho_current==='yes_gp'){
+      showQ('orthoq','warn','<strong>GPs currently doing ortho.</strong> Transition plan needed — clarify whether GPs will continue Invisalign cases or hand off entirely to the orthodontist.');
+    } else if(ortho_hyg==='no'){
+      showQ('orthoq','warn','<strong>No ortho hygienist.</strong> An ortho hygienist is critical to specialist throughput. Confirm a hiring plan before the search opens.');
+    } else {
+      showQ('orthoq','',null);
+    }
+  } else {
+    showQ('orthoq','',null);
   }
 
   if(sp==='Endodontist'){
     var endo_purchase=document.getElementById('endo_purchase').value;
     var endoEquip=['endo_apex','endo_rotary','endo_cbct','endo_scope','endo_dam','endo_obturation'];
-    var endoCount=endoEquip.filter(function(id){return document.getElementById(id).checked}).length;
-    if(endoCount<2) showQ('endoq','warn','<strong>Limited endo equipment.</strong> The clinic has fewer than 2 key endo items. Confirm equipment plan or flag for capex.');
-    else if(endoCount>=4) showQ('endoq','ok','<strong>Well-equipped for endo.</strong> Strong equipment base in place.');
-    else showQ('endoq','',null);
+    var endoCount=endoEquip.filter(function(id){ return document.getElementById(id).checked; }).length;
+
+    if(endoCount < 2 && endo_purchase === 'no'){
+      showQ('endoq','block','<strong>Limited endo equipment and no purchase plan.</strong> The clinic has fewer than 2 key endo items and is not open to additional equipment. Resolve before moving forward.');
+    } else if(endoCount < 2){
+      showQ('endoq','warn','<strong>Limited endo equipment.</strong> The clinic has fewer than 2 key endo items. Confirm equipment plan or flag for capex.');
+    } else if(endoCount >= 4){
+      showQ('endoq','ok','<strong>Well-equipped for endo.</strong> Strong equipment base in place.');
+    } else {
+      showQ('endoq','',null);
+    }
+  } else {
+    showQ('endoq','',null);
   }
 
   if(sp==='Oral Surgeon'){
     var os_suite=document.getElementById('os_suite').value;
     var os_sedation=document.getElementById('os_sedation').value;
-    if(os_suite==='no') showQ('osq','block','<strong>No surgical suite.</strong> Oral surgery requires a proper surgical environment. This is a hard requirement — resolve before opening a search.');
-    else if(os_sedation==='none') showQ('osq','warn','<strong>No sedation offered.</strong> Oral surgery without sedation capability significantly limits case mix and specialist utilisation.');
     var os_permit=document.getElementById('os_permit').value;
-    if(os_sedation!=='none'&&os_permit==='neither') showQ('osq','warn','<strong>No facility sedation permit.</strong> A Type A or Type A/B permit is typically required to support an oral surgeon. Flag for resolution before the search opens.');
-    else showQ('osq','',null);
+
+    var osMsg=null, osClass='warn';
+
+    if(os_suite==='no'){
+      osMsg='<strong>No surgical suite.</strong> Oral surgery requires a proper surgical environment. This is a hard requirement — resolve before opening a search.';
+      osClass='block';
+    } else if(os_sedation==='none'){
+      osMsg='<strong>No sedation offered.</strong> Oral surgery without sedation capability significantly limits case mix and specialist utilisation.';
+      osClass='warn';
+    } else if(os_sedation!=='none' && os_permit==='neither'){
+      osMsg='<strong>No facility sedation permit.</strong> A Type A or Type A/B permit is typically required to support an oral surgeon. Flag for resolution before the search opens.';
+      osClass='warn';
+    }
+
+    if(osMsg) showQ('osq',osClass,osMsg); else showQ('osq','',null);
+  } else {
+    showQ('osq','',null);
   }
 
   if(sp==='Periodontist'){
     var perio_focus=document.getElementById('perio_focus').value;
     var perio_hyg=document.getElementById('perio_hyg').value;
     var perio_bay_el=document.getElementById('perio_bay');
-    var perio_bay=perio_bay_el?perio_bay_el.value:'';
-    if((perio_focus==='surgical'||perio_focus==='both')&&perio_bay==='no')
-      showQ('perioq','block','<strong>No surgical bay.</strong> A surgical-focused periodontist requires a dedicated or adaptable surgical space. This must be resolved before the search opens.');
-    else if(perio_focus==='program'&&perio_hyg==='no')
-      showQ('perioq','warn','<strong>Weak hygiene perio program.</strong> A program-focused periodontist needs an active hygiene perio base to manage. Consider building this before hire.');
-    else if(perio_focus==='both'&&perio_hyg==='no'&&perio_bay==='no')
-      showQ('perioq','block','<strong>Multiple gaps.</strong> A surgical bay and an active hygiene perio program are both needed for a combined role. Resolve before opening a search.');
-    else if(perio_focus&&perio_hyg==='yes'&&(perio_focus==='program'||(perio_bay&&perio_bay!=='no')))
-      showQ('perioq','ok','<strong>Perio setup looks solid.</strong> Hygiene program and infrastructure align with the role focus.');
-    else showQ('perioq','',null);
+    var perio_bay=perio_bay_el ? perio_bay_el.value : '';
+
+    var perioMsg=null, perioClass='warn';
+
+    if(perio_focus==='both' && perio_hyg==='no' && perio_bay==='no'){
+      perioMsg='<strong>Multiple gaps.</strong> A surgical bay and an active hygiene perio program are both needed for a combined role. Resolve before opening a search.';
+      perioClass='block';
+    } else if((perio_focus==='surgical'||perio_focus==='both') && perio_bay==='no'){
+      perioMsg='<strong>No surgical bay.</strong> A surgical-focused periodontist requires a dedicated or adaptable surgical space. This must be resolved before the search opens.';
+      perioClass='block';
+    } else if(perio_focus==='program' && perio_hyg==='no'){
+      perioMsg='<strong>Weak hygiene perio program.</strong> A program-focused periodontist needs an active hygiene perio base to manage. Consider building this before hire.';
+      perioClass='warn';
+    } else if(perio_focus && perio_hyg==='yes' && (perio_focus==='program' || (perio_bay && perio_bay!=='no'))){
+      perioMsg='<strong>Perio setup looks solid.</strong> Hygiene program and infrastructure align with the role focus.';
+      perioClass='ok';
+    }
+
+    if(perioMsg) showQ('perioq',perioClass,perioMsg); else showQ('perioq','',null);
+  } else {
+    showQ('perioq','',null);
   }
 
   if(sp==='Pediatric Dentist'){
     var pedo_nitrous=document.getElementById('pedo_nitrous').value;
     var pedo_operatory=document.getElementById('pedo_operatory').value;
-    if(pedo_nitrous==='no') showQ('pedoq','warn','<strong>No nitrous oxide.</strong> Nitrous is a baseline requirement for pediatric dentistry. Flag for capex or confirm before opening a search.');
-    else if(pedo_operatory==='no') showQ('pedoq','warn','<strong>No child-friendly operatory.</strong> A standard adult setup will limit the pediatric patient experience and throughput.');
-    else showQ('pedoq','',null);
+
+    if(pedo_nitrous==='no'){
+      showQ('pedoq','warn','<strong>No nitrous oxide.</strong> Nitrous is a baseline requirement for pediatric dentistry. Flag for capex or confirm before opening a search.');
+    } else if(pedo_operatory==='no'){
+      showQ('pedoq','warn','<strong>No child-friendly operatory.</strong> A standard adult setup will limit the pediatric patient experience and throughput.');
+    } else {
+      showQ('pedoq','',null);
+    }
+  } else {
+    showQ('pedoq','',null);
   }
 
   calcScore();
@@ -1168,28 +1315,28 @@ function cb(id){var el=document.getElementById(id);return el&&el.checked?'Yes':'
 
 function validateRequired(){
   var missing=[];
+
   if(!v('cn')) missing.push('Practice code');
-  
-  if(!v('mgr')) missing.push('Clinic director');
+  if(!v('mgr')) missing.push('Your name');
   if(!v('em')) missing.push('Email');
-  if(!v('ram')) missing.push('Manager sign-off');
+  if(!v('ram')) missing.push('RM sign-off');
   if(!v('sp')) missing.push('Specialty');
-  if(!pillSel['dg']) missing.push('Days per month');
-  if(!v('ref')) missing.push('Monthly referrals');
-  if(!v('wt')) missing.push('Patient wait time');
-  if(!v('partner_influence')) missing.push('Partner influence');
-  if(!v('hyg_knowledge')) missing.push('Hygiene team knowledge');
-  if(!v('hyg_strength')) missing.push('Hygiene program strength');
-  
-  if(!v('wt')) missing.push('Patient wait time');
-  if(!v('age')) missing.push('Patient age profile');
-  
-  if(!v('gptrain')) missing.push('Associates training');
-  if(!v('chair')) missing.push('Dedicated operatory');
-  if(!v('gp')) missing.push('Number of GPs');
-  if(!v('gbi')) missing.push('GP buy-in');
-  if(!v('capex')) missing.push('Capital investment');
-  if(!v('mcomp')) missing.push('Competing specialists');
+  if(!pillSel['dg']) missing.push('Days needed per month');
+
+  if(!v('ref')) missing.push('Monthly referrals sent out');
+  if(!v('wt')) missing.push('Avg. patient wait time');
+  if(!v('age')) missing.push('Avg. patient age profile');
+  if(!v('gptrain')) missing.push('Associates treatment planning training');
+  if(!v('partner_influence')) missing.push('Partner influence on referral patterns');
+  if(!v('hyg_knowledge')) missing.push('Hygiene team knowledge on this specialty');
+  if(!v('hyg_strength')) missing.push('Strength of hygiene program and recalls');
+
+  if(!v('chair')) missing.push('Dedicated specialist operatory');
+  if(!v('gp')) missing.push('Number of active GPs');
+  if(!v('gbi')) missing.push('GPs actively discussing this specialty with patients');
+  if(!v('capex')) missing.push('Capital investment required');
+  if(!v('mcomp')) missing.push('Competing specialists within 5–10km');
+
   return missing;
 }
 
@@ -1281,15 +1428,21 @@ function submitToSheets(){
     alert('Google Sheets not connected yet.\n\nPaste your Apps Script Web App URL into the SHEETS_URL variable at the top of the script.');
     return;
   }
+
   var missing=validateRequired();
   if(missing.length>0){
-    alert('Please complete the following required fields before submitting:\n\n• '+missing.join('\n• '));
+    alert('Please complete the following required fields before submitting:\n\n• ' + missing.join('\n• '));
     return;
   }
+
   var btn=document.querySelector('.btn-submit');
+  var originalHTML=btn.innerHTML;
+
   btn.disabled=true;
-  btn.textContent='Submitting...';
+  btn.innerHTML='Submitting...';
+
   var payload=buildPayload();
+
   fetch(SHEETS_URL,{
     method:'POST',
     mode:'no-cors',
@@ -1299,18 +1452,20 @@ function submitToSheets(){
     btn.disabled=false;
     btn.innerHTML='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Submitted!';
     btn.style.background='#4a9460';
+
     var t=document.getElementById('toast');
     t.textContent='✓ Submitted to Google Sheets';
     t.style.display='block';
+
     setTimeout(function(){
       t.style.display='none';
-      btn.innerHTML='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg> Submit to Google Sheets';
+      btn.innerHTML=originalHTML;
       btn.style.background='';
     },3000);
   }).catch(function(err){
     btn.disabled=false;
-    btn.textContent='Submit to Google Sheets';
-    alert('Submission failed. Check your internet connection and try again.\n\n'+err);
+    btn.innerHTML=originalHTML;
+    alert('Submission failed. Check your internet connection and try again.\n\n' + err);
   });
 }
 
@@ -1438,23 +1593,60 @@ function exportXLS(){
 }
 
 function clearForm(){
-  document.querySelectorAll('input[type=text],input[type=email],select,textarea').forEach(function(el){el.value=''});
-  document.querySelectorAll('input[type=checkbox]').forEach(function(el){el.checked=false});
-  document.querySelectorAll('.pill').forEach(function(p){p.classList.remove('sel')});
-  Object.values(specialtyCards).forEach(function(id){document.getElementById(id).classList.remove('show')});
+  document.querySelectorAll('input[type=text],input[type=email],select,textarea').forEach(function(el){
+    el.value='';
+  });
+
+  document.querySelectorAll('input[type=checkbox]').forEach(function(el){
+    el.checked=false;
+  });
+
+  document.querySelectorAll('.pill').forEach(function(p){
+    p.classList.remove('sel');
+  });
+
+  Object.values(specialtyCards).forEach(function(id){
+    document.getElementById(id).classList.remove('show');
+  });
+
   document.getElementById('capexBudgetWrap').style.display='none';
+  document.getElementById('capexDetailWrap').style.display='none';
   document.getElementById('practice-confirm').style.display='none';
   document.getElementById('practice-dropdown').style.display='none';
   document.getElementById('practice_name_hidden').value='';
-  var psf=document.getElementById('perio_surgical_fields');if(psf)psf.style.display='none';
-  var ppf=document.getElementById('perio_program_fields');if(ppf)ppf.style.display='none';
-  document.getElementById('capexDetailWrap').style.display='none';
+  document.getElementById('cy').value='';
+
+  var psf=document.getElementById('perio_surgical_fields');
+  if(psf) psf.style.display='none';
+
+  var ppf=document.getElementById('perio_program_fields');
+  if(ppf) ppf.style.display='none';
+
+  var emailField=document.getElementById('em');
+  if(emailField){
+    emailField.dataset.userEdited='';
+    emailField.placeholder='name@dentalcorp.com';
+  }
+
   pillSel={};
+
   ['dq','capexq','rq','orthoq','endoq','osq','perioq','pedoq'].forEach(function(id){
-    var el=document.getElementById(id);if(el)el.style.display='none';
+    var el=document.getElementById(id);
+    if(el){
+      el.style.display='none';
+      el.innerHTML='';
+      el.className='qa';
+    }
   });
+
   resetScore();
 }
+
+window.addEventListener('DOMContentLoaded', function(){
+  chk();
+});
+``
+  
 </script>
 </body>
 </html>
