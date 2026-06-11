@@ -33,9 +33,26 @@ body{font-family:var(--sans);background:var(--body-bg);color:var(--text-primary)
 .req-note span{color:var(--atlantic);font-weight:700}
 
 /* Cards */
-.card{background:var(--white);border:1px solid #ddd9ce;border-radius:10px;padding:1.75rem;margin-bottom:1.25rem}
+.card{
+  background:var(--white);
+  border:1px solid #ddd9ce;
+  border-radius:10px;
+  padding:1.75rem;
+  margin-bottom:1.75rem;
+  box-shadow:0 1px 0 rgba(39,50,33,.02);
+}
+
 .card-accent{border-left:3px solid var(--atlantic)}
-.specialty-card{background:var(--white);border:1.5px solid var(--atlantic);border-radius:10px;padding:1.75rem;margin-bottom:1.25rem;display:none;animation:fadeIn .25s ease}
+.specialty-card{
+  background:var(--white);
+  border:1.5px solid var(--atlantic);
+  border-radius:10px;
+  padding:1.75rem;
+  margin-bottom:1.75rem;
+  display:none;
+  animation:fadeIn .25s ease;
+}
+
 .specialty-card.show{display:block}
 .specialty-card-inner{background:#f0f8fb;border-radius:7px;padding:1.25rem;margin-top:0}
 
@@ -201,8 +218,10 @@ body{font-family:var(--sans);background:var(--body-bg);color:var(--text-primary)
       <!-- Hidden fields used by backend -->
       <input type="hidden" id="cy">
       <input type="hidden" id="practice_name_hidden">
-    </div>
+</div>
   </div>
+</div>
+
 
 
 <!-- 2. Role -->
