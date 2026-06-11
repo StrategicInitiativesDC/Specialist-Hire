@@ -145,8 +145,8 @@ body{font-family:var(--sans);background:var(--body-bg);color:var(--text-primary)
     <span class="sec-title">Your information</span><div class="sec-rule"></div>
   </div>
 
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start">
-    <!-- Left column: keep name + email -->
+ <div class="g2" style="align-items:start">
+    <!-- Left column -->
     <div style="display:flex;flex-direction:column;gap:14px">
       <div class="field">
         <label>Your name <span class="req">*</span></label>
@@ -157,9 +157,21 @@ body{font-family:var(--sans);background:var(--body-bg);color:var(--text-primary)
         <label>Email <span class="req">*</span></label>
         <input type="email" id="em" placeholder="name@dentalcorp.ca">
       </div>
+
+      <div class="field">
+        <label>RM sign-off? <span class="req">*</span></label>
+        <select id="ram" onchange="chk()">
+          <option value="">Select...</option>
+          <option value="yes">Yes — discussed and approved</option>
+          <option value="pending">Discussed — awaiting formal sign-off</option>
+          <option value="no">Not yet discussed</option>
+        </select>
+      </div>
+
+      <div id="ramq" style="display:none"></div>
     </div>
 
-    <!-- Right column: practice lookup + auto-filled fields -->
+    <!-- Right column -->
     <div style="display:flex;flex-direction:column;gap:14px">
       <div class="field" style="position:relative">
         <label>Practice code <span class="req">*</span></label>
@@ -191,20 +203,6 @@ body{font-family:var(--sans);background:var(--body-bg);color:var(--text-primary)
       <input type="hidden" id="practice_name_hidden">
     </div>
   </div>
-
-  <div class="mt">
-    <div class="field"><label>RM sign-off? <span class="req">*</span></label>
-      <select id="ram" onchange="chk()" style="max-width:360px">
-        <option value="">Select...</option>
-        <option value="yes">Yes — discussed and approved</option>
-        <option value="pending">Discussed — awaiting formal sign-off</option>
-        <option value="no">Not yet discussed</option>
-      </select>
-    </div>
-  </div>
-
-  <div id="ramq" style="display:none"></div>
-</div>
 
 
 <!-- 2. Role -->
