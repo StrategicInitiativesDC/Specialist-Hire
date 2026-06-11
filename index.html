@@ -167,7 +167,7 @@ body{font-family:var(--sans);background:var(--body-bg);color:var(--text-primary)
     <div style="display:flex;flex-direction:column;gap:14px">
       <div class="field">
         <label>Your name <span class="req">*</span></label>
-        <input type="text" id="mgr" placeholder="Full name" oninput="autoEmail()">
+        <input type="text" id="mgr" placeholder="Full name">
       </div>
 
       <div class="field">
@@ -202,9 +202,7 @@ body{font-family:var(--sans);background:var(--body-bg);color:var(--text-primary)
           style="padding:9px 12px"
         >
         <div id="practice-dropdown" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid #ccc8be;border-radius:0 0 6px 6px;max-height:220px;overflow-y:auto;z-index:200;box-shadow:0 4px 16px rgba(0,0,0,.12)"></div>
-        <div id="practice-confirm" style="display:none;margin-top:8px;padding:10px 13px;background:#EEF6EE;border:1px solid #A1B9A1;border-left:3px solid #4a9460;border-radius:6px;font-size:13px;color:#1e4d2b;line-height:1.6"></div>
-      </div>
-
+        
       <div class="field">
         <label>Practice name</label>
         <input type="text" id="practice_name_display" placeholder="Auto-filled after selecting a practice" readonly>
@@ -891,7 +889,7 @@ When you click <strong>Submit to SharePoint</strong>, a PDF copy of this complet
 Export to PDF
 </button>
 
-<button class="btn-export" onclick="openEmailModal()">
+<button class="btn-export" onclick="submitToSharePointAndDownloadPDF()">
 Submit to SharePoint + Download PDF
 </button>
 
@@ -916,12 +914,15 @@ var SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwDOrwDsybhQZAS6Gh0q5n
 
 function searchPractice(query){
   var dd=document.getElementById('practice-dropdown');
-  var confirm=document.getElementById('practice-confirm');
-
+document.getElementById('practice_name_display').value='';
+  document.getElementById('city_display').value='';
+  document.getElementById('practice_name_hidden').value='';
+  document.getElementById('cy').value='';
+	
   if(!query || query.length < 1){
     dd.style.display='none';
-    confirm.style.display='none';
     return;
+  }
   }
 
   var q=query.toLowerCase().trim();
@@ -989,10 +990,6 @@ function selectPractice(p){
 
   document.getElementById('practice-dropdown').style.display='none';
 
-  var confirm=document.getElementById('practice-confirm');
-  confirm.style.display='block';
-  confirm.innerHTML='<strong>'+p['Practicename']+'</strong> &nbsp;·&nbsp; '+p['City'];
-
   chk();
 }
 
@@ -1034,34 +1031,6 @@ dd.style.display='none';
 }
 });
 
-function autoEmail(){
-var name=document.getElementById('mgr').value.trim();
-var emailField=document.getElementById('em');
-
-if(!name){
-emailField.placeholder='name@dentalcorp.com';
-if(!emailField.dataset.userEdited) emailField.value='';
-return;
-}
-
-var parts=name.split(/\s+/);
-if(parts.length >= 2){
-var generated = parts[0].toLowerCase() + '.' + parts[parts.length - 1].toLowerCase() + '@dentalcorp.com';
-if(!emailField.dataset.userEdited){
-emailField.value = generated;
-}
-}
-}
-
-// Mark email as user-edited if they type in it directly
-document.addEventListener('DOMContentLoaded',function(){
-var em=document.getElementById('em');
-if(em){
-em.addEventListener('input',function(){
-this.dataset.userEdited='1';
-});
-}
-});
 
 var PRACTICE_DB = [
   /* PASTE YOUR FULL EXISTING PRACTICE_DB ARRAY HERE EXACTLY AS-IS */
