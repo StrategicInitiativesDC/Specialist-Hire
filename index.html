@@ -2443,9 +2443,9 @@ async function confirmSubmit(){
 async function exportPDF(returnOnly){
   chk();
 
-  if(typeof html2canvas==='undefined' || !window.jspdf || !window.jspdf.jsPDF){
-	alert('PDF libraries failed to load. Please refresh the page and try again.');
-	return '';
+  if(typeof html2canvas === 'undefined' || !window.jspdf || !window.jspdf.jsPDF){
+    alert('PDF libraries failed to load. Please refresh the page and try again.');
+    return '';
   }
 
   const { jsPDF } = window.jspdf;
@@ -2454,69 +2454,78 @@ async function exportPDF(returnOnly){
   document.body.classList.add('pdf-export');
 
   try {
-	const canvas = await html2canvas(pageElement, {
-  	scale: 1,
-  	useCORS: true,
-  	backgroundColor: '#F5F2EA',
-  	windowWidth: pageElement.scrollWidth,
-  	scrollY: 0
-	});
+    const canvas = await html2canvas(pageElement, {
+      scale: 1,
+      useCORS: true,
+      backgroundColor: '#F5F2EA',
+      windowWidth: pageElement.scrollWidth,
+      scrollY: 0
+    });
 
-const imgData = canvas.toDataURL('image/jpeg', 0.55);
-	const pdf = new jsPDF('p', 'pt', 'letter');
+    const imgData = canvas.toDataURL('image/jpeg', 0.5);
+    const pdf = new jsPDF('p', 'pt', 'letter');
 
-	const pageWidth = pdf.internal.pageSize.getWidth();
-	const pageHeight = pdf.internal.pageSize.getHeight();
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
 
-	const margin = 24;
-	const usableWidth = pageWidth - margin * 2;
-	const usableHeight = pageHeight - margin * 2;
+    const margin = 24;
+    const usableWidth = pageWidth - margin * 2;
+    const usableHeight = pageHeight - margin * 2;
 
-	const imgWidth = usableWidth;
-	const imgHeight = canvas.height * imgWidth / canvas.width;
+    const imgWidth = usableWidth;
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-	let heightLeft = imgHeight;
-	let position = margin;
+    let heightLeft = imgHeight;
+    let position = margin;
 
-	pdf.addImage(imgData, 'JPEG', margin, position, imgWidth, imgHeight
-	heightLeft -= usableHeight;
+    pdf.addImage(imgData, 'JPEG', margin, position, imgWidth, imgHeight);
+    heightLeft -= usableHeight;
 
-	while (heightLeft > 0) {
-  	pdf.addPage();
-  	position = margin - (imgHeight - heightLeft);
-  	pdf.addImage(imgData, 'JPEG', margin, position, imgWidth, imgHeight);
-  	heightLeft -= usableHeight;
-	}
+    while(heightLeft > 0){
+      pdf.addPage();
+      position = margin - (imgHeight - heightLeft);
+      pdf.addImage(imgData, 'JPEG', margin, position, imgWidth, imgHeight);
+      heightLeft -= usableHeight;
+    }
 
-	var clinic=(v('cn') || 'clinic').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
-	var spec=(v('sp') || 'specialist-hire-request').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
-	var fileName=clinic + '-' + spec + '-hire-request';
+    var clinic = (v('cn') || 'clinic')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-|-$/g, '');
 
-	if(!returnOnly){
-  	pdf.save(fileName + '.pdf');
+    var spec = (v('sp') || 'specialist-hire-request')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-|-$/g, '');
 
-  	var t=document.getElementById('toast');
-  	t.textContent='✓ PDF exported successfully';
-  	t.style.display='block';
+    var fileName = clinic + '-' + spec + '-hire-request';
 
-  	setTimeout(function(){
-    	t.style.display='none';
-    	t.textContent='✓ Exported successfully';
-  	},2500);
-	} else {
-  	pdf.save(fileName + '.pdf');
-	}
+    if(!returnOnly){
+      pdf.save(fileName + '.pdf');
 
-	return pdf.output('datauristring');
+      var t = document.getElementById('toast');
+      t.textContent = '✓ PDF exported successfully';
+      t.style.display = 'block';
 
-  } catch (err) {
-	console.error(err);
-	alert('PDF export failed. Please use your browser print option and select "Save as PDF".');
-	return '';
+      setTimeout(function(){
+        t.style.display = 'none';
+        t.textContent = '✓ Exported successfully';
+      }, 2500);
+    } else {
+      pdf.save(fileName + '.pdf');
+    }
+
+    return pdf.output('datauristring');
+
+  } catch(err) {
+    console.error(err);
+    alert('PDF export failed. Please use your browser print option and select "Save as PDF".');
+    return '';
   } finally {
-	document.body.classList.remove('pdf-export');
+    document.body.classList.remove('pdf-export');
   }
 }
+
 
 function clearForm(){
   document.querySelectorAll('input[type=text],input[type=email],select,textarea').forEach(function(el){
