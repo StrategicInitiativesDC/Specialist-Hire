@@ -2462,7 +2462,7 @@ async function exportPDF(returnOnly){
   	scrollY: 0
 	});
 
-	const imgData = canvas.toDataURL('image/png');
+const imgData = canvas.toDataURL('image/jpeg', 0.55);
 	const pdf = new jsPDF('p', 'pt', 'letter');
 
 	const pageWidth = pdf.internal.pageSize.getWidth();
@@ -2478,13 +2478,13 @@ async function exportPDF(returnOnly){
 	let heightLeft = imgHeight;
 	let position = margin;
 
-	pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
+	pdf.addImage(imgData, 'JPEG', margin, position, imgWidth, imgHeight
 	heightLeft -= usableHeight;
 
 	while (heightLeft > 0) {
   	pdf.addPage();
   	position = margin - (imgHeight - heightLeft);
-  	pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
+  	pdf.addImage(imgData, 'JPEG', margin, position, imgWidth, imgHeight);
   	heightLeft -= usableHeight;
 	}
 
