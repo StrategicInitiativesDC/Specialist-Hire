@@ -202,7 +202,8 @@ body{font-family:var(--sans);background:var(--body-bg);color:var(--text-primary)
           style="padding:9px 12px"
         >
         <div id="practice-dropdown" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid #ccc8be;border-radius:0 0 6px 6px;max-height:220px;overflow-y:auto;z-index:200;box-shadow:0 4px 16px rgba(0,0,0,.12)"></div>
-        
+      </div>
+
       <div class="field">
         <label>Practice name</label>
         <input type="text" id="practice_name_display" placeholder="Auto-filled after selecting a practice" readonly>
@@ -216,7 +217,7 @@ body{font-family:var(--sans);background:var(--body-bg);color:var(--text-primary)
       <!-- Hidden fields used by backend -->
       <input type="hidden" id="cy">
       <input type="hidden" id="practice_name_hidden">
-</div>
+    </div>
   </div>
 </div>
 
@@ -914,15 +915,15 @@ var SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwDOrwDsybhQZAS6Gh0q5n
 
 function searchPractice(query){
   var dd=document.getElementById('practice-dropdown');
-document.getElementById('practice_name_display').value='';
+
+  document.getElementById('practice_name_display').value='';
   document.getElementById('city_display').value='';
   document.getElementById('practice_name_hidden').value='';
   document.getElementById('cy').value='';
-	
+
   if(!query || query.length < 1){
     dd.style.display='none';
     return;
-  }
   }
 
   var q=query.toLowerCase().trim();
@@ -2381,6 +2382,25 @@ function submitToSheets(userEmail, pdfData){
   });
 }
 
+async function submitToSharePointAndDownloadPDF(){
+  var email=v('em').trim();
+
+  if(!email){
+    alert('Please enter your email before submitting.');
+    return;
+  }
+
+  var missing=validateRequired();
+  if(missing.length>0){
+    alert('Please complete the following required fields before submitting:\n\n• ' + missing.join('\n• '));
+    return;
+  }
+
+  var pdfData=await exportPDF(true);
+  submitToSheets(email,pdfData);
+}
+
+	
 function openEmailModal(){
   var modal=document.getElementById('emailModal');
   var userEmailInput=document.getElementById('userEmail');
